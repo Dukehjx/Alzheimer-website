@@ -1,0 +1,103 @@
+---
+description: general rules
+globs: 
+alwaysApply: false
+---
+# .cursorrules
+
+## Project Overview
+You are contributing to the development of an AI-powered website dedicated to the early detection of Mild Cognitive Impairment (MCI) and Alzheimer's prevention. The platform offers features like AI-driven language analysis, cognitive training games, a resource hub, and health monitoring tools.
+
+## General Guidelines
+- **Code Quality**: Ensure all code is clean, well-documented, and adheres to established coding standards.
+- **Security**: Implement robust security measures to protect user data and maintain confidentiality.
+- **Performance**: Optimize the application for fast load times and smooth user interactions.
+
+## Frontend Development (React.js / HTML + CSS + JavaScript)
+- **Component Structure**:
+  - Utilize functional components with hooks.
+  - Promote code reuse by creating modular components.
+- **Styling**:
+  - Apply responsive design principles to ensure compatibility across devices.
+  - Use CSS modules or styled-components to scope styles locally.
+- **State Management**:
+  - Leverage React's Context API or state management libraries (e.g., Redux) for global state.
+  - Keep state as local as possible to minimize side effects.
+- **Error Handling**:
+  - Implement error boundaries to gracefully handle UI errors.
+  - Provide user-friendly error messages and fallback UI components.
+
+## Backend Development (Flask / FastAPI with Python)
+- **API Design**:
+  - Follow RESTful principles for API endpoint design.
+  - Document APIs using tools like Swagger or OpenAPI.
+- **Data Processing**:
+  - Use efficient data structures and algorithms to process user inputs.
+  - Ensure data validation and sanitation to prevent security vulnerabilities.
+- **Security**:
+  - Implement authentication and authorization mechanisms.
+  - Regularly update dependencies to patch known vulnerabilities.
+- **Database Management**:
+  - Use ORM (Object-Relational Mapping) tools for database interactions.
+  - Ensure database queries are optimized for performance.
+
+## AI-Powered Language Analysis
+- **Speech-to-Text Conversion**:
+  - Integrate OpenAI’s Whisper API for accurate transcription.
+  - Handle transcription errors gracefully and provide user feedback.
+- **NLP Feature Extraction**:
+  - Utilize spaCy or GPT-4 for extracting linguistic features.
+  - Ensure models are updated regularly to incorporate the latest advancements.
+- **Risk Scoring Model**:
+  - Train machine learning models using relevant datasets.
+  - Validate models thoroughly to ensure accuracy and reliability.
+
+## Cognitive Training Games
+- **Game Design**:
+  - Develop engaging and scientifically-backed cognitive exercises.
+  - Ensure games adapt to the user's cognitive level and progress.
+- **User Feedback**:
+  - Provide immediate feedback on performance.
+  - Track progress over time and adjust difficulty accordingly.
+
+## Resource Hub
+- **Content Management**:
+  - Curate up-to-date articles and resources on Alzheimer's prevention.
+  - Ensure content is accessible and easy to navigate.
+- **Community Support**:
+  - Implement forums or discussion boards for user interaction.
+  - Monitor community spaces to maintain a supportive environment.
+
+## Lightweight Health Monitoring
+- **Data Collection**:
+  - Allow users to record speech and text inputs securely.
+  - Ensure user consent is obtained for data collection.
+- **Progress Tracking**:
+  - Visualize user data to show trends over time.
+  - Provide insights based on data analysis to encourage proactive health measures.
+
+## Documentation
+- **README Updates**:
+  - Ensure the `README.md` file is updated with every significant change.
+  - Include clear instructions for setup, development, and deployment.
+- **Code Comments**:
+  - Write meaningful comments to explain complex logic.
+  - Maintain consistency in commenting style throughout the codebase.
+
+## Compliance and Ethics
+- **Data Privacy**:
+  - Adhere to data protection regulations (e.g., GDPR).
+  - Implement data anonymization techniques where applicable.
+- **Ethical AI Use**:
+  - Ensure AI models are free from biases.
+  - Provide transparency in AI decision-making processes.
+
+## Collaboration
+- **Version Control**:
+  - Use Git for version control and maintain a consistent branching strategy.
+  - Write clear and concise commit messages.
+- **Code Reviews**:
+  - Conduct regular code reviews to maintain code quality.
+  - Provide constructive feedback and encourage knowledge sharing.
+
+By following these guidelines, the development team can ensure that the project adheres to best practices, resulting in a secure, efficient, and user-friendly platform for early detection of MCI and Alzheimer's prevention.
