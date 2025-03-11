@@ -6,7 +6,6 @@ import {
   ChartBarIcon,
   ChatBubbleLeftRightIcon,
   ClockIcon,
-  BrainIcon,
   DocumentTextIcon,
 } from '@heroicons/react/24/outline';
 
@@ -259,8 +258,8 @@ export default function Dashboard() {
 
       {/* Quick Actions */}
       <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="bg-white dark:bg-neutral-800 overflow-hidden shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
+        <div className="bg-white dark:bg-neutral-800 overflow-hidden shadow rounded-lg flex flex-col">
+          <div className="px-4 py-5 sm:p-6 flex-grow">
             <div className="flex items-center">
               <div className="flex-shrink-0 bg-primary-100 dark:bg-primary-900 rounded-md p-3">
                 <ChatBubbleLeftRightIcon className="h-6 w-6 text-primary-600 dark:text-primary-400" aria-hidden="true" />
@@ -281,8 +280,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-neutral-800 overflow-hidden shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
+        <div className="bg-white dark:bg-neutral-800 overflow-hidden shadow rounded-lg flex flex-col">
+          <div className="px-4 py-5 sm:p-6 flex-grow">
             <div className="flex items-center">
               <div className="flex-shrink-0 bg-secondary-100 dark:bg-secondary-900 rounded-md p-3">
                 <BrainCustomIcon className="h-6 w-6 text-secondary-600 dark:text-secondary-400" aria-hidden="true" />
@@ -303,8 +302,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-neutral-800 overflow-hidden shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
+        <div className="bg-white dark:bg-neutral-800 overflow-hidden shadow rounded-lg flex flex-col">
+          <div className="px-4 py-5 sm:p-6 flex-grow">
             <div className="flex items-center">
               <div className="flex-shrink-0 bg-blue-100 dark:bg-blue-900 rounded-md p-3">
                 <DocumentTextIcon className="h-6 w-6 text-blue-600 dark:text-blue-400" aria-hidden="true" />
@@ -325,8 +324,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-neutral-800 overflow-hidden shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
+        <div className="bg-white dark:bg-neutral-800 overflow-hidden shadow rounded-lg flex flex-col">
+          <div className="px-4 py-5 sm:p-6 flex-grow">
             <div className="flex items-center">
               <div className="flex-shrink-0 bg-indigo-100 dark:bg-indigo-900 rounded-md p-3">
                 <ChartBarIcon className="h-6 w-6 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />

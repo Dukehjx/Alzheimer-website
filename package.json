@@ -33,7 +33,7 @@
   "scripts": {
     "start": "react-scripts start",
     "dev": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -42,6 +42,21 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "resolutions": {
+    "postcss": "^8.4.31",
+    "resolve-url-loader/postcss": "^8.4.31"
+  },
+  "overrides": {
+    "@svgr/webpack": "^8.0.1",
+    "@babel/plugin-transform-private-methods": "^7.23.3",
+    "@babel/plugin-transform-optional-chaining": "^7.23.3",
+    "@eslint/config-array": "^0.1.2",
+    "@eslint/object-schema": "^0.0.1",
+    "sourcemap-codec": "^1.4.8",
+    "glob": "^10.3.10",
+    "workbox-background-sync": "^7.0.0",
+    "postcss": "^8.4.31"
   },
   "browserslist": {
     "production": [
