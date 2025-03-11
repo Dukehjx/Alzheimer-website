@@ -1,261 +1,57 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  Button, 
-  IconButton, 
-  Box, 
-  Drawer, 
-  List, 
-  ListItem, 
-  ListItemText, 
-  ListItemIcon, 
-  Avatar, 
-  Menu, 
-  MenuItem, 
-  useMediaQuery, 
-  Container,
-  Tooltip
-} from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import MenuIcon from '@mui/icons-material/Menu';
-import HomeIcon from '@mui/icons-material/Home';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
-import InfoIcon from '@mui/icons-material/Info';
-import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { useAuth } from '../../contexts/AuthContext';
+  Bars3Icon,
+  MagnifyingGlassIcon,
+  BellIcon,
+} from '@heroicons/react/24/outline';
 
-const Header = () => {
-  const theme = useTheme();
-  const navigate = useNavigate();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { currentUser, logout, isAuthenticated } = useAuth();
-  
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
-  
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-  
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-  
-  const handleLogout = () => {
-    logout();
-    handleMenuClose();
-    navigate('/');
-  };
-
-  const menuItems = [
-    { text: 'Home', path: '/', icon: <HomeIcon /> },
-    { text: 'AI Screening', path: '/screening', icon: <AssessmentIcon /> },
-    { text: 'Cognitive Training', path: '/cognitive-training', icon: <FitnessCenterIcon /> },
-    { text: 'Resource Hub', path: '/resources', icon: <InfoIcon /> },
-    { text: 'Health Monitoring', path: '/health-monitoring', icon: <MonitorHeartIcon /> },
-  ];
-
-  const drawer = (
-    <Box
-      sx={{ width: 250 }}
-      role="presentation"
-      onClick={handleDrawerToggle}
-    >
-      <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
-          BrainGuard AI
-        </Typography>
-      </Box>
-      <List>
-        {menuItems.map((item) => (
-          <ListItem 
-            button 
-            component={RouterLink} 
-            to={item.path} 
-            key={item.text}
-            sx={{
-              '&:hover': {
-                backgroundColor: theme.palette.primary.light + '20',
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: theme.palette.primary.main }}>
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText primary={item.text} />
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
-
+export default function Header({ setSidebarOpen, darkMode, condensed }) {
   return (
-    <>
-      <AppBar position="fixed" color="default" elevation={1} sx={{ 
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(10px)'
-      }}>
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            {/* Mobile menu icon */}
-            {isMobile && (
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                edge="start"
-                onClick={handleDrawerToggle}
-                sx={{ mr: 2 }}
-              >
-                <MenuIcon />
-              </IconButton>
-            )}
-            
-            {/* Logo and name */}
-            <Typography
-              variant="h6"
-              noWrap
-              component={RouterLink}
-              to="/"
-              sx={{
-                mr: 2,
-                display: 'flex',
-                fontWeight: 700,
-                color: theme.palette.primary.main,
-                textDecoration: 'none',
-              }}
-            >
-              BrainGuard AI
-            </Typography>
-
-            {/* Desktop navigation */}
-            {!isMobile && (
-              <Box sx={{ flexGrow: 1, display: 'flex' }}>
-                {menuItems.map((item) => (
-                  <Button
-                    key={item.text}
-                    component={RouterLink}
-                    to={item.path}
-                    sx={{ 
-                      my: 2, 
-                      mx: 1,
-                      color: 'text.primary', 
-                      display: 'block',
-                      '&:hover': {
-                        backgroundColor: theme.palette.primary.light + '20',
-                      },
-                    }}
-                    startIcon={item.icon}
-                  >
-                    {item.text}
-                  </Button>
-                ))}
-              </Box>
-            )}
-
-            {/* User authentication section */}
-            <Box sx={{ flexGrow: 0 }}>
-              {isAuthenticated ? (
-                <>
-                  <Tooltip title="Open settings">
-                    <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
-                      <Avatar 
-                        alt={currentUser?.name || "User"} 
-                        src={currentUser?.profilePicture}
-                        sx={{ 
-                          bgcolor: theme.palette.primary.main,
-                          border: `2px solid ${theme.palette.primary.light}` 
-                        }}
-                      />
-                    </IconButton>
-                  </Tooltip>
-                  <Menu
-                    sx={{ mt: '45px' }}
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    open={Boolean(anchorEl)}
-                    onClose={handleMenuClose}
-                  >
-                    <MenuItem 
-                      onClick={() => {
-                        handleMenuClose();
-                        navigate('/profile');
-                      }}
-                    >
-                      <ListItemIcon>
-                        <AccountCircleIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText>My Profile</ListItemText>
-                    </MenuItem>
-                    <MenuItem onClick={handleLogout}>
-                      <ListItemIcon>
-                        <ExitToAppIcon fontSize="small" />
-                      </ListItemIcon>
-                      <ListItemText>Logout</ListItemText>
-                    </MenuItem>
-                  </Menu>
-                </>
-              ) : (
-                <Box sx={{ display: 'flex' }}>
-                  <Button 
-                    component={RouterLink} 
-                    to="/login"
-                    variant="outlined" 
-                    color="primary"
-                    sx={{ mr: 1 }}
-                  >
-                    Login
-                  </Button>
-                  <Button 
-                    component={RouterLink} 
-                    to="/register"
-                    variant="contained" 
-                    color="primary"
-                  >
-                    Sign Up
-                  </Button>
-                </Box>
-              )}
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
-      
-      {/* Mobile drawer */}
-      <Drawer
-        variant="temporary"
-        open={drawerOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true, // Better open performance on mobile
-        }}
-      >
-        {drawer}
-      </Drawer>
-      
-      {/* Skip to content link for accessibility */}
-      <a href="#main-content" className="skip-link">
-        Skip to content
-      </a>
-    </>
+    <header className={`sticky top-0 z-30 bg-white dark:bg-neutral-800 shadow-sm transition-all duration-300 ease-in-out ${condensed ? 'lg:pl-20' : 'lg:pl-64'}`}>
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+        {/* Left section with mobile menu button */}
+        <div className="flex items-center">
+          <button
+            type="button"
+            className="lg:hidden -mx-2 inline-flex h-10 w-10 items-center justify-center rounded-md text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700 focus:outline-none"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <span className="sr-only">Open sidebar</span>
+            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+          </button>
+          
+          {/* Search bar */}
+          <div className="mx-2 sm:mx-4 lg:mx-0 w-full max-w-xs lg:max-w-md">
+            <label htmlFor="search" className="sr-only">Search</label>
+            <div className="relative text-neutral-400 dark:text-neutral-500 focus-within:text-neutral-500 dark:focus-within:text-neutral-400">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <MagnifyingGlassIcon className="h-5 w-5" aria-hidden="true" />
+              </div>
+              <input
+                id="search"
+                className="block w-full rounded-md border-0 bg-white dark:bg-neutral-700 py-1.5 pl-10 pr-3 text-sm text-neutral-900 dark:text-white ring-1 ring-inset ring-neutral-300 dark:ring-neutral-600 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:ring-2 focus:ring-inset focus:ring-primary-500 sm:text-sm"
+                placeholder="Search"
+                type="search"
+                name="search"
+              />
+            </div>
+          </div>
+        </div>
+        
+        {/* Right section with notifications */}
+        <div className="flex items-center space-x-4">
+          {/* Notification Bell */}
+          <button
+            type="button"
+            className="relative p-1 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+          >
+            <span className="sr-only">View notifications</span>
+            <BellIcon className="h-6 w-6" aria-hidden="true" />
+            {/* Notification indicator */}
+            <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-primary-500 ring-2 ring-white dark:ring-neutral-800" />
+          </button>
+        </div>
+      </div>
+    </header>
   );
-};
-
-export default Header; 
+} 

@@ -18,7 +18,7 @@ Welcome to our innovative platform designed to facilitate early detection of Mil
 
 ### 3. Resource Hub
 
-- **Alzheimer’s Knowledge Base**: Explore comprehensive information on early symptoms, prevention strategies, and caregiving tips.
+- **Alzheimer's Knowledge Base**: Explore comprehensive information on early symptoms, prevention strategies, and caregiving tips.
 - **Latest Research Updates**: Stay informed with AI-curated articles on new findings in Alzheimer's treatment and prevention.
 - **Community Support Forum**: Connect with patients, caregivers, and researchers to exchange insights and experiences.
 
@@ -31,24 +31,30 @@ Welcome to our innovative platform designed to facilitate early detection of Mil
 
 ### 1. Frontend (User Interface & Interaction)
 
-- **Tech Stack**: React.js, HTML, CSS, JavaScript
-- **Features**:
-  - User registration & profile management
-  - Speech/text input & AI result visualization
-  - Interactive cognitive training games
+- **Tech Stack**: React.js, Tailwind CSS, Headless UI components
+- **Implemented Features**:
+  - Responsive layout with collapsible sidebar navigation
+  - Dark/light mode theming with persistent user preferences
+  - Dashboard with cognitive health metrics visualization
+  - AI Screening interface with speech recording and text input options
+  - Result visualization with cognitive scores, category breakdowns, and recommendations
+  - Resource Hub structure for educational content
+  - Health Monitoring interface for tracking cognitive changes
+  - Notifications system for updates and reminders
+  - User profile components and authentication screens
 
 ### 2. Backend (Data Processing & AI Computation)
 
-- **Tech Stack**: Flask or FastAPI (Python)
+- **Tech Stack**: FastAPI (Python)
 - **Functions**:
-  - Speech-to-Text Conversion using OpenAI’s Whisper API
+  - Speech-to-Text Conversion using OpenAI's Whisper API
   - NLP-Based Language Analysis with spaCy or GPT-4
   - AI Risk Scoring Model utilizing Scikit-learn
   - User Data Storage & Progress Tracking with MongoDB or SQLite
 
 ### 3. AI-Powered Language Analysis
 
-- **Speech-to-Text (STT)**: Integrate OpenAI’s Whisper API for accurate transcription.
+- **Speech-to-Text (STT)**: Integrate OpenAI's Whisper API for accurate transcription.
 - **NLP Feature Extraction**:
   - Measure lexical diversity to assess vocabulary richness.
   - Perform dependency parsing with spaCy to evaluate sentence complexity.
