@@ -1,0 +1,10 @@
+# Minimal dependencies for Vercel serverless function
+fastapi>=0.103.1
+uvicorn>=0.23.2
+python-multipart>=0.0.6
+email-validator>=2.0.0
+pydantic>=2.4.2
+requests>=2.31.0
+
+# Don't include heavy ML libraries in the Vercel deployment
+# NLP libraries like spaCy will exceed the 250 MB limit 

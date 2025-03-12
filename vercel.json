@@ -2,15 +2,15 @@
   "version": 2,
   "builds": [
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
+      "src": "frontend/**",
+      "use": "@vercel/static"
     },
     {
       "src": "backend/vercel_handler.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "10mb"
+      }
     }
   ],
   "routes": [
@@ -36,7 +36,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/frontend/$1"
     }
   ]
 }
