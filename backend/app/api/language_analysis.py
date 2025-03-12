@@ -4,16 +4,15 @@ to detect early signs of cognitive decline.
 """
 
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form
-from typing import Optional
+from typing import Optional, Dict, List, Any
 import json
 
 router = APIRouter(
-    prefix="/language-analysis",
     tags=["Language Analysis"],
     responses={404: {"description": "Not found"}},
 )
 
-@router.post("/analyze-text")
+@router.post("/api/language-analysis/analyze-text")
 async def analyze_text(text: str = Form(...)):
     """
     Analyze a text sample for signs of cognitive decline.
@@ -42,7 +41,7 @@ async def analyze_text(text: str = Form(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
 
-@router.post("/analyze-speech")
+@router.post("/api/language-analysis/analyze-speech")
 async def analyze_speech(audio_file: UploadFile = File(...)):
     """
     Analyze a speech recording for signs of cognitive decline.
@@ -79,7 +78,7 @@ async def analyze_speech(audio_file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Speech analysis failed: {str(e)}")
 
-@router.get("/history/{user_id}")
+@router.get("/api/language-analysis/history/{user_id}")
 async def get_analysis_history(user_id: str):
     """
     Retrieve the analysis history for a specific user.

@@ -5,41 +5,38 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "frontend/build"
+        "distDir": "build"
       }
     },
     {
-      "src": "backend/api/index.py",
+      "src": "backend/vercel_handler.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/backend/api/index.py"
-    },
-    {
-      "handle": "filesystem"
+      "dest": "/backend/vercel_handler.py"
     },
     {
       "src": "/static/(.*)",
-      "dest": "/frontend/static/$1"
+      "dest": "/static/$1"
     },
     {
       "src": "/favicon.ico",
-      "dest": "/frontend/favicon.ico"
+      "dest": "/favicon.ico"
     },
     {
       "src": "/manifest.json",
-      "dest": "/frontend/manifest.json"
+      "dest": "/manifest.json"
     },
     {
       "src": "/robots.txt",
-      "dest": "/frontend/robots.txt"
+      "dest": "/robots.txt"
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/index.html"
+      "dest": "/index.html"
     }
   ]
 }
