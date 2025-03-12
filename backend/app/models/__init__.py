@@ -1,0 +1,1 @@
+"""Data models for the Alzheimer's detection platform.""" 
