@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
+    "cross-env": "^7.0.3",
     "cssnano": "^6.0.1",
     "postcss": "^8.4.31",
     "postcss-import": "^15.1.0",
@@ -33,7 +34,7 @@
   "scripts": {
     "start": "react-scripts start",
     "dev": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
