@@ -1,22 +1,16 @@
 {
-  "version": 2,
   "builds": [
     {
-      "src": "frontend/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "backend/vercel_handler.py",
-      "use": "@vercel/python",
+      "src": "package.json",
+      "use": "@vercel/static-build",
       "config": {
-        "maxLambdaSize": "10mb"
+        "distDir": "build"
       }
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/backend/vercel_handler.py"
+      "handle": "filesystem"
     },
     {
       "src": "/static/(.*)",
@@ -36,7 +30,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/$1"
+      "dest": "/index.html"
     }
   ]
 }

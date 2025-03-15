@@ -1,85 +1,78 @@
 """
-Alzheimer's Detection Platform - Backend API
-Main application entry point for the FastAPI application.
+Main FastAPI application for Alzheimer's detection backend.
+
+This module sets up the FastAPI application with all routes and middleware.
 """
 
-import os
 import sys
-import uvicorn
-from fastapi import FastAPI, Request
+import os
+from pathlib import Path
+
+# Add the parent directory to the path so we can import ai_models
+sys.path.append(str(Path(__file__).parent.parent))
+
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
-# Add the directory containing this file to Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# Check if running on Vercel
-is_vercel = os.getenv("VERCEL", "0") == "1"
-
-# Import routers - use try/except to handle potential import errors gracefully
-try:
-    from backend.app.api.language_analysis import router as language_router
-    ROUTER_IMPORT_SUCCESS = True
-except ImportError as e:
-    print(f"Warning: Could not import language_router: {e}")
-    ROUTER_IMPORT_SUCCESS = False
+# Import our API routers
+from app.api import language_analysis
 
 # Create FastAPI app
 app = FastAPI(
-    title="Alzheimer's Detection Platform API",
-    description="Backend API for the AI-powered Alzheimer's detection and prevention platform",
-    version="0.1.0",
+    title="Alzheimer's Early Detection API",
+    description="API for detecting early signs of cognitive decline through language analysis",
+    version="1.0.0"
 )
 
-# Configure CORS - Adjust for production
-frontend_url = os.getenv("FRONTEND_URL", "*")
-allowed_origins = [frontend_url]
-if frontend_url == "*":
-    allowed_origins = ["*"]
-
-# Configure CORS
+# Configure CORS for frontend access
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins,
+    allow_origins=["*"],  # In production, replace with specific origins
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# Include routers only if import was successful
-if ROUTER_IMPORT_SUCCESS:
-    app.include_router(language_router)
+# Include API routers
+app.include_router(language_analysis.router)
 
-# Add error handler for graceful error responses
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    return JSONResponse(
-        status_code=500,
-        content={
-            "status": "error",
-            "message": f"An unexpected error occurred: {str(exc)}",
-            "type": str(type(exc).__name__)
-        }
-    )
+# Serve static files for the frontend
+static_files_dir = Path(__file__).parent / "static"
+if not os.path.exists(static_files_dir):
+    os.makedirs(static_files_dir)
 
-# Root endpoint
-@app.get("/api")
-async def root():
-    """Root endpoint that returns API status."""
-    return {
-        "status": "online",
-        "message": "Welcome to the Alzheimer's Detection Platform API",
-        "version": "0.1.0",
-        "environment": os.getenv("VERCEL_ENV", "development"),
-        "router_import_success": ROUTER_IMPORT_SUCCESS,
-        "deployment_type": "lightweight" if is_vercel else "full"
-    }
+app.mount("/static", StaticFiles(directory=static_files_dir), name="static")
+
+# Serve index.html for root route
+@app.get("/", include_in_schema=False)
+async def serve_frontend():
+    """Serve the frontend application."""
+    frontend_path = static_files_dir / "index.html"
+    
+    # If frontend is not built yet, return a message
+    if not os.path.exists(frontend_path):
+        return {"message": "Frontend not built yet. Please build the frontend and copy it to the 'static' directory."}
+    
+    return FileResponse(frontend_path)
 
 # Health check endpoint
-@app.get("/api/health")
+@app.get("/health", tags=["Health"])
 async def health_check():
-    """Health check endpoint to verify API is functioning."""
+    """Health check endpoint for monitoring."""
     return {"status": "healthy"}
 
+# Version endpoint
+@app.get("/version", tags=["Info"])
+async def version():
+    """Get API version information."""
+    return {
+        "version": app.version,
+        "title": app.title,
+        "description": app.description
+    }
+
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=int(os.getenv("PORT", "8000")), reload=True) 
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True) 

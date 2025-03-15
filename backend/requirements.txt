@@ -13,16 +13,24 @@ spacy>=3.6.1
 scikit-learn>=1.3.1
 numpy>=1.25.2
 pandas>=2.1.1
+textstat>=0.7.3  # For readability metrics
+nltk>=3.8.1  # For additional NLP analysis
 
 # Speech-to-Text
-# openai>=0.28.1 # For Whisper API
+openai>=1.0.0  # For Whisper API
+pydub>=0.25.1  # For audio preprocessing
 
 # Utilities
 python-dotenv>=1.0.0
 pydantic>=2.4.2
 requests>=2.31.0
 pytest>=7.4.2  # For testing
+jsonschema>=4.17.3  # For data validation
+aiofiles>=23.1.0  # For async file operations
+httpx>=0.24.0  # For async HTTP requests
 
 # For production
 # gunicorn>=21.2.0  # For production deployment
-# sentry-sdk>=1.31.0  # For error tracking 
+# sentry-sdk>=1.31.0  # For error tracking
+
+# Install spaCy model with: python -m spacy download en_core_web_md 

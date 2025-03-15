@@ -1,1 +1,20 @@
--r backend/requirements-vercel.txt 
+# Backend dependencies
+fastapi>=0.95.0
+uvicorn>=0.22.0
+python-multipart>=0.0.6
+pydantic>=2.0.0
+aiofiles>=23.1.0
+
+# AI Model dependencies
+openai-whisper>=20230314
+spacy>=3.6.0
+textstat>=0.7.3
+numpy>=1.24.3
+scikit-learn>=1.2.2
+torch>=2.0.0
+pyaudio>=0.2.13
+ffmpeg-python>=0.2.0
+python-dotenv>=1.0.0
+
+# Optional: OpenAI API for API mode
+openai>=0.28.0 

@@ -1,0 +1,11 @@
+This is a sample text for testing the NLP analyzer. The text contains various sentences with different structures and vocabulary to simulate natural language. 
+
+The Alzheimer's detection system uses advanced natural language processing techniques to analyze speech and text patterns. It looks for linguistic markers that may indicate cognitive decline, such as reduced vocabulary diversity, simplified syntax, and changes in fluency.
+
+Early detection of cognitive decline is crucial for effective intervention. Our system provides a non-invasive method to identify potential signs of Alzheimer's disease through everyday speech and writing samples.
+
+The dual-mode Whisper implementation allows for both local processing and API-based transcription, giving users flexibility based on their needs and resources. Local mode runs entirely on the user's machine, while API mode leverages OpenAI's powerful cloud infrastructure.
+
+Each mode has its advantages and limitations. Local mode offers privacy and no usage costs, but may be limited by the user's hardware. API mode provides potentially higher accuracy and faster processing for complex audio, but requires an internet connection and incurs usage fees.
+
+By analyzing linguistic features such as lexical diversity, syntactic complexity, and semantic coherence, our system can help identify subtle changes that might otherwise go unnoticed in routine conversations or written communications. 

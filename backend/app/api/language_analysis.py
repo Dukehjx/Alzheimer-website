@@ -3,124 +3,153 @@ Language Analysis API routes for analyzing speech and text samples
 to detect early signs of cognitive decline.
 """
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Depends
-from fastapi.responses import JSONResponse
-from typing import Optional, Dict, List, Any
-import json
-import os
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, BackgroundTasks
+from typing import Optional, Dict, Any, Literal
 
-# Create router without prefix for Vercel compatibility
+from ..services.cognitive_service import CognitiveService, get_cognitive_service
+
 router = APIRouter(
+    prefix="/language-analysis",
     tags=["Language Analysis"],
     responses={404: {"description": "Not found"}},
 )
 
-# Simple mock function instead of using heavy NLP libraries
-def analyze_text_simple(text: str) -> Dict[str, Any]:
-    """
-    Simple text analysis that doesn't require heavy libraries.
-    This is a placeholder for the real NLP analysis.
-    """
-    # Calculate basic metrics without NLP libraries
-    word_count = len(text.split())
-    char_count = len(text)
-    avg_word_length = char_count / max(word_count, 1)
-    
-    # Mock values for metrics that would normally require NLP
-    metrics = {
-        "lexical_diversity": 0.75,  # Would normally be calculated with NLP
-        "syntactic_complexity": 0.68,  # Would normally be calculated with NLP
-        "hesitations": 0.05,  # Would normally be calculated with NLP
-        "repetitions": 0.02,  # Would normally be calculated with NLP
-        "word_count": word_count,  # This we can actually calculate
-        "character_count": char_count,  # This we can actually calculate
-        "avg_word_length": avg_word_length  # This we can actually calculate
-    }
-    
-    # Mock risk score
-    risk_score = 0.25
-    
-    return {
-        "analysis_id": "sample-123",
-        "text_length": len(text),
-        "metrics": metrics,
-        "risk_score": risk_score,
-        "recommendations": [
-            "Continue regular cognitive exercises",
-            "Monitor changes in linguistic patterns over time"
-        ]
-    }
-
-@router.post("/api/language-analysis/analyze-text")
-async def analyze_text(text: str = Form(...)):
+@router.post("/analyze-text", response_model=None)
+async def analyze_text(
+    text: str = Form(...),
+    user_id: Optional[str] = Form(None),
+    background_tasks: BackgroundTasks = BackgroundTasks(),
+    cognitive_service: CognitiveService = get_cognitive_service()
+):
     """
     Analyze a text sample for signs of cognitive decline.
     
     This endpoint processes text input and returns linguistic metrics
     that may indicate early signs of MCI or Alzheimer's.
+    
+    Parameters:
+    - **text**: The text sample to analyze
+    - **user_id**: Optional user ID for tracking history
+    
+    Returns a detailed analysis including:
+    - Linguistic features and metrics
+    - Risk assessment scores
+    - Recommendations based on the analysis
     """
     try:
-        # Use the simple analyzer instead of heavy NLP libraries
-        result = analyze_text_simple(text)
+        # Call the AI service to analyze the text
+        metadata = {"source": "api", "endpoint": "analyze-text"}
+        
+        result = await cognitive_service.analyze_text(
+            text=text,
+            user_id=user_id,
+            metadata=metadata,
+            background_tasks=background_tasks
+        )
+        
         return result
+        
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
 
-@router.post("/api/language-analysis/analyze-speech")
-async def analyze_speech(audio_file: UploadFile = File(...)):
+@router.post("/analyze-speech", response_model=None)
+async def analyze_speech(
+    audio_file: UploadFile = File(...),
+    language: Optional[str] = Form(None),
+    user_id: Optional[str] = Form(None),
+    whisper_mode: Optional[Literal["local", "api"]] = Form(None),
+    background_tasks: BackgroundTasks = BackgroundTasks(),
+    cognitive_service: CognitiveService = get_cognitive_service()
+):
     """
     Analyze a speech recording for signs of cognitive decline.
     
     This endpoint accepts audio files, transcribes them to text using
     a speech-to-text service, and then performs linguistic analysis.
+    
+    Parameters:
+    - **audio_file**: Audio recording file (MP3, WAV, M4A, etc.)
+    - **language**: Optional language code (e.g., 'en', 'es')
+    - **user_id**: Optional user ID for tracking history
+    - **whisper_mode**: Optional mode for speech-to-text ('local' or 'api')
+    
+    Returns a detailed analysis including:
+    - Speech transcription
+    - Linguistic features and metrics
+    - Risk assessment scores
+    - Recommendations based on the analysis
     """
     try:
-        # In a production app, we'd use a Speech-to-Text service
-        # But for now, just return mock data without heavy ML libraries
-        return {
-            "analysis_id": "speech-123",
-            "audio_duration": "35 seconds",
-            "transcription": "This would be the transcribed text from the audio file.",
-            "metrics": {
-                "lexical_diversity": 0.72,
-                "syntactic_complexity": 0.65,
-                "hesitations": 0.08,
-                "repetitions": 0.03,
-                "speech_rate": 0.9,
-                "pause_patterns": 0.85
-            },
-            "risk_score": 0.3,
-            "recommendations": [
-                "Consider speech fluency exercises",
-                "Schedule a follow-up assessment in 3 months"
-            ]
+        # Call the AI service to analyze the speech
+        metadata = {
+            "source": "api", 
+            "endpoint": "analyze-speech",
+            "whisper_mode": whisper_mode
         }
+        
+        result = await cognitive_service.analyze_speech(
+            audio_file=audio_file,
+            language=language,
+            user_id=user_id,
+            metadata=metadata,
+            background_tasks=background_tasks,
+            whisper_mode=whisper_mode
+        )
+        
+        return result
+        
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Speech analysis failed: {str(e)}")
 
-@router.get("/api/language-analysis/history/{user_id}")
-async def get_analysis_history(user_id: str):
+@router.get("/history/{user_id}", response_model=None)
+async def get_analysis_history(
+    user_id: str,
+    cognitive_service: CognitiveService = get_cognitive_service()
+):
     """
     Retrieve the analysis history for a specific user.
     
     This endpoint returns a list of previous analyses and their results,
     which can be used to track changes over time.
+    
+    Parameters:
+    - **user_id**: ID of the user to retrieve history for
+    
+    Returns:
+    - List of previous assessments with their summary results
     """
-    # Simple mock data response without database access
-    return {
-        "user_id": user_id,
-        "analysis_history": [
-            {
-                "analysis_id": "hist-001",
-                "date": "2023-11-01",
-                "type": "text",
-                "risk_score": 0.22,
-            },
-            {
-                "analysis_id": "hist-002",
-                "date": "2023-12-01",
-                "type": "speech",
-                "risk_score": 0.25,
-            }
-        ]
-    } 
+    try:
+        result = await cognitive_service.get_user_history(user_id)
+        return result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve history: {str(e)}")
+
+@router.get("/config", response_model=None)
+async def get_config(
+    cognitive_service: CognitiveService = get_cognitive_service()
+):
+    """
+    Get the current configuration of the language analysis service.
+    
+    This endpoint returns information about the current configuration,
+    including the Whisper mode and model being used.
+    
+    Returns:
+    - Configuration details
+    """
+    try:
+        return {
+            "whisper_mode": cognitive_service.whisper_mode,
+            "whisper_model": cognitive_service.whisper_model,
+            "has_openai_key": bool(cognitive_service.openai_api_key)
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve configuration: {str(e)}") 
