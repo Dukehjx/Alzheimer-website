@@ -1,38 +1,78 @@
 """
-User Models
-
-This module defines the data models for users of the Alzheimer's detection platform.
+User models for authentication and profile data.
 """
-
-from pydantic import BaseModel, EmailStr, Field
-from typing import Optional, List
 from datetime import datetime
+from typing import List, Optional
+from pydantic import BaseModel, EmailStr, Field, validator
+import uuid
 
 class UserBase(BaseModel):
-    """Base user model with common attributes."""
+    """Base user model with common fields."""
     email: EmailStr
-    first_name: str
-    last_name: str
-    date_of_birth: Optional[datetime] = None
     is_active: bool = True
+    is_verified: bool = False
+    full_name: str
+    age: Optional[int] = None
     
-class UserCreate(UserBase):
-    """User model for creation, including password."""
-    password: str
+    class Config:
+        """Model configuration."""
+        populate_by_name = True
 
-class UserResponse(UserBase):
-    """User model for API responses, excluding sensitive data."""
-    id: str
-    created_at: datetime
+class UserCreate(UserBase):
+    """User creation model with password."""
+    password: str
+    
+    @validator('password')
+    def password_strength(cls, v):
+        """Validate password strength."""
+        if len(v) < 8:
+            raise ValueError('Password must be at least 8 characters')
+        if not any(char.isdigit() for char in v):
+            raise ValueError('Password must contain at least one digit')
+        if not any(char.isupper() for char in v):
+            raise ValueError('Password must contain at least one uppercase letter')
+        return v
+
+class UserInDB(UserBase):
+    """User model as stored in database."""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    hashed_password: str
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
     last_login: Optional[datetime] = None
     
     class Config:
-        """Pydantic configuration."""
-        from_attributes = True
+        """Model configuration."""
+        json_encoders = {
+            datetime: lambda dt: dt.isoformat(),
+            uuid.UUID: lambda id: str(id)
+        }
+
+class UserUpdate(BaseModel):
+    """User update model with optional fields."""
+    full_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    age: Optional[int] = None
+    is_active: Optional[bool] = None
+    
+    class Config:
+        """Model configuration."""
+        populate_by_name = True
+
+class UserResponse(UserBase):
+    """User data for API responses."""
+    id: str
+    created_at: datetime
+    
+    class Config:
+        """Model configuration."""
+        json_encoders = {
+            datetime: lambda dt: dt.isoformat(),
+            uuid.UUID: lambda id: str(id)
+        }
 
 class UserProfile(UserResponse):
     """Extended user model with profile information."""
-    age: Optional[int] = None
     gender: Optional[str] = None
     education_level: Optional[str] = None
     medical_history: Optional[List[str]] = Field(default_factory=list)
@@ -48,17 +88,6 @@ class UserSettings(BaseModel):
     notification_preferences: dict = Field(default_factory=dict)
     privacy_settings: dict = Field(default_factory=dict)
     theme: str = "light"
-    
-    class Config:
-        """Pydantic configuration."""
-        from_attributes = True
-
-class UserInDB(UserBase):
-    """User model as stored in the database, including hashed password."""
-    id: str
-    hashed_password: str
-    created_at: datetime
-    last_login: Optional[datetime] = None
     
     class Config:
         """Pydantic configuration."""

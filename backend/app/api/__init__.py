@@ -2,3 +2,11 @@
 
 # Make all modules importable
 from . import language_analysis 
+
+"""
+API routes initialization.
+"""
+from app.api.auth import router as auth_router
+from app.api.language_analysis import router as language_router
+
+__all__ = ["auth_router", "language_router"] 
