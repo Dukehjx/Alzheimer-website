@@ -1,44 +1,34 @@
 {
-  "builds": [
+  "buildCommand": "cd frontend && npm run build",
+  "outputDirectory": "frontend/build",
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "handle": "filesystem"
+      "source": "/static/(.*)",
+      "destination": "/static/$1"
     },
     {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
+      "source": "/favicon.ico",
+      "destination": "/favicon.ico"
     },
     {
-      "src": "/favicon.ico",
-      "dest": "/favicon.ico"
+      "source": "/manifest.json",
+      "destination": "/manifest.json"
     },
     {
-      "src": "/manifest.json",
-      "dest": "/manifest.json"
+      "source": "/robots.txt",
+      "destination": "/robots.txt"
     },
     {
-      "src": "/robots.txt",
-      "dest": "/robots.txt"
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
+      "source": "/api/(.*)",
+      "destination": "https://api.example.com/api/$1"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "https://api.example.com/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
@@ -59,5 +49,6 @@
         }
       ]
     }
-  ]
+  ],
+  "cleanUrls": true
 }
