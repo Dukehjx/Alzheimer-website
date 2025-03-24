@@ -1,81 +1,22 @@
 import React from 'react';
-import { Box, Button, Container, Typography, Paper } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useTheme } from '@mui/material/styles';
-import SiteMetadata from '../components/SiteMetadata';
+import { Link } from 'react-router-dom';
 
-function NotFoundPage() {
-  const theme = useTheme();
-
+export default function NotFoundPage() {
   return (
-    <>
-      <SiteMetadata 
-        title="Page Not Found - BrainGuard AI"
-        description="The page you are looking for does not exist."
-        keywords="404, not found, error, BrainGuard AI"
-      />
-      
-      <Container component="main" maxWidth="md" sx={{ py: 12 }}>
-        <Paper 
-          elevation={3} 
-          sx={{ 
-            py: 6, 
-            px: 4,
-            textAlign: 'center',
-            borderRadius: 2,
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}
-        >
-          {/* Background pattern */}
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              backgroundColor: theme.palette.grey[50],
-              backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-              zIndex: -1,
-            }}
-          />
-          
-          <Box sx={{ mb: 3 }}>
-            <ErrorOutlineIcon 
-              sx={{ 
-                fontSize: 120, 
-                color: theme.palette.error.main,
-                opacity: 0.8
-              }} 
-            />
-          </Box>
-          
-          <Typography variant="h3" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-            404: Page Not Found
-          </Typography>
-          <Typography variant="h6" color="text.secondary" paragraph sx={{ maxWidth: '600px', mx: 'auto', mb: 4 }}>
-            We couldn't find the page you're looking for. The page may have been moved, deleted, or never existed.
-          </Typography>
-          
-          <Button 
-            component={RouterLink} 
-            to="/" 
-            variant="contained" 
-            color="primary" 
-            size="large" 
-            startIcon={<ArrowBackIcon />}
-            sx={{ mt: 2 }}
+    <div className="min-h-[80vh] flex items-center justify-center px-4 py-12">
+      <div className="text-center">
+        <p className="text-primary-600 text-sm font-semibold uppercase tracking-wide dark:text-primary-400">404 error</p>
+        <h1 className="mt-2 text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl dark:text-white">Page not found</h1>
+        <p className="mt-4 text-lg text-gray-500 dark:text-gray-400">We couldn't find the page you're looking for. The page may have been moved, deleted, or never existed.</p>
+        <div className="mt-6">
+          <Link
+            to="/"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 dark:bg-primary-700 dark:hover:bg-primary-600"
           >
             Back to Home
-          </Button>
-        </Paper>
-      </Container>
-    </>
+          </Link>
+        </div>
+      </div>
+    </div>
   );
-}
-
-export default NotFoundPage; 
+} 

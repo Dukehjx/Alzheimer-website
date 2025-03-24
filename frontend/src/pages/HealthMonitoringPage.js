@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Grid, 
-  Paper, 
-  Card, 
-  CardContent, 
+import React, { useState, useEffect } from 'react';
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  Paper,
+  Card,
+  CardContent,
   Button,
   Divider,
   Tabs,
@@ -54,6 +54,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { getAnalysisHistory } from '../api/aiService';
 
 import {
   Chart as ChartJS,
@@ -82,9 +83,9 @@ ChartJS.register(
 
 // Mock data for assessment history
 const assessmentHistory = [
-  { 
-    id: 1, 
-    date: '2023-08-20', 
+  {
+    id: 1,
+    date: '2023-08-20',
     type: 'AI Screening',
     overallScore: 85,
     categories: {
@@ -97,9 +98,9 @@ const assessmentHistory = [
     trend: 'baseline',
     notes: 'Initial assessment to establish baseline cognitive function.'
   },
-  { 
-    id: 2, 
-    date: '2023-07-15', 
+  {
+    id: 2,
+    date: '2023-07-15',
     type: 'AI Screening',
     overallScore: 83,
     categories: {
@@ -112,9 +113,9 @@ const assessmentHistory = [
     trend: 'stable',
     notes: 'Slight decrease in syntactic complexity, but within normal variation.'
   },
-  { 
-    id: 3, 
-    date: '2023-06-10', 
+  {
+    id: 3,
+    date: '2023-06-10',
     type: 'AI Screening',
     overallScore: 86,
     categories: {
@@ -127,9 +128,9 @@ const assessmentHistory = [
     trend: 'improved',
     notes: 'Improvement in speech fluency after three weeks of cognitive training.'
   },
-  { 
-    id: 4, 
-    date: '2023-05-05', 
+  {
+    id: 4,
+    date: '2023-05-05',
     type: 'AI Screening',
     overallScore: 82,
     categories: {
@@ -142,9 +143,9 @@ const assessmentHistory = [
     trend: 'declined',
     notes: 'Slight decline noted during period of increased stress and poor sleep.'
   },
-  { 
-    id: 5, 
-    date: '2023-04-02', 
+  {
+    id: 5,
+    date: '2023-04-02',
     type: 'Clinical Assessment',
     overallScore: 84,
     categories: {
@@ -161,41 +162,41 @@ const assessmentHistory = [
 
 // Mock data for training activity
 const trainingActivity = [
-  { 
-    id: 1, 
-    date: '2023-08-22', 
+  {
+    id: 1,
+    date: '2023-08-22',
     game: 'Word Recall Challenge',
     score: 85,
     timeSpent: '8 min',
     improvement: '+5%'
   },
-  { 
-    id: 2, 
-    date: '2023-08-20', 
+  {
+    id: 2,
+    date: '2023-08-20',
     game: 'Verbal Fluency Sprint',
     score: 72,
     timeSpent: '5 min',
     improvement: '+3%'
   },
-  { 
-    id: 3, 
-    date: '2023-08-18', 
+  {
+    id: 3,
+    date: '2023-08-18',
     game: 'Narrative Memory',
     score: 90,
     timeSpent: '12 min',
     improvement: '+8%'
   },
-  { 
-    id: 4, 
-    date: '2023-08-15', 
+  {
+    id: 4,
+    date: '2023-08-15',
     game: 'Word Associations',
     score: 78,
     timeSpent: '6 min',
     improvement: '+2%'
   },
-  { 
-    id: 5, 
-    date: '2023-08-12', 
+  {
+    id: 5,
+    date: '2023-08-12',
     game: 'Complex Sentence Builder',
     score: 81,
     timeSpent: '9 min',
@@ -296,47 +297,111 @@ const chartOptions = {
 
 const HealthMonitoringPage = () => {
   const theme = useTheme();
-  const [tabValue, setTabValue] = useState(0);
-  const [timeRange, setTimeRange] = useState('6months');
-  const [shareMenuAnchor, setShareMenuAnchor] = useState(null);
-  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+  const [currentTab, setCurrentTab] = useState(0);
+  const [timeRange, setTimeRange] = useState('6m');
+  const [shareAnchorEl, setShareAnchorEl] = useState(null);
   const [selectedAssessment, setSelectedAssessment] = useState(null);
-  const [exportDialogOpen, setExportDialogOpen] = useState(false);
-  const [doctorEmail, setDoctorEmail] = useState('');
-  
+  const [assessmentHistory, setAssessmentHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch assessment history on component mount
+  useEffect(() => {
+    async function fetchAssessmentHistory() {
+      try {
+        setLoading(true);
+        // Call API to get assessment history
+        const history = await getAnalysisHistory(10);
+
+        // Transform API response to match UI format
+        const transformedHistory = history.map(item => {
+          // Convert risk score (0-1, higher = more risk) to overall score (0-100, higher = better)
+          const overallScore = Math.round((1 - item.cognitive_score) * 100);
+
+          // Calculate trend based on previous score if available
+          let trend = 'baseline';
+          if (history.indexOf(item) < history.length - 1) {
+            const prevScore = Math.round((1 - history[history.indexOf(item) + 1].cognitive_score) * 100);
+            if (overallScore > prevScore + 2) trend = 'improved';
+            else if (overallScore < prevScore - 2) trend = 'declined';
+            else trend = 'stable';
+          }
+
+          // Transform domain scores
+          const categories = {};
+          if (item.domain_scores) {
+            // Map domain names to UI category names
+            const domainMapping = {
+              'LANGUAGE': 'lexicalDiversity',
+              'EXECUTIVE_FUNCTION': 'syntacticComplexity',
+              'VISUOSPATIAL': 'semanticCoherence',
+              'ATTENTION': 'speechFluency',
+              'MEMORY': 'memoryCues'
+            };
+
+            // Convert each domain score to a positive score (0-100, higher = better)
+            Object.entries(item.domain_scores).forEach(([domain, score]) => {
+              const category = domainMapping[domain] || domain.toLowerCase();
+              categories[category] = Math.round((1 - score) * 100);
+            });
+          }
+
+          return {
+            id: item._id || item.id,
+            date: new Date(item.timestamp).toISOString().split('T')[0],
+            type: item.analysis_type || 'AI Screening',
+            overallScore,
+            categories,
+            trend,
+            notes: item.recommendations ? item.recommendations[0] : 'Analysis completed successfully.'
+          };
+        });
+
+        setAssessmentHistory(transformedHistory);
+      } catch (err) {
+        console.error('Error fetching assessment history:', err);
+        setError('Failed to load assessment history');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchAssessmentHistory();
+  }, []);
+
   const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
+    setCurrentTab(newValue);
   };
-  
+
   const handleTimeRangeChange = (event) => {
     setTimeRange(event.target.value);
   };
-  
+
   const handleShareMenuOpen = (event) => {
-    setShareMenuAnchor(event.currentTarget);
+    setShareAnchorEl(event.currentTarget);
   };
-  
+
   const handleShareMenuClose = () => {
-    setShareMenuAnchor(null);
+    setShareAnchorEl(null);
   };
-  
+
   const handleExportData = () => {
-    setShareMenuAnchor(null);
+    setShareAnchorEl(null);
     setExportDialogOpen(true);
   };
-  
+
   const handleShareWithDoctor = () => {
     // In a real app, this would send the data to the doctor's email
     console.log(`Sharing data with doctor at: ${doctorEmail}`);
     setExportDialogOpen(false);
     setDoctorEmail('');
   };
-  
+
   const handleAssessmentClick = (assessment) => {
     setSelectedAssessment(assessment);
     setDetailDialogOpen(true);
   };
-  
+
   // Trend icon based on assessment trend
   const getTrendIcon = (trend) => {
     switch (trend) {
@@ -350,12 +415,12 @@ const HealthMonitoringPage = () => {
         return <TrendingFlatIcon sx={{ color: theme.palette.warning.main }} />;
     }
   };
-  
+
   const getFormattedDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
-  
+
   return (
     <Container component="main" maxWidth="lg" sx={{ py: 6 }} id="main-content">
       <Box sx={{ mb: 6 }}>
@@ -366,7 +431,7 @@ const HealthMonitoringPage = () => {
           Track your cognitive health over time with detailed analytics and assessment history.
         </Typography>
       </Box>
-      
+
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
         <FormControl variant="outlined" size="small" sx={{ minWidth: 200 }}>
           <InputLabel>Time Range</InputLabel>
@@ -382,7 +447,7 @@ const HealthMonitoringPage = () => {
             <MenuItem value="all">All Time</MenuItem>
           </Select>
         </FormControl>
-        
+
         <Box>
           <Button
             variant="contained"
@@ -394,7 +459,7 @@ const HealthMonitoringPage = () => {
           >
             New Assessment
           </Button>
-          
+
           <Button
             variant="outlined"
             color="primary"
@@ -403,10 +468,10 @@ const HealthMonitoringPage = () => {
           >
             Share Data
           </Button>
-          
+
           <Menu
-            anchorEl={shareMenuAnchor}
-            open={Boolean(shareMenuAnchor)}
+            anchorEl={shareAnchorEl}
+            open={Boolean(shareAnchorEl)}
             onClose={handleShareMenuClose}
           >
             <MenuItem onClick={handleExportData}>
@@ -430,7 +495,7 @@ const HealthMonitoringPage = () => {
           </Menu>
         </Box>
       </Box>
-      
+
       <Grid container spacing={4}>
         {/* Cognitive Health Score Card */}
         <Grid item xs={12} sm={6} md={4}>
@@ -444,18 +509,18 @@ const HealthMonitoringPage = () => {
                   <InfoOutlinedIcon fontSize="small" color="action" />
                 </Tooltip>
               </Box>
-              
-              <Box 
-                sx={{ 
+
+              <Box
+                sx={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   my: 2
                 }}
               >
-                <Box 
-                  sx={{ 
-                    position: 'relative', 
+                <Box
+                  sx={{
+                    position: 'relative',
                     display: 'inline-flex',
                     mb: 1
                   }}
@@ -497,19 +562,19 @@ const HealthMonitoringPage = () => {
                     </Typography>
                   </Box>
                 </Box>
-                
-                <Chip 
-                  icon={<AssessmentIcon />} 
-                  label="Healthy Range" 
+
+                <Chip
+                  icon={<AssessmentIcon />}
+                  label="Healthy Range"
                   color="success"
                   variant="outlined"
                 />
-                
+
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 2, textAlign: 'center' }}>
                   Your cognitive health score is in the healthy range. Continue with your current training program.
                 </Typography>
               </Box>
-              
+
               <Button
                 variant="text"
                 color="primary"
@@ -523,7 +588,7 @@ const HealthMonitoringPage = () => {
             </CardContent>
           </Card>
         </Grid>
-        
+
         {/* Category Breakdown Card */}
         <Grid item xs={12} sm={6} md={4}>
           <Card elevation={2} sx={{ height: '100%' }}>
@@ -531,13 +596,13 @@ const HealthMonitoringPage = () => {
               <Typography variant="h6" gutterBottom>
                 Cognitive Categories
               </Typography>
-              
+
               <Box sx={{ my: 2 }}>
                 {Object.entries(assessmentHistory[0].categories).map(([category, score]) => {
                   const formattedCategory = category
                     .replace(/([A-Z])/g, ' $1')
                     .replace(/^./, str => str.toUpperCase());
-                  
+
                   return (
                     <Box key={category} sx={{ mb: 2 }}>
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
@@ -549,9 +614,9 @@ const HealthMonitoringPage = () => {
                           sx={{
                             width: `${score}%`,
                             bgcolor: category === 'lexicalDiversity' ? theme.palette.primary.main :
-                                    category === 'syntacticComplexity' ? theme.palette.secondary.main :
-                                    category === 'memoryCues' ? theme.palette.success.main :
-                                    theme.palette.warning.main,
+                              category === 'syntacticComplexity' ? theme.palette.secondary.main :
+                                category === 'memoryCues' ? theme.palette.success.main :
+                                  theme.palette.warning.main,
                             borderRadius: 5,
                             height: 8,
                           }}
@@ -561,7 +626,7 @@ const HealthMonitoringPage = () => {
                   );
                 })}
               </Box>
-              
+
               <Button
                 variant="text"
                 color="primary"
@@ -576,7 +641,7 @@ const HealthMonitoringPage = () => {
             </CardContent>
           </Card>
         </Grid>
-        
+
         {/* Recent Activity Card */}
         <Grid item xs={12} md={4}>
           <Card elevation={2} sx={{ height: '100%' }}>
@@ -584,15 +649,15 @@ const HealthMonitoringPage = () => {
               <Typography variant="h6" gutterBottom>
                 Recent Activity
               </Typography>
-              
+
               <Box sx={{ my: 1 }}>
                 <Stack spacing={2}>
                   {trainingActivity.slice(0, 3).map((activity) => (
-                    <Paper 
-                      key={activity.id} 
+                    <Paper
+                      key={activity.id}
                       variant="outlined"
-                      sx={{ 
-                        p: 1.5, 
+                      sx={{
+                        p: 1.5,
                         borderRadius: 2,
                         border: 'none',
                         bgcolor: theme.palette.grey[50]
@@ -600,10 +665,10 @@ const HealthMonitoringPage = () => {
                     >
                       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
                         <Typography variant="subtitle2">{activity.game}</Typography>
-                        <Chip 
-                          label={activity.improvement} 
-                          size="small" 
-                          color="success" 
+                        <Chip
+                          label={activity.improvement}
+                          size="small"
+                          color="success"
                           sx={{ height: 20, fontSize: '0.7rem' }}
                         />
                       </Box>
@@ -619,7 +684,7 @@ const HealthMonitoringPage = () => {
                   ))}
                 </Stack>
               </Box>
-              
+
               <Button
                 variant="text"
                 color="primary"
@@ -635,15 +700,15 @@ const HealthMonitoringPage = () => {
           </Card>
         </Grid>
       </Grid>
-      
+
       <Paper sx={{ mt: 4, mb: 4 }}>
-        <Tabs 
-          value={tabValue} 
+        <Tabs
+          value={currentTab}
           onChange={handleTabChange}
           variant="scrollable"
           scrollButtons="auto"
-          sx={{ 
-            borderBottom: 1, 
+          sx={{
+            borderBottom: 1,
             borderColor: 'divider',
             '& .MuiTab-root': {
               py: 2
@@ -654,10 +719,10 @@ const HealthMonitoringPage = () => {
           <Tab label="Assessment History" icon={<AssessmentIcon />} iconPosition="start" />
           <Tab label="Category Comparison" icon={<TrendingUpIcon />} iconPosition="start" />
         </Tabs>
-        
+
         <Box sx={{ p: 3 }}>
           {/* Trend Analysis Tab */}
-          {tabValue === 0 && (
+          {currentTab === 0 && (
             <Box>
               <Typography variant="h6" gutterBottom>
                 Cognitive Score Trend
@@ -665,11 +730,11 @@ const HealthMonitoringPage = () => {
               <Typography variant="body2" color="text.secondary" paragraph>
                 This graph shows your overall cognitive score trend over time. Regular assessments help track changes and identify patterns.
               </Typography>
-              
+
               <Box sx={{ height: 400, mb: 3 }}>
                 <Line data={getTrendChartData(theme)} options={chartOptions} />
               </Box>
-              
+
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap' }}>
                 <Typography variant="body2" color="text.secondary">
                   Baseline established on April 2, 2023
@@ -685,9 +750,9 @@ const HealthMonitoringPage = () => {
               </Box>
             </Box>
           )}
-          
+
           {/* Assessment History Tab */}
-          {tabValue === 1 && (
+          {currentTab === 1 && (
             <Box>
               <Typography variant="h6" gutterBottom>
                 Assessment History
@@ -695,7 +760,7 @@ const HealthMonitoringPage = () => {
               <Typography variant="body2" color="text.secondary" paragraph>
                 A record of all your cognitive assessments, including AI screenings and clinical evaluations.
               </Typography>
-              
+
               <TableContainer>
                 <Table sx={{ minWidth: 650 }}>
                   <TableHead>
@@ -716,8 +781,8 @@ const HealthMonitoringPage = () => {
                       >
                         <TableCell>{getFormattedDate(assessment.date)}</TableCell>
                         <TableCell>
-                          <Chip 
-                            label={assessment.type} 
+                          <Chip
+                            label={assessment.type}
                             size="small"
                             color={assessment.type === "AI Screening" ? "primary" : "secondary"}
                             variant="outlined"
@@ -733,9 +798,9 @@ const HealthMonitoringPage = () => {
                           </Box>
                         </TableCell>
                         <TableCell>
-                          <Typography 
-                            variant="body2" 
-                            sx={{ 
+                          <Typography
+                            variant="body2"
+                            sx={{
                               maxWidth: 250,
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
@@ -746,8 +811,8 @@ const HealthMonitoringPage = () => {
                           </Typography>
                         </TableCell>
                         <TableCell align="right">
-                          <Button 
-                            size="small" 
+                          <Button
+                            size="small"
                             color="primary"
                             onClick={() => handleAssessmentClick(assessment)}
                           >
@@ -761,9 +826,9 @@ const HealthMonitoringPage = () => {
               </TableContainer>
             </Box>
           )}
-          
+
           {/* Category Comparison Tab */}
-          {tabValue === 2 && (
+          {currentTab === 2 && (
             <Box>
               <Typography variant="h6" gutterBottom>
                 Cognitive Categories Comparison
@@ -771,17 +836,17 @@ const HealthMonitoringPage = () => {
               <Typography variant="body2" color="text.secondary" paragraph>
                 Compare how different aspects of your cognitive function have changed over time.
               </Typography>
-              
+
               <Box sx={{ height: 400, mb: 3 }}>
                 <Line data={getCategoryChartData(theme)} options={chartOptions} />
               </Box>
-              
+
               <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid item xs={12} sm={6} md={3}>
-                  <Paper 
-                    elevation={1} 
-                    sx={{ 
-                      p: 2, 
+                  <Paper
+                    elevation={1}
+                    sx={{
+                      p: 2,
                       borderLeft: `4px solid ${theme.palette.primary.main}`,
                     }}
                   >
@@ -794,10 +859,10 @@ const HealthMonitoringPage = () => {
                   </Paper>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
-                  <Paper 
-                    elevation={1} 
-                    sx={{ 
-                      p: 2, 
+                  <Paper
+                    elevation={1}
+                    sx={{
+                      p: 2,
                       borderLeft: `4px solid ${theme.palette.secondary.main}`,
                     }}
                   >
@@ -810,10 +875,10 @@ const HealthMonitoringPage = () => {
                   </Paper>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
-                  <Paper 
-                    elevation={1} 
-                    sx={{ 
-                      p: 2, 
+                  <Paper
+                    elevation={1}
+                    sx={{
+                      p: 2,
                       borderLeft: `4px solid ${theme.palette.warning.main}`,
                     }}
                   >
@@ -826,10 +891,10 @@ const HealthMonitoringPage = () => {
                   </Paper>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
-                  <Paper 
-                    elevation={1} 
-                    sx={{ 
-                      p: 2, 
+                  <Paper
+                    elevation={1}
+                    sx={{
+                      p: 2,
                       borderLeft: `4px solid ${theme.palette.success.main}`,
                     }}
                   >
@@ -846,7 +911,7 @@ const HealthMonitoringPage = () => {
           )}
         </Box>
       </Paper>
-      
+
       <Box sx={{ mt: 8 }}>
         <Paper elevation={3} sx={{ p: 4, borderRadius: 2, bgcolor: theme.palette.primary.light + '10' }}>
           <Grid container spacing={4} alignItems="center">
@@ -879,11 +944,11 @@ const HealthMonitoringPage = () => {
           </Grid>
         </Paper>
       </Box>
-      
+
       {/* Assessment Detail Dialog */}
       <Dialog
-        open={detailDialogOpen}
-        onClose={() => setDetailDialogOpen(false)}
+        open={selectedAssessment !== null}
+        onClose={() => setSelectedAssessment(null)}
         fullWidth
         maxWidth="md"
       >
@@ -894,8 +959,8 @@ const HealthMonitoringPage = () => {
                 <Typography variant="h6">
                   Assessment Details - {getFormattedDate(selectedAssessment.date)}
                 </Typography>
-                <Chip 
-                  label={selectedAssessment.type} 
+                <Chip
+                  label={selectedAssessment.type}
                   size="small"
                   color={selectedAssessment.type === "AI Screening" ? "primary" : "secondary"}
                 />
@@ -908,11 +973,11 @@ const HealthMonitoringPage = () => {
                     Overall Score
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                    <Box 
-                      sx={{ 
-                        width: 60, 
-                        height: 60, 
-                        borderRadius: '50%', 
+                    <Box
+                      sx={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: '50%',
                         bgcolor: theme.palette.primary.main,
                         color: 'white',
                         display: 'flex',
@@ -937,14 +1002,14 @@ const HealthMonitoringPage = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  
+
                   <Typography variant="subtitle1" gutterBottom>
                     Notes
                   </Typography>
                   <Typography variant="body2" paragraph>
                     {selectedAssessment.notes}
                   </Typography>
-                  
+
                   <Typography variant="subtitle1" gutterBottom>
                     Recommendations
                   </Typography>
@@ -960,12 +1025,12 @@ const HealthMonitoringPage = () => {
                     </Typography>
                   </Box>
                 </Grid>
-                
+
                 <Grid item xs={12} sm={6}>
                   <Typography variant="subtitle1" gutterBottom>
                     Category Breakdown
                   </Typography>
-                  
+
                   <TableContainer>
                     <Table size="small">
                       <TableHead>
@@ -979,7 +1044,7 @@ const HealthMonitoringPage = () => {
                           const formattedCategory = category
                             .replace(/([A-Z])/g, ' $1')
                             .replace(/^./, str => str.toUpperCase());
-                          
+
                           return (
                             <TableRow key={category}>
                               <TableCell>{formattedCategory}</TableCell>
@@ -991,17 +1056,17 @@ const HealthMonitoringPage = () => {
                     </Table>
                   </TableContainer>
                 </Grid>
-                
+
                 <Grid item xs={12}>
                   <Divider sx={{ my: 2 }} />
                   <Typography variant="subtitle1" gutterBottom>
                     Compare with Previous Assessment
                   </Typography>
-                  
+
                   <Box sx={{ height: 300 }}>
-                    <Line 
+                    <Line
                       data={{
-                        labels: Object.keys(selectedAssessment.categories).map(cat => 
+                        labels: Object.keys(selectedAssessment.categories).map(cat =>
                           cat.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())
                         ),
                         datasets: [
@@ -1020,7 +1085,7 @@ const HealthMonitoringPage = () => {
                             borderDash: [5, 5]
                           }
                         ]
-                      }} 
+                      }}
                       options={{
                         ...chartOptions,
                         scales: {
@@ -1032,23 +1097,23 @@ const HealthMonitoringPage = () => {
                             }
                           }
                         }
-                      }} 
+                      }}
                     />
                   </Box>
                 </Grid>
               </Grid>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setDetailDialogOpen(false)}>Close</Button>
-              <Button 
-                variant="outlined" 
+              <Button onClick={() => setSelectedAssessment(null)}>Close</Button>
+              <Button
+                variant="outlined"
                 color="primary"
                 startIcon={<PrintIcon />}
               >
                 Print Report
               </Button>
-              <Button 
-                variant="contained" 
+              <Button
+                variant="contained"
                 color="primary"
                 startIcon={<ShareIcon />}
                 onClick={handleExportData}
@@ -1059,7 +1124,7 @@ const HealthMonitoringPage = () => {
           </>
         )}
       </Dialog>
-      
+
       {/* Export Data Dialog */}
       <Dialog
         open={exportDialogOpen}
@@ -1081,7 +1146,7 @@ const HealthMonitoringPage = () => {
             value={doctorEmail}
             onChange={(e) => setDoctorEmail(e.target.value)}
           />
-          
+
           <Box sx={{ mt: 3 }}>
             <Typography variant="subtitle2" gutterBottom>
               What will be shared:
@@ -1101,8 +1166,8 @@ const HealthMonitoringPage = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setExportDialogOpen(false)}>Cancel</Button>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             color="primary"
             onClick={handleShareWithDoctor}
             disabled={!doctorEmail.includes('@')}

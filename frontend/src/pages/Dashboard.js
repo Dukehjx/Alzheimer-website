@@ -1,71 +1,72 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  ArrowUpIcon, 
+import {
+  ArrowUpIcon,
   ArrowDownIcon,
   ChartBarIcon,
   ChatBubbleLeftRightIcon,
   ClockIcon,
   DocumentTextIcon,
 } from '@heroicons/react/24/outline';
+import { getAnalysisHistory } from '../api/aiService';
 
 // Custom Brain icon if not available in Heroicons
 const BrainCustomIcon = (props) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    fill="none" 
-    viewBox="0 0 24 24" 
-    strokeWidth={1.5} 
-    stroke="currentColor" 
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
     {...props}
   >
-    <path 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      d="M12 18c.33 0 .6-.27.6-.6V7.8c0-.17.17-.3.34-.24l5.34 1.8c.23.08.47-.07.47-.3V7.5c0-.13-.08-.24-.2-.28l-5.8-1.94c-.1-.03-.21-.03-.3 0l-5.8 1.94c-.12.04-.2.15-.2.28v1.56c0 .23.24.38.47.3l5.34-1.8c.17-.06.34.07.34.24v9.6c0 .33.27.6.6.6z" 
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 18c.33 0 .6-.27.6-.6V7.8c0-.17.17-.3.34-.24l5.34 1.8c.23.08.47-.07.47-.3V7.5c0-.13-.08-.24-.2-.28l-5.8-1.94c-.1-.03-.21-.03-.3 0l-5.8 1.94c-.12.04-.2.15-.2.28v1.56c0 .23.24.38.47.3l5.34-1.8c.17-.06.34.07.34.24v9.6c0 .33.27.6.6.6z"
     />
-    <path 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      d="M8 10v4a4 4 0 0 0 8 0v-4" 
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M8 10v4a4 4 0 0 0 8 0v-4"
     />
   </svg>
 );
 
-// Sample stats data
-const stats = [
-  { 
-    name: 'Cognitive Score', 
-    value: '87/100', 
-    change: '+2%', 
+// Initial empty stats data structure
+const initialStats = [
+  {
+    name: 'Cognitive Score',
+    value: '0/100',
+    change: '0%',
     trend: 'up',
     icon: BrainCustomIcon,
     iconBackground: 'bg-primary-100 dark:bg-primary-900',
     iconColor: 'text-primary-600 dark:text-primary-400',
   },
-  { 
-    name: 'Training Sessions', 
-    value: '12', 
-    change: '+3', 
+  {
+    name: 'Training Sessions',
+    value: '0',
+    change: '0',
     trend: 'up',
     icon: ChartBarIcon,
     iconBackground: 'bg-secondary-100 dark:bg-secondary-900',
     iconColor: 'text-secondary-600 dark:text-secondary-400',
   },
-  { 
-    name: 'Language Complexity', 
-    value: '76/100', 
-    change: '-1%', 
-    trend: 'down',
+  {
+    name: 'Language Complexity',
+    value: '0/100',
+    change: '0%',
+    trend: 'up',
     icon: ChatBubbleLeftRightIcon,
     iconBackground: 'bg-yellow-100 dark:bg-yellow-900',
     iconColor: 'text-yellow-600 dark:text-yellow-400',
   },
-  { 
-    name: 'Reaction Time', 
-    value: '320ms', 
-    change: '+5ms', 
-    trend: 'down',
+  {
+    name: 'Reaction Time',
+    value: '0ms',
+    change: '0ms',
+    trend: 'up',
     icon: ClockIcon,
     iconBackground: 'bg-indigo-100 dark:bg-indigo-900',
     iconColor: 'text-indigo-600 dark:text-indigo-400',
@@ -107,6 +108,88 @@ const activities = [
 ];
 
 export default function Dashboard() {
+  const [stats, setStats] = useState(initialStats);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchDashboardData() {
+      try {
+        setLoading(true);
+        // Fetch analysis history from the API
+        const historyData = await getAnalysisHistory(5);
+
+        if (historyData && historyData.length > 0) {
+          // Get the most recent analysis
+          const latestAnalysis = historyData[0];
+          // Compare with the previous analysis if available
+          const previousAnalysis = historyData.length > 1 ? historyData[1] : null;
+
+          // Calculate the cognitive score from the analysis
+          const cognitiveScore = Math.round(latestAnalysis.cognitive_score * 100);
+          let cognitiveChange = '0%';
+          let cognitiveTrend = 'up';
+
+          if (previousAnalysis) {
+            const prevScore = Math.round(previousAnalysis.cognitive_score * 100);
+            const diff = cognitiveScore - prevScore;
+            cognitiveChange = `${diff >= 0 ? '+' : ''}${diff}%`;
+            cognitiveTrend = diff >= 0 ? 'up' : 'down';
+          }
+
+          // Calculate language complexity from domain scores (if available)
+          let languageScore = 0;
+          let languageChange = '0%';
+          let languageTrend = 'up';
+
+          if (latestAnalysis.domain_scores) {
+            // Find the language domain score
+            const languageDomain = Object.keys(latestAnalysis.domain_scores)
+              .find(key => key.toLowerCase().includes('language'));
+
+            if (languageDomain) {
+              languageScore = Math.round(latestAnalysis.domain_scores[languageDomain] * 100);
+
+              if (previousAnalysis && previousAnalysis.domain_scores) {
+                const prevLanguageScore = Math.round(previousAnalysis.domain_scores[languageDomain] * 100);
+                const diff = languageScore - prevLanguageScore;
+                languageChange = `${diff >= 0 ? '+' : ''}${diff}%`;
+                languageTrend = diff >= 0 ? 'up' : 'down';
+              }
+            }
+          }
+
+          // Update the stats with real data
+          setStats(prevStats => [
+            {
+              ...prevStats[0],
+              value: `${cognitiveScore}/100`,
+              change: cognitiveChange,
+              trend: cognitiveTrend
+            },
+            // Keep training sessions as is for now (would need another API for this)
+            prevStats[1],
+            {
+              ...prevStats[2],
+              value: `${languageScore || 0}/100`,
+              change: languageChange,
+              trend: languageTrend
+            },
+            // Keep reaction time as is for now (would need another API for this)
+            prevStats[3]
+          ]);
+        }
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+        setError('Failed to load dashboard data. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchDashboardData();
+  }, []);
+
   return (
     <div className="max-w-7xl mx-auto">
       <div className="px-4 py-5 sm:px-6">
@@ -119,7 +202,7 @@ export default function Dashboard() {
       {/* Stats Grid */}
       <div className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <div 
+          <div
             key={stat.name}
             className="overflow-hidden rounded-lg bg-white dark:bg-neutral-800 shadow"
           >
@@ -134,21 +217,20 @@ export default function Dashboard() {
                   </p>
                   <div className="flex items-baseline justify-between">
                     <p className="text-xl font-semibold text-neutral-900 dark:text-white">
-                      {stat.value}
+                      {loading ? '...' : stat.value}
                     </p>
-                    <div 
-                      className={`flex items-center text-sm font-medium ${
-                        stat.trend === 'up' 
-                          ? 'text-green-600 dark:text-green-500' 
-                          : 'text-red-600 dark:text-red-500'
-                      }`}
+                    <div
+                      className={`flex items-center text-sm font-medium ${stat.trend === 'up'
+                        ? 'text-green-600 dark:text-green-500'
+                        : 'text-red-600 dark:text-red-500'
+                        }`}
                     >
                       {stat.trend === 'up' ? (
                         <ArrowUpIcon className="h-4 w-4 mr-1 flex-shrink-0" aria-hidden="true" />
                       ) : (
                         <ArrowDownIcon className="h-4 w-4 mr-1 flex-shrink-0" aria-hidden="true" />
                       )}
-                      {stat.change}
+                      {loading ? '...' : stat.change}
                     </div>
                   </div>
                 </div>
@@ -157,6 +239,13 @@ export default function Dashboard() {
           </div>
         ))}
       </div>
+
+      {/* Show error if any */}
+      {error && (
+        <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-md">
+          <p className="text-red-800 dark:text-red-300">{error}</p>
+        </div>
+      )}
 
       {/* Main Content Area */}
       <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">

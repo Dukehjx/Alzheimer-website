@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Paper, 
-  Button, 
-  TextField, 
-  Grid, 
-  Card, 
-  CardContent, 
-  Step, 
-  Stepper, 
+import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  Button,
+  TextField,
+  Grid,
+  Card,
+  CardContent,
+  Step,
+  Stepper,
   StepLabel,
   StepContent,
   CircularProgress,
@@ -38,6 +38,7 @@ import {
   Legend
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
+import { analyzeText } from '../api/aiService';
 
 // Register Chart.js components
 ChartJS.register(
@@ -62,7 +63,7 @@ const ScreeningPage = () => {
   const [results, setResults] = useState(null);
   const [error, setError] = useState('');
   const [inputMethod, setInputMethod] = useState('speech'); // 'speech' or 'text'
-  
+
   // Prompt suggestions
   const prompts = [
     "Describe what you did yesterday from morning to evening.",
@@ -71,64 +72,51 @@ const ScreeningPage = () => {
     "Explain how to prepare your favorite meal.",
     "Share a memorable experience from your childhood."
   ];
-  
-  // Mock analysis function (in a real app, this would call an API)
+
+  // Real analysis function that calls the API
   const analyzeLanguage = async (data) => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 3000));
-    
-    // Generate mock results
-    const mockScores = {
-      lexicalDiversity: Math.random() * 40 + 60, // 60-100
-      syntacticComplexity: Math.random() * 40 + 60, // 60-100
-      semanticCoherence: Math.random() * 40 + 60, // 60-100
-      speechFluency: Math.random() * 40 + 60, // 60-100
-      memoryCues: Math.random() * 40 + 60, // 60-100
-    };
-    
-    const overallScore = Object.values(mockScores).reduce((a, b) => a + b, 0) / 5;
-    
-    const risk = overallScore > 85 
-      ? { level: 'Low', color: theme.palette.success.main } 
-      : overallScore > 70 
-        ? { level: 'Moderate', color: theme.palette.warning.main }
-        : { level: 'High', color: theme.palette.error.main };
-    
-    return {
-      scores: mockScores,
-      overallScore,
-      risk,
-      recommendations: [
-        "Regular cognitive training exercises 3-4 times per week",
-        "Daily reading and writing practice to maintain language skills",
-        "Social engagement through conversation and group activities",
-        "Physical exercise for at least 30 minutes, 5 days per week",
-        "Mediterranean diet rich in omega-3 fatty acids and antioxidants"
-      ],
-      insights: inputMethod === 'speech' 
-        ? "Analysis shows slight hesitations and simplified sentence structures. Consider our cognitive training games to improve verbal fluency and sentence complexity."
-        : "Text analysis shows good vocabulary but some repetition in structure. Recommend daily language exercises to maintain cognitive flexibility."
-    };
+    try {
+      const isTextData = typeof data === 'string';
+      const analysisType = isTextData ? 'text' : 'speech';
+
+      // For text input, directly call the API
+      if (isTextData) {
+        return await analyzeText(data, analysisType, true);
+      }
+      // For audio input, we would first transcribe the audio to text
+      // and then analyze the text
+      else {
+        // This would be replaced with actual speech-to-text conversion
+        // For now, we're simulating it:
+        const simulatedTranscription = "This is a simulated transcription of speech. In a real application, we would convert your audio to text using a speech recognition service, and then analyze the resulting text.";
+
+        // Now analyze the transcribed text
+        return await analyzeText(simulatedTranscription, analysisType, true);
+      }
+    } catch (error) {
+      console.error('Error analyzing language:', error);
+      throw error;
+    }
   };
-  
+
   // Start recording audio
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
       const audioChunks = [];
-      
+
       recorder.addEventListener('dataavailable', event => {
         audioChunks.push(event.data);
       });
-      
+
       recorder.addEventListener('stop', () => {
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
         const audioUrl = URL.createObjectURL(audioBlob);
         setAudioBlob(audioBlob);
         setAudioURL(audioUrl);
       });
-      
+
       setMediaRecorder(recorder);
       recorder.start();
       setRecording(true);
@@ -138,7 +126,7 @@ const ScreeningPage = () => {
       setError('Could not access microphone. Please check your browser permissions.');
     }
   };
-  
+
   // Stop recording audio
   const stopRecording = () => {
     if (mediaRecorder && recording) {
@@ -148,7 +136,7 @@ const ScreeningPage = () => {
       mediaRecorder.stream.getTracks().forEach(track => track.stop());
     }
   };
-  
+
   // Timer for recording
   useEffect(() => {
     let interval;
@@ -164,23 +152,23 @@ const ScreeningPage = () => {
         });
       }, 1000);
     }
-    
+
     return () => clearInterval(interval);
   }, [recording]);
-  
+
   // Format recording time as MM:SS
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
     const secs = (seconds % 60).toString().padStart(2, '0');
     return `${mins}:${secs}`;
   };
-  
+
   // Handle submit for analysis
   const handleSubmit = async () => {
     try {
       setAnalyzing(true);
       setError('');
-      
+
       let dataToAnalyze;
       if (inputMethod === 'speech') {
         if (!audioBlob) {
@@ -197,19 +185,63 @@ const ScreeningPage = () => {
         }
         dataToAnalyze = textInput;
       }
-      
-      // In a real app, you would upload the audio or text to your API here
-      const analysisResults = await analyzeLanguage(dataToAnalyze);
-      setResults(analysisResults);
+
+      // Call API to analyze the data
+      const apiResults = await analyzeLanguage(dataToAnalyze);
+
+      if (!apiResults.success) {
+        throw new Error(apiResults.error || 'Analysis failed');
+      }
+
+      // Transform API response to match the UI expectations
+      const transformedResults = {
+        scores: {
+          // Convert domain scores from API (higher = more risk) to UI format (higher = better)
+          // and map API domain names to UI score names
+          lexicalDiversity: apiResults.domain_scores.LANGUAGE ?
+            Math.round((1 - apiResults.domain_scores.LANGUAGE) * 100) : 75,
+          syntacticComplexity: apiResults.domain_scores.EXECUTIVE_FUNCTION ?
+            Math.round((1 - apiResults.domain_scores.EXECUTIVE_FUNCTION) * 100) : 75,
+          semanticCoherence: apiResults.domain_scores.VISUOSPATIAL ?
+            Math.round((1 - apiResults.domain_scores.VISUOSPATIAL) * 100) : 85,
+          speechFluency: apiResults.domain_scores.ATTENTION ?
+            Math.round((1 - apiResults.domain_scores.ATTENTION) * 100) : 70,
+          memoryCues: apiResults.domain_scores.MEMORY ?
+            Math.round((1 - apiResults.domain_scores.MEMORY) * 100) : 80
+        },
+        // Convert overall score (0-1, higher = more risk) to UI format (0-100, higher = better)
+        overallScore: Math.round((1 - apiResults.overall_score) * 100),
+        // Map risk level based on API overall score
+        risk: {
+          level: apiResults.overall_score < 0.3 ? 'Low' :
+            apiResults.overall_score < 0.6 ? 'Moderate' : 'High',
+          color: apiResults.overall_score < 0.3 ? theme.palette.success.main :
+            apiResults.overall_score < 0.6 ? theme.palette.warning.main :
+              theme.palette.error.main
+        },
+        recommendations: apiResults.recommendations || [
+          "Regular cognitive training exercises 3-4 times per week",
+          "Daily reading and writing practice to maintain language skills",
+          "Social engagement through conversation and group activities"
+        ],
+        insights: apiResults.features ?
+          `Analysis shows ${apiResults.features.lexical_diversity ? 'a vocabulary richness of ' +
+            Math.round(apiResults.features.lexical_diversity.ttr * 100) + '%. ' : ''}${apiResults.features.syntactic_complexity ? 'Average sentence complexity is ' +
+              Math.round(apiResults.features.syntactic_complexity.mean_sentence_length) +
+              ' words per sentence. ' : ''}Consider regular cognitive exercises to maintain language skills.` :
+          "Analysis complete. Results show patterns in your language use that can help identify cognitive health trends."
+      };
+
+      setResults(transformedResults);
       setActiveStep(3); // Go to results step
     } catch (err) {
       console.error('Error during analysis:', err);
-      setError('An error occurred during analysis. Please try again.');
+      setError('An error occurred during analysis: ' + (err.message || 'Please try again.'));
     } finally {
       setAnalyzing(false);
     }
   };
-  
+
   // Reset the form for a new submission
   const resetForm = () => {
     setActiveStep(0);
@@ -219,17 +251,17 @@ const ScreeningPage = () => {
     setResults(null);
     setError('');
   };
-  
+
   // Generate chart data from results
   const getChartData = () => {
     if (!results) return null;
-    
+
     return {
       labels: [
-        'Lexical Diversity', 
-        'Syntactic Complexity', 
-        'Semantic Coherence', 
-        'Speech Fluency', 
+        'Lexical Diversity',
+        'Syntactic Complexity',
+        'Semantic Coherence',
+        'Speech Fluency',
         'Memory Cues'
       ],
       datasets: [
@@ -263,7 +295,7 @@ const ScreeningPage = () => {
       ]
     };
   };
-  
+
   const chartOptions = {
     scales: {
       r: {
@@ -280,7 +312,7 @@ const ScreeningPage = () => {
       }
     }
   };
-  
+
   // Steps for the screening process
   const steps = [
     {
@@ -289,9 +321,9 @@ const ScreeningPage = () => {
       content: (
         <Grid container spacing={3} sx={{ mt: 1 }}>
           <Grid item xs={12} sm={6}>
-            <Card 
-              onClick={() => setInputMethod('speech')} 
-              sx={{ 
+            <Card
+              onClick={() => setInputMethod('speech')}
+              sx={{
                 cursor: 'pointer',
                 height: '100%',
                 border: inputMethod === 'speech' ? `2px solid ${theme.palette.primary.main}` : 'none',
@@ -316,9 +348,9 @@ const ScreeningPage = () => {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Card 
-              onClick={() => setInputMethod('text')} 
-              sx={{ 
+            <Card
+              onClick={() => setInputMethod('text')}
+              sx={{
                 cursor: 'pointer',
                 height: '100%',
                 border: inputMethod === 'text' ? `2px solid ${theme.palette.primary.main}` : 'none',
@@ -359,8 +391,8 @@ const ScreeningPage = () => {
                 key={index}
                 label={prompt}
                 onClick={() => inputMethod === 'text' ? setTextInput(prompt) : null}
-                sx={{ 
-                  m: 0.5, 
+                sx={{
+                  m: 0.5,
                   cursor: 'pointer',
                   bgcolor: theme.palette.grey[100],
                   '&:hover': {
@@ -372,7 +404,7 @@ const ScreeningPage = () => {
           </Box>
           <Alert severity="info" sx={{ mb: 2 }}>
             <Typography variant="body2">
-              {inputMethod === 'speech' 
+              {inputMethod === 'speech'
                 ? "Please speak for at least 30 seconds for accurate analysis. Our AI works best with natural, conversational speech."
                 : "Please write at least 150 words for accurate analysis. Our AI looks for patterns in your writing style and word choice."
               }
@@ -383,13 +415,13 @@ const ScreeningPage = () => {
     },
     {
       label: inputMethod === 'speech' ? 'Record Speech' : 'Enter Text',
-      description: inputMethod === 'speech' 
+      description: inputMethod === 'speech'
         ? 'Record yourself speaking about the chosen topic.'
         : 'Type or paste your text about the chosen topic.',
       content: inputMethod === 'speech' ? (
         <Box sx={{ textAlign: 'center', py: 2 }}>
-          <Box 
-            sx={{ 
+          <Box
+            sx={{
               display: 'inline-flex',
               justifyContent: 'center',
               alignItems: 'center',
@@ -417,7 +449,7 @@ const ScreeningPage = () => {
             <IconButton
               color="inherit"
               onClick={recording ? stopRecording : startRecording}
-              sx={{ 
+              sx={{
                 width: 100,
                 height: 100,
                 color: 'white',
@@ -429,48 +461,48 @@ const ScreeningPage = () => {
               {recording ? <StopIcon sx={{ fontSize: 50 }} /> : <MicIcon sx={{ fontSize: 50 }} />}
             </IconButton>
           </Box>
-          
+
           <Typography variant="h6" sx={{ mb: 1 }}>
             {recording ? 'Recording...' : audioBlob ? 'Recording Complete' : 'Start Recording'}
           </Typography>
-          
+
           {recording && (
             <Box sx={{ mb: 2 }}>
               <Typography variant="body1" sx={{ fontFamily: 'monospace', mb: 1 }}>
                 {formatTime(recordingTime)}
               </Typography>
-              <LinearProgress 
-                variant="determinate" 
-                value={(recordingTime / 120) * 100} 
-                sx={{ 
-                  height: 8, 
+              <LinearProgress
+                variant="determinate"
+                value={(recordingTime / 120) * 100}
+                sx={{
+                  height: 8,
                   borderRadius: 4,
                   maxWidth: 300,
                   mx: 'auto',
                   bgcolor: theme.palette.grey[200]
-                }} 
+                }}
               />
               <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
                 Recording will automatically stop after 2 minutes
               </Typography>
             </Box>
           )}
-          
+
           {audioBlob && !recording && (
             <Box sx={{ mb: 3, mt: 3 }}>
               <audio src={audioURL} controls />
-              <Button 
-                startIcon={<MicIcon />} 
-                variant="outlined" 
-                color="primary" 
-                onClick={startRecording} 
+              <Button
+                startIcon={<MicIcon />}
+                variant="outlined"
+                color="primary"
+                onClick={startRecording}
                 sx={{ mt: 2 }}
               >
                 Record Again
               </Button>
             </Box>
           )}
-          
+
           <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 500, mx: 'auto', mt: 2 }}>
             Speak naturally about the chosen topic. Try to provide detailed descriptions and use complex sentences when possible.
           </Typography>
@@ -491,9 +523,9 @@ const ScreeningPage = () => {
             <Typography variant="body2" color="text.secondary">
               Word count: {textInput.split(/\s+/).filter(word => word.length > 0).length}
             </Typography>
-            <Button 
-              variant="outlined" 
-              color="primary" 
+            <Button
+              variant="outlined"
+              color="primary"
               size="small"
               onClick={() => setTextInput('')}
               disabled={!textInput}
@@ -516,9 +548,9 @@ const ScreeningPage = () => {
                   <Typography variant="h5" gutterBottom>
                     Overall Cognitive Score
                   </Typography>
-                  <Box 
-                    sx={{ 
-                      position: 'relative', 
+                  <Box
+                    sx={{
+                      position: 'relative',
                       display: 'inline-flex',
                       justifyContent: 'center',
                       alignItems: 'center',
@@ -569,33 +601,33 @@ const ScreeningPage = () => {
                     </Box>
                   </Box>
                 </Box>
-                
+
                 <Box sx={{ textAlign: 'center', mb: 3 }}>
                   <Typography variant="subtitle1" gutterBottom>
                     Cognitive Risk Level
                   </Typography>
-                  <Chip 
-                    label={results.risk.level} 
-                    sx={{ 
+                  <Chip
+                    label={results.risk.level}
+                    sx={{
                       bgcolor: results.risk.color + '20',
                       color: results.risk.color,
                       fontWeight: 'bold',
                       fontSize: '1rem',
                       py: 2,
                       px: 1
-                    }} 
+                    }}
                   />
                 </Box>
-                
+
                 <Divider sx={{ my: 3 }} />
-                
+
                 <Typography variant="h6" gutterBottom>
                   AI Insights
                 </Typography>
                 <Typography variant="body2" paragraph>
                   {results.insights}
                 </Typography>
-                
+
                 <Box sx={{ mt: 4 }}>
                   <Button
                     variant="contained"
@@ -608,7 +640,7 @@ const ScreeningPage = () => {
                 </Box>
               </Paper>
             </Grid>
-            
+
             <Grid item xs={12} md={7}>
               <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
                 <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
@@ -623,7 +655,7 @@ const ScreeningPage = () => {
                   <Radar data={getChartData()} options={chartOptions} />
                 </Box>
               </Paper>
-              
+
               <Paper elevation={2} sx={{ p: 3 }}>
                 <Typography variant="h6" gutterBottom>
                   Personalized Recommendations
@@ -667,34 +699,34 @@ const ScreeningPage = () => {
       )
     }
   ];
-  
+
   const handleStepChange = (step) => {
     // Validation before proceeding to next step
     if (activeStep === 0 && !inputMethod) {
       setError('Please select an input method.');
       return;
     }
-    
+
     if (activeStep === 2) {
       if (inputMethod === 'speech' && !audioBlob) {
         setError('Please record a speech sample before continuing.');
         return;
       }
-      
+
       if (inputMethod === 'text' && (!textInput.trim() || textInput.split(/\s+/).filter(word => word.length > 0).length < 20)) {
         setError('Please enter at least 20 words for accurate analysis.');
         return;
       }
-      
+
       // If validation passes, submit for analysis
       handleSubmit();
       return;
     }
-    
+
     setActiveStep(step);
     setError('');
   };
-  
+
   return (
     <Container maxWidth="lg" sx={{ py: 6 }} id="main-content">
       <Box textAlign="center" sx={{ mb: 6 }}>
@@ -705,10 +737,10 @@ const ScreeningPage = () => {
           Analyze language patterns to detect subtle cognitive changes that might indicate early signs of MCI or Alzheimer's.
         </Typography>
       </Box>
-      
+
       <Paper elevation={3} sx={{ p: { xs: 2, md: 4 }, borderRadius: 2 }}>
         {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
-        
+
         <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((step, index) => (
             <Step key={step.label}>
@@ -719,9 +751,9 @@ const ScreeningPage = () => {
                 <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
                   {step.description}
                 </Typography>
-                
+
                 {step.content}
-                
+
                 <Box sx={{ mb: 2, mt: 3 }}>
                   <div>
                     {index < steps.length - 1 && (
@@ -745,7 +777,7 @@ const ScreeningPage = () => {
                         )}
                       </Button>
                     )}
-                    
+
                     <Button
                       disabled={index === 0 || analyzing}
                       onClick={() => setActiveStep(index - 1)}
@@ -760,7 +792,7 @@ const ScreeningPage = () => {
           ))}
         </Stepper>
       </Paper>
-      
+
       <Box sx={{ mt: 8, mb: 4 }}>
         <Typography variant="h5" gutterBottom sx={{ fontWeight: 'medium' }}>
           Frequently Asked Questions

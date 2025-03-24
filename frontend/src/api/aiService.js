@@ -1,0 +1,245 @@
+/**
+ * AI analysis service module
+ * 
+ * This module provides functions for interacting with the AI analysis API endpoints.
+ */
+
+import axios from 'axios';
+import { API_BASE_URL } from '../config';
+
+// Helper function to get auth headers from localStorage
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
+/**
+ * Analyze text for cognitive indicators
+ * 
+ * @param {string} text - The text to analyze
+ * @param {string} analysisType - The type of analysis (default: "text")
+ * @param {boolean} includeFeatures - Whether to include detailed features in response
+ * @param {boolean} demoMode - Whether to run in demo mode without authentication
+ * @returns {Promise<Object>} Analysis results
+ */
+export const analyzeText = async (text, analysisType = 'text', includeFeatures = false, demoMode = false) => {
+    console.log(`Analyzing text (${text.length} chars): ${text.substring(0, 50)}...`);
+
+    try {
+        // Check if authentication token exists (bypass in demo mode)
+        const token = localStorage.getItem('token');
+        if (!token && !demoMode) {
+            return {
+                success: false,
+                error: 'Authentication required. Please log in.',
+                status: 401
+            };
+        }
+
+        // In demo mode, generate mock analysis results
+        if (demoMode) {
+            return generateMockAnalysisResults(text, includeFeatures);
+        }
+
+        // Generate a unique request ID to prevent caching
+        const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+        const response = await axios.post(
+            `${API_BASE_URL}/api/ai/analyze`,
+            {
+                text,
+                analysis_type: analysisType,
+                include_features: includeFeatures,
+                request_id: requestId
+            },
+            {
+                headers: {
+                    ...getAuthHeaders(),
+                    'Cache-Control': 'no-cache, no-store'
+                }
+            }
+        );
+
+        console.log('Analysis response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error analyzing text:', error);
+
+        // Handle authentication errors
+        if (error.response && error.response.status === 401) {
+            return {
+                success: false,
+                error: 'Authentication required. Please log in.',
+                status: 401
+            };
+        }
+
+        return {
+            success: false,
+            error: error.response?.data?.detail || 'An error occurred during analysis.',
+            status: error.response?.status || 500
+        };
+    }
+};
+
+/**
+ * Generate mock analysis results for demo purposes when user is not authenticated
+ * 
+ * @param {string} text - The text to analyze
+ * @param {boolean} includeFeatures - Whether to include detailed features
+ * @returns {Object} Simulated analysis results
+ */
+function generateMockAnalysisResults(text, includeFeatures) {
+    // Calculate a deterministic but pseudo-random score based on text
+    const calculateScore = (base, seed) => {
+        // Use text length as a seed for some variability
+        const variability = (text.length * seed) % 20 / 100;
+        return Math.max(0.1, Math.min(0.9, base - variability));
+    };
+
+    const textLength = text.length;
+    // Shorter texts get higher risk scores (worse)
+    const overallBase = textLength < 100 ? 0.5 : textLength < 300 ? 0.35 : 0.25;
+
+    const domainScores = {
+        "LANGUAGE": calculateScore(overallBase, 1),
+        "MEMORY": calculateScore(overallBase, 2),
+        "EXECUTIVE_FUNCTION": calculateScore(overallBase, 3),
+        "ATTENTION": calculateScore(overallBase, 4),
+        "VISUOSPATIAL": calculateScore(overallBase, 5)
+    };
+
+    // Calculate overall score as average of domain scores
+    const overallScore = Object.values(domainScores).reduce((a, b) => a + b, 0) /
+        Object.values(domainScores).length;
+
+    // Generate recommendations based on scores
+    let recommendations = [
+        "Regular cognitive training exercises can help maintain brain health",
+        "Stay mentally active by reading, solving puzzles, and learning new skills",
+        "Physical exercise has been shown to improve cognitive function"
+    ];
+
+    if (overallScore > 0.4) {
+        recommendations.push("Consider increasing variety in your daily activities and speech patterns");
+    }
+
+    // Add detailed linguistic features if requested
+    const features = includeFeatures ? {
+        "lexical_diversity": {
+            "ttr": 0.65 + (Math.random() * 0.2),
+            "hapax_legomena_ratio": 0.3 + (Math.random() * 0.1)
+        },
+        "syntactic_complexity": {
+            "mean_sentence_length": 12 + (Math.random() * 8),
+            "complex_sentence_ratio": 0.4 + (Math.random() * 0.3)
+        },
+        "hesitation_patterns": {
+            "hesitation_score": 0.2 + (Math.random() * 0.2)
+        },
+        "repetition_patterns": {
+            "word_repetition_rate": 0.1 + (Math.random() * 0.1)
+        }
+    } : null;
+
+    return {
+        success: true,
+        overall_score: overallScore,
+        domain_scores: domainScores,
+        confidence_score: 0.75,
+        recommendations: recommendations,
+        features: features,
+        model_type: "demo",
+        timestamp: new Date().toISOString()
+    };
+}
+
+/**
+ * Set the AI model to use for analysis
+ * 
+ * @param {string} modelType - The type of model to use ('spacy' or 'gpt4')
+ * @param {string} apiKey - API key for GPT-4 (required if modelType is 'gpt4')
+ * @returns {Promise<Object>} Success message
+ */
+export const setAiModel = async (modelType, apiKey = null) => {
+    try {
+        // Check if authentication token exists
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return {
+                success: false,
+                error: 'Authentication required. Please log in.',
+                status: 401
+            };
+        }
+
+        const response = await axios.post(
+            `${API_BASE_URL}/api/ai/set-model`,
+            { model_type: modelType, api_key: apiKey },
+            {
+                headers: getAuthHeaders(),
+                // Add timestamp to prevent caching
+                params: { t: new Date().getTime() }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error setting AI model:', error);
+
+        // Handle authentication errors
+        if (error.response && error.response.status === 401) {
+            return {
+                success: false,
+                error: 'Authentication required. Please log in.',
+                status: 401
+            };
+        }
+
+        return {
+            success: false,
+            error: error.response?.data?.detail || 'An error occurred while setting the model.',
+            status: error.response?.status || 500
+        };
+    }
+};
+
+/**
+ * Get analysis history for the current user
+ * 
+ * @param {number} limit - Maximum number of results to return
+ * @returns {Promise} - The analysis history
+ */
+export const getAnalysisHistory = async (limit = 10) => {
+    try {
+        // Check if authentication token exists
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return [];  // Return empty array if not authenticated
+        }
+
+        // Add timestamp parameter to prevent caching
+        const timestamp = Date.now();
+        const response = await axios.get(
+            `${API_BASE_URL}/api/ai/history?limit=${limit}&_t=${timestamp}`,
+            {
+                headers: {
+                    ...getAuthHeaders(),
+                    'Cache-Control': 'no-cache, no-store'
+                }
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching analysis history:', error);
+
+        // Handle authentication errors
+        if (error.response && error.response.status === 401) {
+            console.warn('User not authenticated for history fetch');
+            return [];  // Return empty array if not authenticated
+        }
+
+        // For other errors, return empty array with error logging
+        console.error('Failed to fetch history:', error.message);
+        return [];
+    }
+}; 

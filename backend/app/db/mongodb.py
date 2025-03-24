@@ -16,17 +16,10 @@ logger = logging.getLogger(__name__)
 
 # MongoDB connection variables
 MONGODB_URI = os.getenv("MONGODB_URI")
-MONGODB_PASSWORD = os.getenv("MONGODB_PASSWORD")
 MONGODB_DB_NAME = os.getenv("MONGODB_DB_NAME", "alzheimer_db")
 
 if not MONGODB_URI:
     raise ValueError("MONGODB_URI environment variable is not set")
-
-if not MONGODB_PASSWORD:
-    raise ValueError("MONGODB_PASSWORD environment variable is not set")
-
-# Replace placeholder with actual password
-MONGODB_URI = MONGODB_URI.replace("<password>", MONGODB_PASSWORD)
 
 # MongoDB Client
 mongodb_client: Optional[AsyncIOMotorClient] = None

@@ -128,14 +128,29 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserInDB:
         
         if user_id is None:
             raise credentials_exception
-    except (JWTError, ValidationError):
+    except JWTError as e:
+        # Log the specific error
+        print(f"JWT Error: {str(e)}")
+        raise credentials_exception
+    except ValidationError as e:
+        # Log validation errors
+        print(f"Validation Error: {str(e)}")
+        raise credentials_exception
+    except Exception as e:
+        # Log unexpected errors
+        print(f"Unexpected error in token validation: {str(e)}")
         raise credentials_exception
     
     # Get the user from the database
     db = get_database()
-    user_data = await db[COLLECTION_USERS].find_one({"_id": user_id})
+    user_data = await db[COLLECTION_USERS].find_one({"id": user_id})
     
     if user_data is None:
+        # Try with _id field if id field doesn't work
+        user_data = await db[COLLECTION_USERS].find_one({"_id": user_id})
+        
+    if user_data is None:
+        print(f"User with ID {user_id} not found in database")
         raise credentials_exception
     
     return UserInDB(**user_data)

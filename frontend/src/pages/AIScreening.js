@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tab } from '@headlessui/react';
 import {
   MicrophoneIcon,
@@ -9,6 +9,7 @@ import {
   InformationCircleIcon,
   XCircleIcon,
 } from '@heroicons/react/24/outline';
+import { analyzeText } from '../api/aiService';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -19,7 +20,15 @@ export default function AIScreening() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [textInput, setTextInput] = useState('');
   const [analysisResult, setAnalysisResult] = useState(null);
-  
+  const [error, setError] = useState(null);
+  const [isDemoMode, setIsDemoMode] = useState(false);
+
+  // Check if user is authenticated on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsDemoMode(!token);
+  }, []);
+
   // Dummy data for analysis result
   const sampleResult = {
     overallScore: 82,
@@ -32,20 +41,20 @@ export default function AIScreening() {
       { name: 'Word Finding', score: 75, status: 'normal' },
     ],
     insights: [
-      { 
-        type: 'positive', 
-        title: 'Strong Verbal Reasoning', 
-        description: 'Your ability to express complex ideas shows strong verbal reasoning skills.' 
+      {
+        type: 'positive',
+        title: 'Strong Verbal Reasoning',
+        description: 'Your ability to express complex ideas shows strong verbal reasoning skills.'
       },
-      { 
-        type: 'caution', 
-        title: 'Slight Hesitations', 
-        description: 'We noticed some hesitations in your speech that might indicate mild word-finding difficulties.' 
+      {
+        type: 'caution',
+        title: 'Slight Hesitations',
+        description: 'We noticed some hesitations in your speech that might indicate mild word-finding difficulties.'
       },
-      { 
-        type: 'info', 
-        title: 'Consistent with Previous', 
-        description: 'Your results are consistent with your previous assessments, showing stability in cognitive function.' 
+      {
+        type: 'info',
+        title: 'Consistent with Previous',
+        description: 'Your results are consistent with your previous assessments, showing stability in cognitive function.'
       },
     ],
     recommendations: [
@@ -55,32 +64,153 @@ export default function AIScreening() {
     ]
   };
 
+  // Start recording audio
   const startRecording = () => {
     setIsRecording(true);
-    
+
     // Simulate recording for demo
     setTimeout(() => {
       setIsRecording(false);
       setIsProcessing(true);
-      
+
       // Simulate processing time
       setTimeout(() => {
         setIsProcessing(false);
-        setAnalysisResult(sampleResult);
+
+        // For speech recording, we would convert audio to text first
+        // and then analyze it, but for now we'll use dummy text for demo
+        const dummyText = "This is a simulated speech recording. In a real application, we would analyze your actual speech patterns. For now, we're processing this placeholder text to show how the interface would work with real data.";
+
+        // Use the handleAnalysis function with the dummy text
+        handleAnalysis(dummyText, 'speech');
       }, 2000);
     }, 3000);
   };
 
+  // Process text analysis
   const submitTextAnalysis = () => {
-    if (!textInput.trim()) return;
-    
+    if (!textInput.trim()) {
+      setError('Please enter some text to analyze');
+      return;
+    }
+
     setIsProcessing(true);
-    
-    // Simulate processing time
-    setTimeout(() => {
+    handleAnalysis(textInput, 'text');
+  };
+
+  // Handle the API call for analysis
+  const handleAnalysis = async (text, analysisType) => {
+    try {
+      setError(null);
+
+      // Call the API to analyze the text (passing demoMode flag)
+      const result = await analyzeText(text, analysisType, true, isDemoMode);
+
+      if (!result.success) {
+        throw new Error(result.error || 'Analysis failed');
+      }
+
+      // Transform API response to the format our UI expects
+      const transformedResult = {
+        overallScore: Math.round((1 - result.overall_score) * 100), // Convert risk to score
+        cognitiveRisk: getCognitiveRiskLevel(result.overall_score),
+        categories: transformCategories(result.domain_scores, result.features),
+        insights: generateInsights(result),
+        recommendations: result.recommendations || []
+      };
+
+      setAnalysisResult(transformedResult);
+    } catch (err) {
+      console.error('Analysis error:', err);
+      setError(err.message || 'An error occurred during analysis');
+    } finally {
       setIsProcessing(false);
-      setAnalysisResult(sampleResult);
-    }, 2000);
+    }
+  };
+
+  // Helper function to determine risk level from score
+  const getCognitiveRiskLevel = (score) => {
+    if (score < 0.3) return 'Low';
+    if (score < 0.6) return 'Moderate';
+    return 'High';
+  };
+
+  // Transform domain scores into categories
+  const transformCategories = (domainScores, features) => {
+    if (!domainScores) return [];
+
+    const categories = [];
+
+    // Map domain names to display names
+    const domainDisplayNames = {
+      'LANGUAGE': 'Lexical Diversity',
+      'MEMORY': 'Word Finding',
+      'EXECUTIVE_FUNCTION': 'Grammatical Complexity',
+      'ATTENTION': 'Speech Fluency',
+      'VISUOSPATIAL': 'Semantic Coherence'
+    };
+
+    // Map score to status
+    const getStatus = (score) => {
+      if (score < 0.3) return 'strong';
+      if (score < 0.5) return 'normal';
+      if (score < 0.7) return 'caution';
+      return 'warning';
+    };
+
+    Object.entries(domainScores).forEach(([domain, score]) => {
+      const displayName = domainDisplayNames[domain] || domain;
+      categories.push({
+        name: displayName,
+        score: Math.round((1 - score) * 100), // Convert risk score to positive score
+        status: getStatus(score)
+      });
+    });
+
+    return categories;
+  };
+
+  // Generate insights based on analysis results
+  const generateInsights = (result) => {
+    const insights = [];
+
+    // Add insight based on overall score
+    if (result.overall_score < 0.3) {
+      insights.push({
+        type: 'positive',
+        title: 'Strong Overall Performance',
+        description: 'Your cognitive linguistic patterns show strong performance across multiple domains.'
+      });
+    } else if (result.overall_score < 0.6) {
+      insights.push({
+        type: 'info',
+        title: 'Generally Stable Performance',
+        description: 'Your linguistic patterns are generally within normal ranges with some areas that could benefit from targeted exercises.'
+      });
+    } else {
+      insights.push({
+        type: 'caution',
+        title: 'Areas Needing Attention',
+        description: 'Several cognitive linguistic patterns indicate areas that may benefit from closer monitoring and targeted intervention.'
+      });
+    }
+
+    // Add insight about confidence
+    if (result.confidence_score > 0.7) {
+      insights.push({
+        type: 'info',
+        title: 'High Analysis Confidence',
+        description: 'The AI model has high confidence in this assessment based on the quality and quantity of language data provided.'
+      });
+    } else {
+      insights.push({
+        type: 'info',
+        title: 'Limited Data Assessment',
+        description: 'For more accurate results, consider providing a longer text sample in future assessments.'
+      });
+    }
+
+    return insights;
   };
 
   const resetAnalysis = () => {
@@ -121,12 +251,34 @@ export default function AIScreening() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="px-4 sm:px-0">
-        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-white">AI-Powered Cognitive Screening</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-semibold text-neutral-900 dark:text-white">AI-Powered Cognitive Screening</h1>
+          {isDemoMode && (
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
+              Demo Mode
+            </span>
+          )}
+        </div>
         <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-300">
-          Submit a speech recording or text sample for analysis. Our AI will evaluate linguistic patterns 
+          Submit a speech recording or text sample for analysis. Our AI will evaluate linguistic patterns
           to help identify potential cognitive changes.
         </p>
+        {isDemoMode && (
+          <p className="mt-2 text-sm italic text-blue-600 dark:text-blue-400">
+            You're using the demo version with simulated results. <a href="/login" className="underline font-medium">Log in</a> for full functionality.
+          </p>
+        )}
       </div>
+
+      {/* Display error message if one exists */}
+      {error && (
+        <div className="mt-4 bg-red-50 dark:bg-red-900/20 p-4 rounded-md">
+          <div className="flex">
+            <XCircleIcon className="h-5 w-5 text-red-400 mr-2" aria-hidden="true" />
+            <span className="text-sm text-red-700 dark:text-red-300">{error}</span>
+          </div>
+        </div>
+      )}
 
       {!analysisResult ? (
         <div className="mt-6 bg-white dark:bg-neutral-800 shadow overflow-hidden sm:rounded-lg">
@@ -168,11 +320,11 @@ export default function AIScreening() {
                 <div className="flex flex-col items-center justify-center py-10">
                   <div className="mb-6 text-center">
                     <p className="text-neutral-700 dark:text-neutral-300">
-                      Record yourself describing what you did yesterday in as much detail as possible. 
+                      Record yourself describing what you did yesterday in as much detail as possible.
                       Aim to speak for at least 1 minute.
                     </p>
                   </div>
-                  
+
                   <div className="relative w-40 h-40 mb-6">
                     <button
                       onClick={startRecording}
@@ -182,8 +334,8 @@ export default function AIScreening() {
                         isRecording
                           ? 'bg-red-100 dark:bg-red-900/30 animate-pulse'
                           : isProcessing
-                          ? 'bg-neutral-100 dark:bg-neutral-700 cursor-wait'
-                          : 'bg-primary-100 dark:bg-primary-900/30 hover:bg-primary-200 dark:hover:bg-primary-900/50'
+                            ? 'bg-neutral-100 dark:bg-neutral-700 cursor-wait'
+                            : 'bg-primary-100 dark:bg-primary-900/30 hover:bg-primary-200 dark:hover:bg-primary-900/50'
                       )}
                     >
                       {isRecording ? (
@@ -195,7 +347,7 @@ export default function AIScreening() {
                       )}
                     </button>
                   </div>
-                  
+
                   <div className="text-center">
                     {isRecording ? (
                       <p className="text-red-600 dark:text-red-400 font-medium">Recording... (tap to stop)</p>
@@ -207,7 +359,7 @@ export default function AIScreening() {
                   </div>
                 </div>
               </Tab.Panel>
-              
+
               <Tab.Panel>
                 <div className="py-4">
                   <label htmlFor="text-analysis" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
@@ -226,7 +378,7 @@ export default function AIScreening() {
                   <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
                     For best results, provide a detailed description of an event, story, or your day.
                   </p>
-                  
+
                   <div className="mt-6">
                     <button
                       type="button"
@@ -260,9 +412,17 @@ export default function AIScreening() {
           <div className="bg-white dark:bg-neutral-800 shadow overflow-hidden sm:rounded-lg">
             <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
               <div>
-                <h3 className="text-lg leading-6 font-medium text-neutral-900 dark:text-white">Analysis Results</h3>
+                <h3 className="text-lg leading-6 font-medium text-neutral-900 dark:text-white flex items-center gap-2">
+                  Analysis Results
+                  {isDemoMode && (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
+                      Demo
+                    </span>
+                  )}
+                </h3>
                 <p className="mt-1 max-w-2xl text-sm text-neutral-500 dark:text-neutral-400">
                   Based on AI evaluation of your language patterns.
+                  {isDemoMode && <span className="text-blue-500 italic"> (Simulated results)</span>}
                 </p>
               </div>
               <button
@@ -273,14 +433,14 @@ export default function AIScreening() {
                 Start New Analysis
               </button>
             </div>
-            
+
             <div className="border-t border-neutral-200 dark:border-neutral-700 px-4 py-5 sm:px-6">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div className="bg-neutral-50 dark:bg-neutral-700/50 p-4 rounded-lg text-center">
                   <div className="text-4xl font-bold text-primary-600 dark:text-primary-400">{analysisResult.overallScore}</div>
                   <div className="text-sm text-neutral-500 dark:text-neutral-400">Cognitive Score</div>
                 </div>
-                
+
                 <div className="bg-neutral-50 dark:bg-neutral-700/50 p-4 rounded-lg text-center">
                   <div className="text-xl font-bold text-neutral-900 dark:text-white">
                     {analysisResult.cognitiveRisk === 'Low' ? (
@@ -293,7 +453,7 @@ export default function AIScreening() {
                   </div>
                   <div className="text-sm text-neutral-500 dark:text-neutral-400">Cognitive Risk Level</div>
                 </div>
-                
+
                 <div className="bg-neutral-50 dark:bg-neutral-700/50 p-4 rounded-lg flex flex-col justify-center">
                   <div className="text-sm text-neutral-900 dark:text-white font-medium mb-1">Assessment Complete</div>
                   <div className="text-xs text-neutral-500 dark:text-neutral-400">Results based on AI language analysis</div>
@@ -302,7 +462,7 @@ export default function AIScreening() {
               </div>
             </div>
           </div>
-          
+
           {/* Category Scores */}
           <div className="bg-white dark:bg-neutral-800 shadow overflow-hidden sm:rounded-lg">
             <div className="px-4 py-5 sm:px-6">
@@ -311,12 +471,12 @@ export default function AIScreening() {
                 Detailed scores across key cognitive dimensions.
               </p>
             </div>
-            
+
             <div className="border-t border-neutral-200 dark:border-neutral-700">
               <dl>
                 {analysisResult.categories.map((category, idx) => (
-                  <div 
-                    key={category.name} 
+                  <div
+                    key={category.name}
                     className={classNames(
                       idx % 2 === 0 ? 'bg-neutral-50 dark:bg-neutral-800' : 'bg-white dark:bg-neutral-700/20',
                       'px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'
@@ -328,12 +488,12 @@ export default function AIScreening() {
                     </dt>
                     <dd className="mt-1 text-sm text-neutral-900 dark:text-white sm:mt-0 sm:col-span-2">
                       <div className="w-full bg-neutral-200 dark:bg-neutral-600 rounded-full h-2.5">
-                        <div 
+                        <div
                           className={classNames(
                             'h-2.5 rounded-full',
                             category.status === 'strong' ? 'bg-green-500' :
-                            category.status === 'normal' ? 'bg-primary-500' :
-                            category.status === 'caution' ? 'bg-yellow-500' : 'bg-red-500'
+                              category.status === 'normal' ? 'bg-primary-500' :
+                                category.status === 'caution' ? 'bg-yellow-500' : 'bg-red-500'
                           )}
                           style={{ width: `${category.score}%` }}
                         ></div>
@@ -348,7 +508,7 @@ export default function AIScreening() {
               </dl>
             </div>
           </div>
-          
+
           {/* Insights & Recommendations */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* Insights */}
@@ -374,7 +534,7 @@ export default function AIScreening() {
                 </ul>
               </div>
             </div>
-            
+
             {/* Recommendations */}
             <div className="bg-white dark:bg-neutral-800 shadow overflow-hidden sm:rounded-lg">
               <div className="px-4 py-5 sm:px-6">
@@ -400,7 +560,7 @@ export default function AIScreening() {
               </div>
             </div>
           </div>
-          
+
           {/* Call to Action */}
           <div className="bg-primary-50 dark:bg-primary-900/20 rounded-lg px-4 py-5 sm:px-6 text-center">
             <h3 className="text-lg font-medium text-primary-800 dark:text-primary-200 mb-2">
@@ -418,7 +578,7 @@ export default function AIScreening() {
           </div>
         </div>
       )}
-      
+
       {/* Health Information Notice */}
       <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 rounded-md p-4">
         <div className="flex">

@@ -5,6 +5,7 @@ Main application entry point for the FastAPI application.
 
 import logging
 import os
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -13,7 +14,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from dotenv import load_dotenv
 
 # Import routers
-from app.api import auth_router, language_router
+from app.api import auth_router, language_router, ai_router
 
 # Import database utilities
 from app.db import connect_to_mongodb, close_mongodb_connection
@@ -28,11 +29,24 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Define lifespan context manager for database connections
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan events for database connections."""
+    # Startup: Connect to MongoDB
+    logger.info("Connecting to MongoDB...")
+    await connect_to_mongodb()
+    yield
+    # Shutdown: Close MongoDB connection
+    logger.info("Closing MongoDB connection...")
+    await close_mongodb_connection()
+
 # Create FastAPI app
 app = FastAPI(
     title="Alzheimer's Detection Platform API",
     description="Backend API for the AI-powered Alzheimer's detection and prevention platform",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 # Configure CORS
@@ -48,6 +62,7 @@ app.add_middleware(
 api_prefix = os.getenv("API_PREFIX", "/api/v1")
 app.include_router(auth_router, prefix=api_prefix)
 app.include_router(language_router, prefix=api_prefix)
+app.include_router(ai_router)  # AI router already has prefix defined
 
 # Error handling
 @app.exception_handler(StarletteHTTPException)
@@ -63,9 +78,20 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     """Handle validation errors."""
     logger.error(f"Validation error: {exc.errors()}")
+    
+    # Convert validation errors to a serializable format
+    error_details = []
+    for error in exc.errors():
+        error_dict = {
+            "loc": error.get("loc", []),
+            "msg": error.get("msg", ""),
+            "type": error.get("type", "")
+        }
+        error_details.append(error_dict)
+    
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content={"message": "Validation error", "details": exc.errors()},
+        content={"message": "Validation error", "details": error_details},
     )
 
 @app.exception_handler(Exception)
@@ -76,19 +102,6 @@ async def general_exception_handler(request: Request, exc: Exception):
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={"message": "Internal server error"},
     )
-
-# Database connection events
-@app.on_event("startup")
-async def startup_db_client():
-    """Connect to MongoDB on application startup."""
-    logger.info("Connecting to MongoDB...")
-    await connect_to_mongodb()
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    """Close MongoDB connection on application shutdown."""
-    logger.info("Closing MongoDB connection...")
-    await close_mongodb_connection()
 
 # Root endpoint
 @app.get("/")

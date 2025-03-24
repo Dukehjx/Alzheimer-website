@@ -1,232 +1,163 @@
 import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import {
-  AppBar,
-  Box,
-  Toolbar,
-  IconButton,
-  Typography,
-  Menu,
-  Container,
-  Avatar,
-  Button,
-  Tooltip,
-  MenuItem,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Divider,
-  useTheme,
-  useMediaQuery
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import HomeIcon from '@mui/icons-material/Home';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
-import PersonIcon from '@mui/icons-material/Person';
-import BrainIcon from '@mui/icons-material/Psychology';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import ThemeSwitcher from './ThemeSwitcher';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { BoltIcon } from '@heroicons/react/24/solid';
 
-function Navigation() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [userMenuAnchor, setUserMenuAnchor] = useState(null);
-  
-  const menuItems = [
-    { text: 'Home', path: '/', icon: <HomeIcon /> },
-    { text: 'AI Screening', path: '/screening', icon: <AssessmentIcon /> },
-    { text: 'Cognitive Training', path: '/training', icon: <FitnessCenterIcon /> },
-    { text: 'Resource Hub', path: '/resources', icon: <LibraryBooksIcon /> },
-    { text: 'Health Monitoring', path: '/health-monitoring', icon: <MonitorHeartIcon /> },
-  ];
-  
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-  
-  const handleOpenUserMenu = (event) => {
-    setUserMenuAnchor(event.currentTarget);
-  };
-  
-  const handleCloseUserMenu = () => {
-    setUserMenuAnchor(null);
-  };
-  
-  const drawer = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={handleDrawerToggle}>
-      <Box sx={{ p: 2, display: 'flex', alignItems: 'center' }}>
-        <BrainIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
-        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>
-          BrainGuard AI
-        </Typography>
-      </Box>
-      <Divider />
-      <List>
-        {menuItems.map((item) => (
-          <ListItem 
-            button 
-            component={RouterLink} 
-            to={item.path} 
-            key={item.text}
-            sx={{
-              '&:hover': {
-                backgroundColor: theme.palette.primary.light + '20',
-              },
-            }}
-          >
-            <ListItemIcon sx={{ color: theme.palette.primary.main }}>
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText primary={item.text} />
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
+const navigation = [
+  { name: 'Home', href: '/' },
+  { name: 'AI Screening', href: '/screening' },
+  { name: 'Cognitive Training', href: '/training' },
+  { name: 'Resource Hub', href: '/resources' },
+  { name: 'Health Monitoring', href: '/health-monitoring' },
+];
+
+export default function Navigation() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { currentUser, logout, isAuthenticated } = useAuth();
 
   return (
-    <AppBar position="static" color="default" elevation={1} sx={{ bgcolor: 'background.paper' }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          {/* Logo for all screen sizes */}
-          <BrainIcon sx={{ 
-            display: { xs: 'none', md: 'flex' }, 
-            mr: 1, 
-            color: theme.palette.primary.main 
-          }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component={RouterLink}
-            to="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontWeight: 700,
-              color: theme.palette.primary.main,
-              textDecoration: 'none',
-            }}
-          >
-            BrainGuard AI
-          </Typography>
+    <header className="bg-white shadow-sm dark:bg-gray-800 dark:border-gray-700 transition-colors duration-200">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8" aria-label="Global">
+        <div className="flex lg:flex-1">
+          <Link to="/" className="-m-1.5 p-1.5 flex items-center">
+            <BoltIcon className="h-8 w-auto text-primary-600 dark:text-primary-400" />
+            <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">BrainGuard AI</span>
+          </Link>
+        </div>
 
-          {/* Mobile menu icon */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="open drawer"
-              aria-controls="menu-mobile"
-              aria-haspopup="true"
-              onClick={handleDrawerToggle}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-          </Box>
-          
-          {/* Logo for mobile */}
-          <BrainIcon sx={{ 
-            display: { xs: 'flex', md: 'none' }, 
-            mr: 1, 
-            color: theme.palette.primary.main 
-          }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component={RouterLink}
-            to="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontWeight: 700,
-              color: theme.palette.primary.main,
-              textDecoration: 'none',
-            }}
+        <div className="flex lg:hidden">
+          <button
+            type="button"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-200"
+            onClick={() => setMobileMenuOpen(true)}
           >
-            BrainGuard AI
-          </Typography>
-          
-          {/* Desktop menu items */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {menuItems.map((item) => (
-              <Button
-                key={item.text}
-                component={RouterLink}
-                to={item.path}
-                startIcon={item.icon}
-                sx={{ 
-                  my: 2, 
-                  mx: 0.5, 
-                  color: 'text.primary',
-                  '&:hover': {
-                    backgroundColor: theme.palette.primary.light + '20',
-                  },
-                }}
+            <span className="sr-only">Open main menu</span>
+            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+          </button>
+        </div>
+
+        <div className="hidden lg:flex lg:gap-x-12">
+          {navigation.map((item) => (
+            <Link
+              key={item.name}
+              to={item.href}
+              className="text-sm font-semibold leading-6 text-gray-900 hover:text-primary-600 dark:text-gray-200 dark:hover:text-primary-400"
+            >
+              {item.name}
+            </Link>
+          ))}
+        </div>
+
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center gap-4">
+          <ThemeSwitcher />
+
+          {isAuthenticated ? (
+            <div className="flex items-center">
+              <div className="mr-2 text-sm text-gray-700 dark:text-gray-300">
+                {currentUser?.full_name || currentUser?.email || 'User'}
+              </div>
+              <button
+                onClick={logout}
+                className="rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-700 dark:hover:bg-primary-600"
               >
-                {item.text}
-              </Button>
-            ))}
-          </Box>
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-x-4">
+              <Link
+                to="/login"
+                className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
+              >
+                Log in
+              </Link>
+              <Link
+                to="/register"
+                className="rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-700 dark:hover:bg-primary-600"
+              >
+                Sign up
+              </Link>
+            </div>
+          )}
+        </div>
+      </nav>
 
-          {/* User menu */}
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open profile settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar 
-                  alt="User" 
-                  sx={{ 
-                    bgcolor: theme.palette.primary.main,
-                    '&:hover': { bgcolor: theme.palette.primary.dark }
-                  }}
-                >
-                  <PersonIcon />
-                </Avatar>
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-user"
-              anchorEl={userMenuAnchor}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(userMenuAnchor)}
-              onClose={handleCloseUserMenu}
+      {/* Mobile menu, show/hide based on mobile menu state */}
+      <div className={`lg:hidden ${mobileMenuOpen ? 'block' : 'hidden'}`}>
+        <div className="fixed inset-0 z-50" />
+        <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:bg-gray-800 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+          <div className="flex items-center justify-between">
+            <Link to="/" className="-m-1.5 p-1.5 flex items-center">
+              <BoltIcon className="h-8 w-auto text-primary-600 dark:text-primary-400" />
+              <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">BrainGuard AI</span>
+            </Link>
+            <button
+              type="button"
+              className="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-200"
+              onClick={() => setMobileMenuOpen(false)}
             >
-              <MenuItem component={RouterLink} to="/login" onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Login</Typography>
-              </MenuItem>
-              <MenuItem component={RouterLink} to="/register" onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">Register</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-      
-      {/* Mobile Drawer */}
-      <Drawer
-        anchor="left"
-        open={drawerOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{ keepMounted: true }}
-      >
-        {drawer}
-      </Drawer>
-    </AppBar>
+              <span className="sr-only">Close menu</span>
+              <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+            </button>
+          </div>
+          <div className="mt-6 flow-root">
+            <div className="-my-6 divide-y divide-gray-500/10 dark:divide-gray-700">
+              <div className="space-y-2 py-6">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-700"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+                <div className="py-2">
+                  <ThemeSwitcher className="mx-3" />
+                </div>
+              </div>
+              <div className="py-6">
+                {isAuthenticated ? (
+                  <>
+                    <div className="mb-2 px-3 text-base font-semibold text-gray-700 dark:text-gray-300">
+                      {currentUser?.full_name || currentUser?.email || 'User'}
+                    </div>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    >
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Log in
+                    </Link>
+                    <Link
+                      to="/register"
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Sign up
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
   );
-}
-
-export default Navigation; 
+} 
