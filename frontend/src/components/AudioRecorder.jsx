@@ -16,18 +16,62 @@ const AudioRecorder = () => {
     const [results, setResults] = useState(null);
     const [includeAnalysis, setIncludeAnalysis] = useState(true);
 
+    // Audio player state
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [audioDuration, setAudioDuration] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [seekValue, setSeekValue] = useState(0);
+
     const mediaRecorderRef = useRef(null);
     const streamRef = useRef(null);
     const chunksRef = useRef([]);
     const timerRef = useRef(null);
     const fileInputRef = useRef(null);
+    const audioRef = useRef(null);
 
     // Stop recording audio - using useCallback to make it stable across renders
     const stopRecording = useCallback(() => {
         if (mediaRecorderRef.current && isRecording) {
             mediaRecorderRef.current.stop();
-            clearInterval(timerRef.current);
+            // No need to clear the timer here as it's handled by the useEffect when isRecording becomes false
         }
+    }, [isRecording]);
+
+    // Start timer effect that updates when isRecording changes
+    useEffect(() => {
+        let timerId = null;
+
+        if (isRecording) {
+            // Reset to zero when starting recording
+            setRecordingDuration(0);
+            console.log('Timer reset to 0s');
+
+            // Create function to update recording duration
+            const updateDuration = () => {
+                setRecordingDuration(prevDuration => {
+                    // Ensure we're using integer seconds
+                    const newDuration = Math.round(prevDuration) + 1;
+                    console.log(`Timer tick: ${newDuration}s`);
+                    return newDuration;
+                });
+            };
+
+            // Only start interval, don't call updateDuration immediately
+            timerId = setInterval(updateDuration, 1000);
+            console.log('Recording timer started with ID:', timerId);
+
+            // Store timer ID in ref for potential external access
+            timerRef.current = timerId;
+        }
+
+        // Cleanup function
+        return () => {
+            if (timerId) {
+                console.log('Cleaning up timer with ID:', timerId);
+                clearInterval(timerId);
+                timerRef.current = null;
+            }
+        };
     }, [isRecording]);
 
     // Clean up on unmount
@@ -63,6 +107,14 @@ const AudioRecorder = () => {
         }
     };
 
+    // Reset audio player state
+    const resetAudioPlayerState = () => {
+        setIsPlaying(false);
+        setCurrentTime(0);
+        setSeekValue(0);
+        setAudioDuration(0);
+    };
+
     // Start recording audio
     const startRecording = async () => {
         try {
@@ -75,12 +127,31 @@ const AudioRecorder = () => {
             setResults(null);
             setError(null);
 
-            // Request microphone access
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            // Reset audio player state
+            resetAudioPlayerState();
+
+            // We no longer need to set recordingDuration here since useEffect handles it
+
+            // Request microphone access with specific audio constraints
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    channelCount: 1,
+                    sampleRate: 44100,
+                    echoCancellation: true,
+                    noiseSuppression: true
+                }
+            });
             streamRef.current = stream;
 
-            // Create media recorder
-            const mediaRecorder = new MediaRecorder(stream);
+            // Create media recorder with specific MIME type
+            const mimeType = MediaRecorder.isTypeSupported('audio/webm')
+                ? 'audio/webm'
+                : 'audio/ogg';
+
+            const mediaRecorder = new MediaRecorder(stream, {
+                mimeType: mimeType,
+                audioBitsPerSecond: 128000
+            });
             mediaRecorderRef.current = mediaRecorder;
 
             // Reset chunks array
@@ -94,9 +165,20 @@ const AudioRecorder = () => {
             };
 
             mediaRecorder.onstop = () => {
-                // Create blob from audio chunks
-                const audioBlob = new Blob(chunksRef.current, { type: 'audio/wav' });
+                // Create blob from audio chunks with proper MIME type
+                const audioBlob = new Blob(chunksRef.current, {
+                    type: mimeType
+                });
                 const audioUrl = URL.createObjectURL(audioBlob);
+
+                console.log(`Recording complete: ${recordingDuration}s, MIME type: ${mimeType}`);
+
+                // Be sure to set the audio duration from the recording duration
+                if (recordingDuration > 0) {
+                    const duration = Math.round(recordingDuration);
+                    console.log(`Setting audioDuration in onstop: ${duration}s`);
+                    setAudioDuration(duration);
+                }
 
                 setAudioBlob(audioBlob);
                 setAudioUrl(audioUrl);
@@ -107,19 +189,15 @@ const AudioRecorder = () => {
                     streamRef.current.getTracks().forEach(track => track.stop());
                 }
 
-                // Reset timer
-                clearInterval(timerRef.current);
+                // No need to clear timer here as it's handled by the useEffect
             };
 
-            // Start recording
-            mediaRecorder.start();
+            // Set data available interval to 1 second to ensure smaller chunks
+            mediaRecorder.start(1000);
             setIsRecording(true);
-            setRecordingDuration(0);
 
-            // Start timer
-            timerRef.current = setInterval(() => {
-                setRecordingDuration(prev => prev + 1);
-            }, 1000);
+            // Timer is now managed by the useEffect hook
+
         } catch (err) {
             console.error('Error starting recording:', err);
             setError('Could not access microphone. Please ensure you have granted permission.');
@@ -156,6 +234,9 @@ const AudioRecorder = () => {
             URL.revokeObjectURL(audioUrl);
         }
 
+        // Reset audio player state for the new file
+        resetAudioPlayerState();
+
         // Create URL for audio playback
         const newAudioUrl = URL.createObjectURL(file);
         console.log('Created URL for file:', newAudioUrl);
@@ -165,12 +246,15 @@ const AudioRecorder = () => {
         setAudioUrl(newAudioUrl);
         setResults(null);
         setError(null);
+        setRecordingDuration(0); // Reset recording duration for uploaded files
     };
 
-    // Format seconds to MM:SS
+    // Format seconds to MM:SS (only integer seconds)
     const formatTime = (seconds) => {
-        const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-        const secs = (seconds % 60).toString().padStart(2, '0');
+        // Round to nearest integer to avoid decimal places
+        const roundedSeconds = Math.round(seconds);
+        const mins = Math.floor(roundedSeconds / 60).toString().padStart(2, '0');
+        const secs = (roundedSeconds % 60).toString().padStart(2, '0');
         return `${mins}:${secs}`;
     };
 
@@ -201,8 +285,22 @@ const AudioRecorder = () => {
 
         try {
             // Prepare file for upload
-            const audioFile = uploadedFile || new File([audioBlob], 'recording.wav', { type: 'audio/wav' });
-            console.log('Audio file prepared for upload:', audioFile.name, audioFile.size, audioFile.type);
+            let audioFile;
+            if (audioBlob) {
+                // Get the MIME type from the blob or default to audio/wav
+                const blobType = audioBlob.type || 'audio/wav';
+                const fileExtension = blobType.includes('webm') ? 'webm' :
+                    blobType.includes('ogg') ? 'ogg' : 'wav';
+
+                audioFile = new File([audioBlob], `recording.${fileExtension}`, {
+                    type: blobType,
+                    lastModified: Date.now()
+                });
+                console.log(`Created file from recorded blob: ${audioFile.name}, type: ${audioFile.type}, size: ${audioFile.size} bytes`);
+            } else {
+                audioFile = uploadedFile;
+                console.log(`Using uploaded file: ${audioFile.name}, type: ${audioFile.type}, size: ${audioFile.size} bytes`);
+            }
 
             // Process audio with real API (no demo mode)
             const response = await processAudio(audioFile, {
@@ -303,6 +401,232 @@ const AudioRecorder = () => {
         return 'text-red-500 border-red-500';
     };
 
+    // RecordButton component to optimize updates
+    const RecordButton = React.memo(({ isRecording, duration, onStart, onStop }) => {
+        // Format seconds to MM:SS (integers only)
+        const formatTime = (seconds) => {
+            // Ensure we're working with integers
+            const roundedSeconds = Math.round(seconds);
+            const mins = Math.floor(roundedSeconds / 60).toString().padStart(2, '0');
+            const secs = (roundedSeconds % 60).toString().padStart(2, '0');
+            return `${mins}:${secs}`;
+        };
+
+        const formattedTime = formatTime(duration);
+
+        return isRecording ? (
+            <button
+                onClick={onStop}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center"
+                type="button"
+            >
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />
+                </svg>
+                Stop Recording ({formattedTime})
+            </button>
+        ) : (
+            <button
+                onClick={onStart}
+                className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md flex items-center"
+                disabled={false}
+                type="button"
+            >
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                </svg>
+                Start Recording
+            </button>
+        );
+    });
+
+    // Audio player event handlers
+    const handleLoadedMetadata = () => {
+        if (audioRef.current) {
+            console.log('Audio metadata loaded - checking duration');
+
+            if (isNaN(audioRef.current.duration) || audioRef.current.duration === Infinity) {
+                // If duration is not available, try to seek to get it
+                console.log('Audio duration not available, trying to load...');
+                try {
+                    // First try seeking to end
+                    audioRef.current.currentTime = 24 * 60 * 60; // Seek far ahead (24 hours)
+                    setTimeout(() => {
+                        audioRef.current.currentTime = 0; // Then back to start
+
+                        // Try again to get duration after seeking
+                        if (!isNaN(audioRef.current.duration) && audioRef.current.duration !== Infinity) {
+                            const duration = Math.round(audioRef.current.duration);
+                            console.log(`Audio duration loaded after seeking: ${duration}s`);
+                            setAudioDuration(duration);
+                        } else if (recordingDuration > 0 && !uploadedFile) {
+                            // If still no duration and we have recording duration, use that
+                            const duration = Math.round(recordingDuration);
+                            console.log(`Using recording duration as fallback: ${duration}s`);
+                            setAudioDuration(duration);
+                        } else {
+                            // Last resort - set a reasonable default duration
+                            console.log('Setting default duration of 30s as last resort');
+                            setAudioDuration(30);
+                        }
+                    }, 300); // Give a bit more time for seeking to complete
+                } catch (err) {
+                    console.warn('Error seeking audio:', err);
+                    // Fallback to recording duration
+                    if (recordingDuration > 0 && !uploadedFile) {
+                        const duration = Math.round(recordingDuration);
+                        console.log(`Using recording duration after seek error: ${duration}s`);
+                        setAudioDuration(duration);
+                    } else {
+                        // Set a default duration as last resort
+                        console.log('Setting default duration of 30s after error');
+                        setAudioDuration(30);
+                    }
+                }
+            } else {
+                // Round duration to integer seconds
+                const duration = Math.round(audioRef.current.duration);
+                console.log(`Audio duration loaded directly: ${duration}s`);
+                setAudioDuration(duration);
+
+                // If this is a recording and duration seems off, use recording duration
+                if (!uploadedFile && recordingDuration > 0 && (duration < 0.5 || duration > 3600)) {
+                    const recordDuration = Math.round(recordingDuration);
+                    console.log(`Using recording duration instead: ${recordDuration}s`);
+                    setAudioDuration(recordDuration);
+                }
+            }
+        }
+    };
+
+    const handleTimeUpdate = () => {
+        if (audioRef.current) {
+            // Round to integer seconds for display
+            const current = Math.round(audioRef.current.currentTime);
+            const duration = Math.round(audioRef.current.duration || audioDuration);
+
+            // Only update state when integer seconds change to avoid too many rerenders
+            if (Math.floor(current) !== Math.floor(currentTime)) {
+                setCurrentTime(current);
+                const progress = duration ? (current / duration) * 100 : 0;
+                setSeekValue(progress);
+            }
+        }
+    };
+
+    const handlePlay = () => {
+        setIsPlaying(true);
+    };
+
+    const handlePause = () => {
+        setIsPlaying(false);
+    };
+
+    const handleEnded = () => {
+        setIsPlaying(false);
+        // Set to integer zero for consistency
+        setCurrentTime(0);
+        setSeekValue(0);
+    };
+
+    const handleSeekChange = (e) => {
+        if (!audioRef.current) return;
+
+        try {
+            const value = parseFloat(e.target.value);
+            setSeekValue(value);
+
+            const duration = Math.round(audioRef.current.duration || audioDuration);
+            if (duration > 0) {
+                // Calculate seek time and round to integer seconds
+                const seekTime = Math.round((value / 100) * duration);
+
+                // Only update if integer second position has changed
+                if (Math.floor(seekTime) !== Math.floor(audioRef.current.currentTime)) {
+                    console.log(`Seeking to ${seekTime}s (${value}%)`);
+                    audioRef.current.currentTime = seekTime;
+                    setCurrentTime(seekTime);
+                }
+            }
+        } catch (err) {
+            console.error('Error seeking:', err);
+        }
+    };
+
+    // Update seek value when audio time changes (for smoother progress bar)
+    useEffect(() => {
+        if (audioRef.current && audioDuration > 0) {
+            // Use integer values for current time and duration for consistent progress calculation
+            const roundedCurrentTime = Math.round(currentTime);
+            const roundedDuration = Math.round(audioDuration);
+
+            // Calculate progress percentage based on integers
+            const progress = (roundedCurrentTime / roundedDuration) * 100;
+            setSeekValue(progress);
+        }
+    }, [currentTime, audioDuration]);
+
+    const togglePlayPause = () => {
+        if (audioRef.current) {
+            if (isPlaying) {
+                audioRef.current.pause();
+            } else {
+                audioRef.current.play().catch(err => {
+                    console.error('Error playing audio:', err);
+                });
+            }
+        }
+    };
+
+    // Set initial audio duration when recording completes
+    useEffect(() => {
+        if (audioBlob && recordingDuration > 0 && !audioDuration) {
+            const duration = Math.round(recordingDuration);
+            console.log(`Setting audioDuration from recording: ${duration}s`);
+            setAudioDuration(duration);
+        }
+    }, [audioBlob, recordingDuration, audioDuration]);
+
+    // Clean up audio resources on unmount
+    useEffect(() => {
+        // Capture current value of refs to use in cleanup
+        const audio = audioRef.current;
+        const mediaRecorder = mediaRecorderRef.current;
+        const stream = streamRef.current;
+        const timer = timerRef.current;
+        const audioUrlCurrent = audioUrl;
+
+        return () => {
+            // Stop and clean up any playing audio
+            if (audio) {
+                if (!audio.paused) {
+                    audio.pause();
+                }
+                audio.src = '';
+            }
+
+            // Clean up media recorder and stream
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+
+            // Stop all media tracks
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+
+            // Clear timers
+            if (timer) {
+                clearInterval(timer);
+            }
+
+            // Revoke object URLs
+            if (audioUrlCurrent) {
+                URL.revokeObjectURL(audioUrlCurrent);
+            }
+        };
+    }, [audioUrl]); // stopRecording removed from dependencies to avoid the warning
+
     return (
         <div className="w-full">
             <div className="mb-6 space-y-4">
@@ -311,30 +635,7 @@ const AudioRecorder = () => {
                     <div className="flex-1 p-4 border border-gray-300 rounded-md dark:border-gray-600">
                         <h3 className="text-lg font-medium mb-3">Record Audio</h3>
                         <div className="flex items-center space-x-4">
-                            {!isRecording ? (
-                                <button
-                                    onClick={handleStartRecording}
-                                    className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md flex items-center"
-                                    disabled={loading}
-                                    type="button"
-                                >
-                                    <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                                    </svg>
-                                    Start Recording
-                                </button>
-                            ) : (
-                                <button
-                                    onClick={handleStopRecording}
-                                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center"
-                                    type="button"
-                                >
-                                    <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />
-                                    </svg>
-                                    Stop Recording ({formatTime(recordingDuration)})
-                                </button>
-                            )}
+                            <RecordButton isRecording={isRecording} duration={recordingDuration} onStart={handleStartRecording} onStop={handleStopRecording} />
                         </div>
                     </div>
 
@@ -372,11 +673,77 @@ const AudioRecorder = () => {
                 {audioUrl && (
                     <div className="mt-4">
                         <h3 className="text-lg font-medium mb-2">Audio Preview</h3>
+
+                        {/* Hidden native audio element for browser audio API */}
                         <audio
-                            controls
+                            ref={audioRef}
                             src={audioUrl}
-                            className="w-full"
+                            className="hidden"
+                            preload="metadata"
+                            onLoadedMetadata={handleLoadedMetadata}
+                            onTimeUpdate={handleTimeUpdate}
+                            onPlay={handlePlay}
+                            onPause={handlePause}
+                            onEnded={handleEnded}
+                            onError={(e) => {
+                                console.error('Audio player error:', e.target.error);
+                                setError('Error playing audio. The file may be corrupted or in an unsupported format.');
+                            }}
                         />
+
+                        {/* Custom audio player UI */}
+                        <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                            {/* Play/Pause button and time display */}
+                            <div className="flex items-center mb-2">
+                                <button
+                                    onClick={togglePlayPause}
+                                    className="bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-full mr-3"
+                                    type="button"
+                                    aria-label={isPlaying ? "Pause" : "Play"}
+                                >
+                                    {isPlaying ? (
+                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                        </svg>
+                                    ) : (
+                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                                        </svg>
+                                    )}
+                                </button>
+
+                                <div className="text-sm font-mono text-gray-600 dark:text-gray-300">
+                                    {formatTime(currentTime)} / {formatTime(audioDuration || 0)}
+                                </div>
+                            </div>
+
+                            {/* Progress bar */}
+                            <div className="relative h-2 bg-gray-300 dark:bg-gray-600 rounded-full overflow-hidden">
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value={seekValue}
+                                    onChange={handleSeekChange}
+                                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                    aria-label="Seek audio position"
+                                />
+                                <div
+                                    className="h-full bg-primary-600 rounded-full"
+                                    style={{ width: `${seekValue}%` }}
+                                ></div>
+                            </div>
+
+                            {/* File info */}
+                            <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 flex justify-between">
+                                <span>{uploadedFile ? uploadedFile.name : 'Recorded Audio'}</span>
+                                <span>
+                                    {uploadedFile ?
+                                        `${(uploadedFile.size / (1024 * 1024)).toFixed(2)} MB` :
+                                        `${recordingDuration}s recording`}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 )}
 
@@ -422,7 +789,7 @@ const AudioRecorder = () => {
 
             {/* Results Display */}
             {results && results.success && (
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mt-6">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mt-6 results-container">
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Transcription Results</h3>
 
                     <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md mb-6">

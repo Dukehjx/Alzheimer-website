@@ -1,4 +1,9 @@
 ---
+description: 
+globs: 
+alwaysApply: false
+---
+---
 description: general rules
 globs: 
 alwaysApply: false
@@ -13,7 +18,7 @@ You are contributing to the development of an AI-powered website dedicated to th
 - **Security**: Implement robust security measures to protect user data and maintain confidentiality.
 - **Performance**: Optimize the application for fast load times and smooth user interactions.
 
-## Frontend Development (React.js / HTML + CSS + JavaScript)
+## Frontend Development (React.js / HTML + Tailwind CSS + JavaScript)
 - **Component Structure**:
   - Utilize functional components with hooks.
   - Promote code reuse by creating modular components.
