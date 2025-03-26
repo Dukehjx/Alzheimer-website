@@ -15,7 +15,11 @@ numpy>=1.26.3
 pandas>=2.2.0
 
 # Speech-to-Text
-# openai>=1.14.0 # For Whisper API
+openai-whisper>=20231117
+ffmpeg-python>=0.2.0
+pydub>=0.25.1
+torch>=2.1.0  # Required for whisper
+torchaudio>=2.1.0  # Required for audio processing
 
 # Utilities
 python-dotenv>=1.0.1

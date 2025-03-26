@@ -1,5 +1,6 @@
-Frontend Base
-[ ] Complete responsive layout implementation with Tailwind CSS
-[ ] Implement dark/light mode toggle functionality
-[ ] Set up proper API client with Axios
-[ ] Implement authentication UI and context
+Speech Processing
+[ ] Integrate OpenAI Whisper API for speech-to-text conversion
+[ ] Implement audio recording and file upload functionality
+[ ] Add audio preprocessing for optimal conversion
+[ ] Create API endpoint for audio file processing
+[ ] Implement frontend components for audio recording/upload

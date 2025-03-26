@@ -242,4 +242,226 @@ export const getAnalysisHistory = async (limit = 10) => {
         console.error('Failed to fetch history:', error.message);
         return [];
     }
-}; 
+};
+
+/**
+ * Process audio file for speech-to-text conversion and optional analysis
+ * 
+ * @param {File} audioFile - The audio file to process 
+ * @param {Object} options - Processing options
+ * @param {string} options.language - Optional language code
+ * @param {boolean} options.includeAnalysis - Whether to analyze the transcribed text
+ * @param {boolean} options.demoMode - Whether to run in demo mode without authentication
+ * @returns {Promise<Object>} Processing results
+ */
+export const processAudio = async (audioFile, options = {}) => {
+    const { language = null, includeAnalysis = false, demoMode = false } = options;
+
+    console.log(`Processing audio file: ${audioFile.name} (${audioFile.size} bytes)`);
+
+    try {
+        // Check if authentication token exists (bypass in demo mode)
+        const token = localStorage.getItem('token');
+        if (!token && !demoMode) {
+            return {
+                success: false,
+                error: 'Authentication required. Please log in.',
+                status: 401
+            };
+        }
+
+        // In demo mode, generate mock results
+        if (demoMode) {
+            return generateMockAudioResults(includeAnalysis);
+        }
+
+        // Generate a unique request ID
+        const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+        // Create FormData to send the file
+        const formData = new FormData();
+        formData.append('audio_file', audioFile);
+        formData.append('request_id', requestId);
+        formData.append('include_analysis', includeAnalysis.toString());  // Convert boolean to string
+
+        if (language) {
+            formData.append('language', language);
+        }
+
+        const response = await axios.post(
+            `${API_BASE_URL}/api/ai/process-audio`,
+            formData,
+            {
+                headers: {
+                    ...getAuthHeaders(),
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+        );
+
+        console.log('Audio processing response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error processing audio:', error);
+
+        // Handle authentication errors
+        if (error.response && error.response.status === 401) {
+            return {
+                success: false,
+                error: 'Authentication required. Please log in.',
+                status: 401
+            };
+        }
+
+        return {
+            success: false,
+            error: error.response?.data?.detail || 'An error occurred during audio processing.',
+            status: error.response?.status || 500
+        };
+    }
+};
+
+/**
+ * Set the Whisper model size to use
+ * 
+ * @param {string} modelSize - The model size to use ('tiny', 'base', 'small', 'medium', 'large')
+ * @returns {Promise<Object>} Success message
+ */
+export const setWhisperModelSize = async (modelSize) => {
+    try {
+        // Check if authentication token exists
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return {
+                success: false,
+                error: 'Authentication required. Please log in.',
+                status: 401
+            };
+        }
+
+        const response = await axios.post(
+            `${API_BASE_URL}/api/ai/set-whisper-model`,
+            { model_size: modelSize },
+            {
+                headers: getAuthHeaders(),
+                // Add timestamp to prevent caching
+                params: { t: new Date().getTime() }
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error('Error setting Whisper model size:', error);
+
+        // Handle authentication errors
+        if (error.response && error.response.status === 401) {
+            return {
+                success: false,
+                error: 'Authentication required. Please log in.',
+                status: 401
+            };
+        }
+
+        return {
+            success: false,
+            error: error.response?.data?.detail || 'An error occurred while setting the model size.',
+            status: error.response?.status || 500
+        };
+    }
+};
+
+/**
+ * Generate mock audio processing results for demo purposes
+ * 
+ * @param {boolean} includeAnalysis - Whether to include analysis results
+ * @returns {Object} Simulated audio processing results
+ */
+function generateMockAudioResults(includeAnalysis) {
+    const transcribedText = "I went to the store yesterday to buy some groceries. I forgot what I was looking for when I got there. The clerk helped me remember that I needed milk and bread. My memory is not as good as it used to be, but I'm still getting by.";
+
+    const result = {
+        success: true,
+        transcription: {
+            text: transcribedText,
+            language: "en",
+            segments: [
+                {
+                    id: 0,
+                    start: 0.0,
+                    end: 4.5,
+                    text: "I went to the store yesterday to buy some groceries."
+                },
+                {
+                    id: 1,
+                    start: 4.8,
+                    end: 8.2,
+                    text: "I forgot what I was looking for when I got there."
+                },
+                {
+                    id: 2,
+                    start: 8.5,
+                    end: 12.3,
+                    text: "The clerk helped me remember that I needed milk and bread."
+                },
+                {
+                    id: 3,
+                    start: 12.7,
+                    end: 17.9,
+                    text: "My memory is not as good as it used to be, but I'm still getting by."
+                }
+            ]
+        }
+    };
+
+    // Add analysis results if requested
+    if (includeAnalysis) {
+        result.analysis = generateMockSpeechAnalysisResults(transcribedText);
+    }
+
+    return result;
+}
+
+/**
+ * Generate mock analysis results for speech text
+ * 
+ * @param {string} text - The text to analyze
+ * @returns {Object} Simulated analysis results
+ */
+function generateMockSpeechAnalysisResults(text) {
+    // Calculate a deterministic but pseudo-random score based on text
+    const calculateScore = (base, seed) => {
+        // Use text length as a seed for some variability
+        const variability = (text.length * seed) % 20 / 100;
+        return Math.max(0.1, Math.min(0.9, base - variability));
+    };
+
+    const textLength = text.length;
+    // Shorter texts get higher risk scores (worse)
+    const overallBase = textLength < 100 ? 0.5 : textLength < 300 ? 0.35 : 0.25;
+
+    const domainScores = {
+        "LANGUAGE": calculateScore(overallBase, 1),
+        "MEMORY": calculateScore(overallBase, 2),
+        "EXECUTIVE_FUNCTION": calculateScore(overallBase, 3),
+        "ATTENTION": calculateScore(overallBase, 4),
+        "VISUOSPATIAL": calculateScore(overallBase, 5)
+    };
+
+    // Calculate overall score as average of domain scores
+    const overallScore = Object.values(domainScores).reduce((a, b) => a + b, 0) /
+        Object.values(domainScores).length;
+
+    return {
+        analysis_id: `demo_${Date.now()}`,
+        overall_score: overallScore,
+        confidence_score: 0.75,
+        domain_scores: domainScores,
+        recommendations: [
+            "Regular cognitive training exercises can help maintain brain health",
+            "Stay mentally active by reading, solving puzzles, and learning new skills",
+            "Physical exercise has been shown to improve cognitive function"
+        ],
+        model_type: "demo",
+        timestamp: new Date().toISOString()
+    };
+} 

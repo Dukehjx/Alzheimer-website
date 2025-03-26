@@ -1,17 +1,25 @@
 """
-AI Module Initialization.
+AI module for Alzheimer's detection platform.
 
-This module contains all AI-related functionality for the Alzheimer's detection platform.
+This module provides utilities for analyzing language to detect cognitive
+decline indicators.
+
+It includes both spaCy-based and GPT-based models for text analysis,
+as well as Whisper-based speech-to-text processing.
 """
 
-from app.ai.nlp import (
-    preprocess_text,
-    extract_linguistic_features,
-    calculate_cognitive_risk
+from app.ai.factory import (
+    analyze_text,
+    process_audio, 
+    set_model,
+    set_whisper_model_size,
+    register_gpt_model
 )
 
 __all__ = [
-    "preprocess_text",
-    "extract_linguistic_features",
-    "calculate_cognitive_risk"
+    "analyze_text",
+    "process_audio",
+    "set_model",
+    "set_whisper_model_size",
+    "register_gpt_model"
 ] 
