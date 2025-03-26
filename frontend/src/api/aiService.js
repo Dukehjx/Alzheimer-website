@@ -41,26 +41,48 @@ export const analyzeText = async (text, analysisType = 'text', includeFeatures =
             return generateMockAnalysisResults(text, includeFeatures);
         }
 
-        // Generate a unique request ID to prevent caching
-        const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('text', text);
+        formData.append('include_features', includeFeatures);
+        formData.append('include_raw_text', false);
 
+        // Use detect_patterns if analysis type is pattern
+        if (analysisType === 'pattern') {
+            formData.append('detect_patterns', true);
+        }
+
+        // Use the new language-analysis endpoint
         const response = await axios.post(
-            `${API_BASE_URL}/api/ai/analyze`,
-            {
-                text,
-                analysis_type: analysisType,
-                include_features: includeFeatures,
-                request_id: requestId
-            },
+            `${API_BASE_URL}/api/v1/language-analysis/analyze-text`,
+            formData,
             {
                 headers: {
                     ...getAuthHeaders(),
-                    'Cache-Control': 'no-cache, no-store'
+                    'Cache-Control': 'no-cache, no-store',
+                    'Content-Type': 'multipart/form-data'
                 }
             }
         );
 
         console.log('Analysis response:', response.data);
+
+        // Ensure we have domain_scores for consistency with our UI
+        if (response.data.success && !response.data.domain_scores) {
+            // If the API didn't provide domain scores, map any available scores to maintain UI compatibility
+            response.data.domain_scores = {};
+
+            // Use any scored domains from the response if available
+            if (response.data.cognitive_scores) {
+                response.data.domain_scores = response.data.cognitive_scores;
+            }
+
+            // Add an overall score if not present but required by UI
+            if (!response.data.overall_score && response.data.risk_score) {
+                response.data.overall_score = response.data.risk_score;
+            }
+        }
+
         return response.data;
     } catch (error) {
         console.error('Error analyzing text:', error);

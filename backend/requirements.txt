@@ -13,6 +13,7 @@ spacy>=3.7.2
 scikit-learn>=1.4.0
 numpy>=1.26.3
 pandas>=2.2.0
+langdetect>=1.0.9  # For language detection
 
 # Speech-to-Text
 openai-whisper>=20231117

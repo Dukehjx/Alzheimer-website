@@ -6,6 +6,8 @@ const TextAnalysis = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [results, setResults] = useState(null);
+    const [analysisType, setAnalysisType] = useState('text'); // 'text' or 'pattern'
+    const [includeFeatures, setIncludeFeatures] = useState(false);
 
     const handleTextChange = (e) => {
         setText(e.target.value);
@@ -17,8 +19,8 @@ const TextAnalysis = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!text.trim() || text.trim().length < 10) {
-            setError('Please enter at least 10 characters of text to analyze.');
+        if (!text.trim() || text.trim().length < 20) {
+            setError('Please enter at least 20 characters of text to analyze.');
             return;
         }
 
@@ -26,12 +28,18 @@ const TextAnalysis = () => {
         setError(null);
 
         try {
-            const response = await analyzeText(text, 'text', false, true); // Use demo mode for now
+            // Use live backend when connected, otherwise fall back to demo mode
+            const response = await analyzeText(text, analysisType, includeFeatures, false);
             console.log("Analysis response:", response);
+
+            if (!response.success) {
+                throw new Error(response.error || 'Analysis failed. Please try again.');
+            }
+
             setResults(response);
         } catch (err) {
             console.error('Analysis error:', err);
-            setError(err.response?.data?.detail || 'An error occurred during analysis. Please try again.');
+            setError(err.message || 'An error occurred during analysis. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -40,9 +48,9 @@ const TextAnalysis = () => {
     // Format domain name for display
     const formatDomain = (domain) => {
         return domain
-            .toLowerCase()
-            .split('_')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .replace(/_/g, ' ')
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
             .join(' ');
     };
 
@@ -63,17 +71,72 @@ const TextAnalysis = () => {
     return (
         <div className="w-full">
             <form onSubmit={handleSubmit} className="mb-6">
-                <textarea
-                    className="w-full border border-gray-300 rounded-md p-3 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white mb-4"
-                    rows="6"
-                    placeholder="Type or paste text here for analysis. The more text you provide, the more accurate the analysis."
-                    value={text}
-                    onChange={handleTextChange}
-                />
+                <div className="mb-4">
+                    <label htmlFor="text-input" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Enter Text for Analysis
+                    </label>
+                    <textarea
+                        id="text-input"
+                        className="w-full border border-gray-300 rounded-md p-3 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white mb-4"
+                        rows="6"
+                        placeholder="Type or paste text here for analysis. The more text you provide, the more accurate the analysis. Minimum 20 characters."
+                        value={text}
+                        onChange={handleTextChange}
+                    />
+                </div>
+
+                <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-4">
+                    <div className="w-full md:w-1/2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Analysis Type
+                        </label>
+                        <div className="flex">
+                            <button
+                                type="button"
+                                className={`flex-1 py-2 px-4 rounded-l-md ${analysisType === 'text'
+                                        ? 'bg-primary-600 text-white'
+                                        : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                                    }`}
+                                onClick={() => setAnalysisType('text')}
+                            >
+                                Standard Analysis
+                            </button>
+                            <button
+                                type="button"
+                                className={`flex-1 py-2 px-4 rounded-r-md ${analysisType === 'pattern'
+                                        ? 'bg-primary-600 text-white'
+                                        : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                                    }`}
+                                onClick={() => setAnalysisType('pattern')}
+                            >
+                                Pattern Detection
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="w-full md:w-1/2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Options
+                        </label>
+                        <div className="flex items-center">
+                            <input
+                                id="include-features"
+                                type="checkbox"
+                                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                                checked={includeFeatures}
+                                onChange={() => setIncludeFeatures(!includeFeatures)}
+                            />
+                            <label htmlFor="include-features" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                Include detailed linguistic features
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <button
                     type="submit"
                     className={`w-full py-2 px-4 rounded-md text-white ${loading ? 'bg-gray-400' : 'bg-primary-600 hover:bg-primary-700'} dark:bg-primary-700 dark:hover:bg-primary-600 flex justify-center items-center`}
-                    disabled={loading || !text.trim() || text.trim().length < 10}
+                    disabled={loading || !text.trim() || text.trim().length < 20}
                 >
                     {loading ? (
                         <>
@@ -112,55 +175,79 @@ const TextAnalysis = () => {
                                     fill="none"
                                     stroke={results.overall_score < 0.3 ? "#4caf50" : results.overall_score < 0.6 ? "#ff9800" : "#f44336"}
                                     strokeWidth="3"
-                                    strokeDasharray={`${results.overall_score * 100}, 100`}
+                                    strokeDasharray={`${(results.overall_score || results.risk_score || 0.5) * 100}, 100`}
                                 />
                                 <text x="18" y="20.35" className="text-center text-lg font-bold" textAnchor="middle" fill="currentColor">
-                                    {Math.round(results.overall_score * 100)}%
+                                    {Math.round((results.overall_score || results.risk_score || 0.5) * 100)}%
                                 </text>
                             </svg>
                             <div className="ml-4">
                                 <p className="text-lg font-semibold">
-                                    Risk Level: {getRiskLevel(results.overall_score)}
+                                    Risk Level: {getRiskLevel(results.overall_score || results.risk_score || 0.5)}
                                 </p>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Confidence: {Math.round((results.confidence_score || 0.75) * 100)}%
+                                    Confidence: {Math.round((results.confidence || 0.75) * 100)}%
                                 </p>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Model: {results.model_type || 'Demo'}
+                                    Language: {results.language_name || 'English'}
                                 </p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="border-t border-gray-200 dark:border-gray-700 my-4 py-4">
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Cognitive Domain Scores</h4>
+                    {results.domain_scores && Object.keys(results.domain_scores).length > 0 && (
+                        <div className="border-t border-gray-200 dark:border-gray-700 my-4 py-4">
+                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Cognitive Domain Scores</h4>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-                            {Object.entries(results.domain_scores || {}).map(([domain, score]) => (
-                                <div
-                                    key={domain}
-                                    className={`p-4 text-center rounded-lg shadow-sm border-t-4 ${getScoreColor(score)}`}
-                                >
-                                    <p className="text-sm font-medium">{formatDomain(domain)}</p>
-                                    <p className={`text-2xl font-bold ${getScoreColor(score)}`}>
-                                        {Math.round(score * 100)}%
-                                    </p>
-                                </div>
-                            ))}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+                                {Object.entries(results.domain_scores).filter(([domain]) => domain !== 'overall_cognitive').map(([domain, score]) => (
+                                    <div
+                                        key={domain}
+                                        className={`p-4 text-center rounded-lg shadow-sm border-t-4 ${getScoreColor(score)}`}
+                                    >
+                                        <p className="text-sm font-medium">{formatDomain(domain)}</p>
+                                        <p className={`text-2xl font-bold ${getScoreColor(score)}`}>
+                                            {Math.round(score * 100)}%
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
-                    <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Recommendations</h4>
+                    {results.detected_patterns && Object.keys(results.detected_patterns).length > 0 && (
+                        <div className="border-t border-gray-200 dark:border-gray-700 my-4 py-4">
+                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Detected Patterns</h4>
 
-                        <ul className="list-disc pl-5 space-y-2">
-                            {results.recommendations?.map((recommendation, index) => (
-                                <li key={index} className="text-gray-700 dark:text-gray-300">
-                                    {recommendation}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+                                {Object.entries(results.detected_patterns).map(([pattern, data]) => (
+                                    <div
+                                        key={pattern}
+                                        className="p-4 text-center rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                                    >
+                                        <p className="text-sm font-medium">{formatDomain(pattern)}</p>
+                                        <p className="text-2xl font-bold">
+                                            {Math.round((data.score || 0) * 100)}%
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {results.recommendations && results.recommendations.length > 0 && (
+                        <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Recommendations</h4>
+
+                            <ul className="list-disc pl-5 space-y-2">
+                                {results.recommendations.map((recommendation, index) => (
+                                    <li key={index} className="text-gray-700 dark:text-gray-300">
+                                        {recommendation}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                 </div>
             )}
         </div>

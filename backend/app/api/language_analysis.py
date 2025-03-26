@@ -3,9 +3,16 @@ Language Analysis API routes for analyzing speech and text samples
 to detect early signs of cognitive decline.
 """
 
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form
-from typing import Optional
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query, Body, Depends
+from typing import Optional, Dict, Any, List
 import json
+import asyncio
+
+from app.ai.nlp import (
+    text_analysis_pipeline,
+    validate_and_preprocess_text,
+    extract_segments
+)
 
 router = APIRouter(
     prefix="/language-analysis",
@@ -14,33 +21,143 @@ router = APIRouter(
 )
 
 @router.post("/analyze-text")
-async def analyze_text(text: str = Form(...)):
+async def analyze_text(
+    text: str = Form(...),
+    include_features: bool = Form(False),
+    include_raw_text: bool = Form(False),
+    detect_patterns: bool = Form(False)
+):
     """
     Analyze a text sample for signs of cognitive decline.
     
     This endpoint processes text input and returns linguistic metrics
     that may indicate early signs of MCI or Alzheimer's.
+    
+    Args:
+        text: The text to analyze
+        include_features: Whether to include detailed linguistic features
+        include_raw_text: Whether to include the original text in the response
+        detect_patterns: Whether to detect specific linguistic patterns
+    
+    Returns:
+        Analysis results with risk score and recommendations
     """
     try:
-        # In a real implementation, this would call a service that performs NLP analysis
-        # For now, we return mock data
-        return {
-            "analysis_id": "sample-123",
-            "text_length": len(text),
-            "metrics": {
-                "lexical_diversity": 0.75,
-                "syntactic_complexity": 0.68,
-                "hesitations": 0.05,
-                "repetitions": 0.02,
-            },
-            "risk_score": 0.25,  # Example score where 0 is low risk and 1 is high risk
-            "recommendations": [
-                "Continue regular cognitive exercises",
-                "Monitor changes in linguistic patterns over time"
-            ]
-        }
+        # Validate and preprocess the text
+        validation = validate_and_preprocess_text(text)
+        if not validation["success"]:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Invalid text input: {', '.join(validation.get('errors', ['Unknown error']))}"
+            )
+        
+        # Analyze the text
+        if detect_patterns:
+            results = await text_analysis_pipeline.detect_linguistic_patterns(validation["text"])
+        else:
+            results = await text_analysis_pipeline.analyze_text(
+                validation["text"],
+                include_features=include_features,
+                include_raw_text=include_raw_text
+            )
+        
+        # Add validation metadata
+        results["language"] = validation["language"]
+        results["language_name"] = validation["language_name"]
+        
+        # Add warnings if any
+        if validation.get("warnings"):
+            results["warnings"] = validation["warnings"]
+        
+        return results
+    
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+
+@router.post("/analyze-text-segments")
+async def analyze_text_segments(
+    text: str = Form(...),
+    min_segment_length: int = Form(50),
+    include_features: bool = Form(False)
+):
+    """
+    Analyze segments of a text sample separately and return results for each segment.
+    
+    This is useful for analyzing longer texts by breaking them into paragraphs
+    or sections and analyzing each independently.
+    
+    Args:
+        text: The text to analyze
+        min_segment_length: Minimum length for a valid segment
+        include_features: Whether to include detailed linguistic features
+    
+    Returns:
+        Analysis results for each segment and overall assessment
+    """
+    try:
+        # Validate and preprocess the text
+        validation = validate_and_preprocess_text(text)
+        if not validation["success"]:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Invalid text input: {', '.join(validation.get('errors', ['Unknown error']))}"
+            )
+        
+        # Extract segments
+        segments = extract_segments(validation["text"], min_segment_length=min_segment_length)
+        
+        if not segments:
+            raise HTTPException(
+                status_code=400,
+                detail="Could not extract valid segments from text"
+            )
+        
+        # Analyze each segment
+        segment_results = []
+        analysis_tasks = []
+        
+        for segment in segments:
+            # Create analysis tasks
+            task = text_analysis_pipeline.analyze_text(
+                segment["text"],
+                include_features=include_features,
+                include_raw_text=False
+            )
+            analysis_tasks.append(task)
+        
+        # Run all analyses concurrently
+        segment_analyses = await asyncio.gather(*analysis_tasks)
+        
+        # Combine segment data with analysis results
+        for i, segment in enumerate(segments):
+            segment_result = {
+                "segment": segment,
+                "analysis": segment_analyses[i]
+            }
+            segment_results.append(segment_result)
+        
+        # Calculate overall risk score (average of segment scores weighted by length)
+        total_length = sum(segment["length"] for segment in segments)
+        overall_score = 0.0
+        
+        if total_length > 0:
+            for i, segment in enumerate(segments):
+                if segment_analyses[i].get("success", False):
+                    weight = segment["length"] / total_length
+                    overall_score += segment_analyses[i].get("risk_score", 0.5) * weight
+        
+        # Return combined results
+        return {
+            "success": True,
+            "segments": segment_results,
+            "overall_risk_score": overall_score,
+            "segment_count": len(segments),
+            "language": validation["language"],
+            "language_name": validation["language_name"]
+        }
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Segment analysis failed: {str(e)}")
 
 @router.post("/analyze-speech")
 async def analyze_speech(audio_file: UploadFile = File(...)):
