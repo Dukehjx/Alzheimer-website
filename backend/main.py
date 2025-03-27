@@ -11,6 +11,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 
 # Import routers
@@ -57,6 +59,15 @@ app.add_middleware(
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
 )
+
+# Mount static files directory
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Favicon endpoint
+@app.get("/favicon.ico")
+async def get_favicon():
+    """Serve the favicon.ico file."""
+    return FileResponse("static/favicon.ico")
 
 # Include routers
 api_prefix = os.getenv("API_PREFIX", "/api/v1")
