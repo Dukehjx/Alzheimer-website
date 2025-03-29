@@ -8,7 +8,7 @@ import { BoltIcon } from '@heroicons/react/24/solid';
 const navigation = [
   { name: 'Home', href: '/' },
   { name: 'AI Screening', href: '/screening' },
-  { name: 'Cognitive Training', href: '/training' },
+  { name: 'Cognitive Training', href: '/cognitive-training' },
   { name: 'Resource Hub', href: '/resources' },
   { name: 'Health Monitoring', href: '/health-monitoring' },
 ];

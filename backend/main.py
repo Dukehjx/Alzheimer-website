@@ -16,7 +16,7 @@ from fastapi.responses import FileResponse
 from dotenv import load_dotenv
 
 # Import routers
-from app.api import auth_router, language_router, ai_router
+from app.api import auth_router, language_router, cognitive_training_router, ai_router
 
 # Import database utilities
 from app.db import connect_to_mongodb, close_mongodb_connection
@@ -73,6 +73,7 @@ async def get_favicon():
 api_prefix = os.getenv("API_PREFIX", "/api/v1")
 app.include_router(auth_router, prefix=api_prefix)
 app.include_router(language_router, prefix=api_prefix)
+app.include_router(cognitive_training_router, prefix=api_prefix)
 app.include_router(ai_router)  # AI router already has prefix defined
 
 # Error handling
