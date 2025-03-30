@@ -67,7 +67,7 @@ async def lifespan(app: FastAPI):
 
 # Create FastAPI app
 app = FastAPI(
-    title="Alzheimer's Detection Platform API",
+    title="NeuroAegis Platform API",
     description="Backend API for the AI-powered Alzheimer's detection and prevention platform",
     version="0.1.0",
     lifespan=lifespan,
@@ -144,7 +144,7 @@ async def root():
     """Root endpoint that returns API status."""
     return {
         "status": "online",
-        "message": "Welcome to the Alzheimer's Detection Platform API",
+        "message": "Welcome to the NeuroAegis Platform API",
         "version": "0.1.0",
     }
 

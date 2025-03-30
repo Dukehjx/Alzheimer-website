@@ -1,6 +1,6 @@
-# 🌍 AI-Powered Platform for Early Detection of MCI & Alzheimer's Prevention
+# 🌍 NeuroAegis: AI-Powered Platform for Early Detection of MCI & Alzheimer's Prevention
 
-Welcome to our innovative platform designed to facilitate early detection of Mild Cognitive Impairment (MCI) and support Alzheimer's prevention through AI-driven tools and resources. This project combines advanced language analysis, cognitive training, and comprehensive resources to promote cognitive health.
+Welcome to NeuroAegis - our innovative platform designed to facilitate early detection of Mild Cognitive Impairment (MCI) and support Alzheimer's prevention through AI-driven tools and resources. This project combines advanced language analysis, cognitive training, and comprehensive resources to promote cognitive health.
 
 ## 🧠 Core Features
 

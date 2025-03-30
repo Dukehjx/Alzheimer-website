@@ -1,7 +1,7 @@
 /**
  * Application Configuration
  * 
- * Central configuration settings for the Alzheimer's Early Detection Platform
+ * Central configuration settings for the NeuroAegis Platform
  */
 
 // API Configuration

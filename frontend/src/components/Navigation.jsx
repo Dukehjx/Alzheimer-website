@@ -22,7 +22,7 @@ export default function Navigation() {
         <div className="flex lg:flex-1">
           <Link to="/" className="-m-1.5 p-1.5 flex items-center">
             <BoltIcon className="h-8 w-auto text-primary-600 dark:text-primary-400" />
-            <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">BrainGuard AI</span>
+            <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">NeuroAegis</span>
           </Link>
         </div>
 
@@ -90,7 +90,7 @@ export default function Navigation() {
           <div className="flex items-center justify-between">
             <Link to="/" className="-m-1.5 p-1.5 flex items-center">
               <BoltIcon className="h-8 w-auto text-primary-600 dark:text-primary-400" />
-              <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">BrainGuard AI</span>
+              <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">NeuroAegis</span>
             </Link>
             <button
               type="button"
