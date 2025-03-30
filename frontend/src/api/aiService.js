@@ -179,8 +179,8 @@ function generateMockAnalysisResults(text, includeFeatures) {
 /**
  * Set the AI model to use for analysis
  * 
- * @param {string} modelType - The type of model to use ('spacy' or 'gpt4')
- * @param {string} apiKey - API key for GPT-4 (required if modelType is 'gpt4')
+ * @param {string} modelType - Should always be 'gpt4o'
+ * @param {string} apiKey - API key for GPT-4o (required)
  * @returns {Promise<Object>} Success message
  */
 export const setAiModel = async (modelType, apiKey = null) => {
@@ -195,9 +195,24 @@ export const setAiModel = async (modelType, apiKey = null) => {
             };
         }
 
+        // Ensure model type is always gpt4o
+        const finalModelType = 'gpt4o';
+        if (modelType !== finalModelType) {
+            console.warn(`Model type ${modelType} is not supported. Using GPT-4o instead.`);
+        }
+
+        // API key is required
+        if (!apiKey) {
+            return {
+                success: false,
+                error: 'API key is required for GPT-4o',
+                status: 400
+            };
+        }
+
         const response = await axios.post(
             `${API_BASE_URL}/api/ai/set-model`,
-            { model_type: modelType, api_key: apiKey },
+            { model_type: finalModelType, api_key: apiKey },
             {
                 headers: getAuthHeaders(),
                 // Add timestamp to prevent caching

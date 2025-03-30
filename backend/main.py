@@ -21,6 +21,9 @@ from app.api import auth_router, language_router, cognitive_training_router, ai_
 # Import database utilities
 from app.db import connect_to_mongodb, close_mongodb_connection
 
+# Import OpenAI initialization
+from app.ai.openai_init import initialize_openai_api
+
 # Load environment variables
 load_dotenv()
 
@@ -34,11 +37,30 @@ logger = logging.getLogger(__name__)
 # Define lifespan context manager for database connections
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lifespan events for database connections."""
+    """Lifespan events for database connections and API initialization."""
     # Startup: Connect to MongoDB
     logger.info("Connecting to MongoDB...")
     await connect_to_mongodb()
+    
+    # Initialize OpenAI API
+    logger.info("Initializing OpenAI API with your API key...")
+    api_key = os.getenv("OPENAI_API_KEY")
+    if api_key:
+        logger.info(f"API key found (starts with: {api_key[:8]}...)")
+        if initialize_openai_api():
+            logger.info("OpenAI API initialized successfully and GPT-4o model is set as default.")
+            
+            # Display current model configuration
+            from app.ai.factory import model_factory
+            current_model = model_factory.get_current_model_type()
+            logger.info(f"Current AI model set to: {current_model}")
+        else:
+            logger.warning("Failed to initialize OpenAI API. Some features may not work properly.")
+    else:
+        logger.warning("No OpenAI API key found in environment variables.")
+    
     yield
+    
     # Shutdown: Close MongoDB connection
     logger.info("Closing MongoDB connection...")
     await close_mongodb_connection()

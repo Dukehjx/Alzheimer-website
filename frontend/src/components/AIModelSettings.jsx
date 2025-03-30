@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     Button,
@@ -6,10 +6,7 @@ import {
     CardContent,
     CardHeader,
     FormControl,
-    FormControlLabel,
     Grid,
-    Radio,
-    RadioGroup,
     TextField,
     Typography,
     Alert,
@@ -22,7 +19,7 @@ import {
 import { setAiModel, setWhisperModelSize } from '../api/aiService';
 
 const AIModelSettings = () => {
-    const [selectedModel, setSelectedModel] = useState('spacy');
+    // Always use GPT-4o model
     const [apiKey, setApiKey] = useState('');
     const [whisperModelSize, setWhisperModelSize] = useState('base');
     const [loading, setLoading] = useState(false);
@@ -31,13 +28,6 @@ const AIModelSettings = () => {
     const [whisperError, setWhisperError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [whisperSuccess, setWhisperSuccess] = useState(null);
-
-    const handleModelChange = (e) => {
-        setSelectedModel(e.target.value);
-        // Clear messages when model changes
-        if (error) setError(null);
-        if (success) setSuccess(null);
-    };
 
     const handleApiKeyChange = (e) => {
         setApiKey(e.target.value);
@@ -57,8 +47,8 @@ const AIModelSettings = () => {
         e.preventDefault();
 
         // Validate form
-        if (selectedModel === 'gpt4' && !apiKey.trim()) {
-            setError('API key is required for GPT-4 model');
+        if (!apiKey.trim()) {
+            setError('API key is required for GPT-4o model');
             return;
         }
 
@@ -67,22 +57,17 @@ const AIModelSettings = () => {
         setSuccess(null);
 
         try {
-            // Only pass API key if GPT-4 is selected
-            const apiKeyToSend = selectedModel === 'gpt4' ? apiKey : null;
-            const response = await setAiModel(selectedModel, apiKeyToSend);
+            // Always set model to GPT-4o
+            const response = await setAiModel('gpt4o', apiKey);
 
             if (response.success) {
-                setSuccess(`Successfully set AI model to ${selectedModel.toUpperCase()}`);
-                // Clear API key field after successful submission
-                if (selectedModel === 'spacy') {
-                    setApiKey('');
-                }
+                setSuccess('Successfully set API key for GPT-4o model');
             } else {
-                setError('Failed to update AI model settings');
+                setError('Failed to update API key');
             }
         } catch (err) {
             console.error('Error setting AI model:', err);
-            setError(err.response?.data?.detail || 'Failed to update AI model settings');
+            setError(err.response?.data?.detail || 'Failed to update API key');
         } finally {
             setLoading(false);
         }
@@ -116,8 +101,8 @@ const AIModelSettings = () => {
             <Grid item xs={12} md={6}>
                 <Card variant="outlined">
                     <CardHeader
-                        title="Text Analysis Model"
-                        subheader="Configure which model to use for cognitive analysis"
+                        title="OpenAI API Configuration"
+                        subheader="Set your API key for GPT-4o powered cognitive analysis"
                     />
                     <Divider />
                     <CardContent>
@@ -125,59 +110,33 @@ const AIModelSettings = () => {
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
                                     <Typography variant="subtitle1" gutterBottom>
-                                        Select Model
+                                        GPT-4o API Key
                                     </Typography>
-                                    <FormControl component="fieldset">
-                                        <RadioGroup
-                                            name="model-type"
-                                            value={selectedModel}
-                                            onChange={handleModelChange}
-                                        >
-                                            <FormControlLabel
-                                                value="spacy"
-                                                control={<Radio />}
-                                                label="SpaCy NLP (Default)"
-                                            />
-                                            <FormControlLabel
-                                                value="gpt4"
-                                                control={<Radio />}
-                                                label="GPT-4 (Requires API Key)"
-                                            />
-                                        </RadioGroup>
-                                    </FormControl>
+                                    <TextField
+                                        fullWidth
+                                        type="password"
+                                        variant="outlined"
+                                        label="OpenAI API Key"
+                                        value={apiKey}
+                                        onChange={handleApiKeyChange}
+                                        placeholder="Enter your OpenAI API key"
+                                        required
+                                        autoComplete="off"
+                                    />
+                                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
+                                        Your API key is required for GPT-4o powered analysis and is only used to initialize the model.
+                                    </Typography>
                                 </Grid>
-
-                                {selectedModel === 'gpt4' && (
-                                    <Grid item xs={12}>
-                                        <Typography variant="subtitle1" gutterBottom>
-                                            OpenAI API Key
-                                        </Typography>
-                                        <TextField
-                                            fullWidth
-                                            type="password"
-                                            variant="outlined"
-                                            label="OpenAI API Key"
-                                            value={apiKey}
-                                            onChange={handleApiKeyChange}
-                                            placeholder="Enter your OpenAI API key"
-                                            required
-                                            autoComplete="off"
-                                        />
-                                        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-                                            Your API key is not stored permanently and is only used to initialize the model.
-                                        </Typography>
-                                    </Grid>
-                                )}
 
                                 <Grid item xs={12}>
                                     <Button
                                         type="submit"
                                         variant="contained"
                                         color="primary"
-                                        disabled={loading || (selectedModel === 'gpt4' && !apiKey.trim())}
+                                        disabled={loading || !apiKey.trim()}
                                         startIcon={loading && <CircularProgress size={20} color="inherit" />}
                                     >
-                                        {loading ? 'Updating...' : 'Save Settings'}
+                                        {loading ? 'Updating...' : 'Save API Key'}
                                     </Button>
                                 </Grid>
 

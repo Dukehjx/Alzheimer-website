@@ -146,11 +146,11 @@ async def set_model_endpoint(
     current_user: UserInDB = Depends(get_current_user)
 ):
     """
-    Set the AI model to use for analysis.
+    Set the API key for the GPT-4o model.
     
     Args:
-        model_type: The type of model to use ('spacy' or 'gpt4')
-        api_key: API key for GPT-4 (required if model_type is 'gpt4')
+        model_type: Will always be 'gpt4o' regardless of input
+        api_key: API key for GPT-4o (required)
         current_user: The authenticated user
         
     Returns:
@@ -160,7 +160,17 @@ async def set_model_endpoint(
     if "admin" not in current_user.roles:
         raise HTTPException(
             status_code=403,
-            detail="Only administrators can change the AI model"
+            detail="Only administrators can update the API key"
+        )
+    
+    # Force model_type to 'gpt4o'
+    model_type = 'gpt4o'
+    
+    # API key is required
+    if not api_key:
+        raise HTTPException(
+            status_code=400,
+            detail="API key is required for GPT-4o"
         )
     
     try:
@@ -169,16 +179,16 @@ async def set_model_endpoint(
         if not success:
             raise HTTPException(
                 status_code=400,
-                detail=f"Failed to set model to {model_type}. Check if API key is valid."
+                detail="Failed to set API key. Please check if the API key is valid."
             )
         
-        return {"success": True, "message": f"Model set to {model_type}"}
+        return {"success": True, "message": "GPT-4o API key updated successfully"}
     
     except Exception as e:
-        logger.error(f"Error setting model: {str(e)}")
+        logger.error(f"Error setting API key: {str(e)}")
         raise HTTPException(
             status_code=500,
-            detail=f"An error occurred while setting the model: {str(e)}"
+            detail=f"An error occurred while updating the API key: {str(e)}"
         )
 
 @router.get("/history")

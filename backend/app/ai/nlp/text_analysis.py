@@ -3,7 +3,7 @@ Text Analysis Pipeline for Linguistic Pattern Detection.
 
 This module implements a complete pipeline for analyzing text samples to 
 detect linguistic patterns that may indicate early signs of cognitive decline.
-It coordinates preprocessing, feature extraction, and risk assessment.
+It coordinates preprocessing, feature extraction, and risk assessment using GPT-4o.
 """
 
 import logging
@@ -14,7 +14,9 @@ from datetime import datetime
 
 from app.ai.nlp.preprocessing import preprocess_text, tokenize_text
 from app.ai.nlp.feature_extraction import extract_linguistic_features
-from app.ai.nlp.risk_assessment import calculate_cognitive_risk
+
+# Remove the circular import
+# from app.ai.factory import analyze_text as factory_analyze_text
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -22,12 +24,12 @@ logger = logging.getLogger(__name__)
 class TextAnalysisPipeline:
     """
     A complete pipeline for analyzing text to detect linguistic patterns
-    related to cognitive decline.
+    related to cognitive decline using GPT-4o.
     """
     
     def __init__(self):
         """Initialize the text analysis pipeline."""
-        logger.info("Initializing text analysis pipeline")
+        logger.info("Initializing text analysis pipeline with GPT-4o")
     
     async def analyze_text(
         self, 
@@ -37,7 +39,8 @@ class TextAnalysisPipeline:
         normalize_scores: bool = True
     ) -> Dict[str, Any]:
         """
-        Analyze text for linguistic patterns that may indicate cognitive decline.
+        Analyze text for linguistic patterns that may indicate cognitive decline
+        using the GPT-4o model.
         
         Args:
             text: The text to analyze
@@ -84,19 +87,21 @@ class TextAnalysisPipeline:
                 results["execution_time"] = time.time() - start_time
                 return results
             
-            # Step 2: Extract linguistic features
-            logger.debug("Extracting linguistic features")
-            linguistic_features = extract_linguistic_features(processed_text)
-            
-            # Include detailed features if requested
+            # Step 2: Extract linguistic features if needed
             if include_features:
+                logger.debug("Extracting linguistic features")
+                linguistic_features = extract_linguistic_features(processed_text)
                 results["linguistic_features"] = linguistic_features
             
-            # Step 3: Calculate cognitive risk scores
-            logger.debug("Calculating cognitive risk scores")
-            risk_assessment = calculate_cognitive_risk(
+            # Step 3: Use GPT-4o for cognitive risk assessment
+            logger.debug("Calculating cognitive risk scores with GPT-4o")
+            
+            # Import analyze_with_gpt directly from analyzer to avoid circular import
+            from app.ai.gpt.analyzer import analyze_with_gpt
+            
+            risk_assessment = analyze_with_gpt(
                 processed_text, 
-                include_features=False
+                include_features=include_features
             )
             
             # Check if risk_assessment was successful
@@ -108,18 +113,14 @@ class TextAnalysisPipeline:
                     "execution_time": time.time() - start_time
                 }
             
-            # Extract the values from the GPT data which contains the interpretation
-            gpt_data = risk_assessment.get("gpt_data", {})
-            cognitive_assessment = gpt_data.get("cognitive_assessment", {})
-            interpretation = cognitive_assessment.get("interpretation", "No interpretation available")
-            
             # Step 4: Combine results
             results.update({
-                "risk_score": risk_assessment.get("overall_score", 0.5),
-                "confidence_score": risk_assessment.get("confidence_score", 0.7),  # Use confidence_score key consistently
+                "risk_score": risk_assessment.get("risk_score", 0.5),
+                "confidence_score": risk_assessment.get("confidence", 0.7),
                 "domain_scores": risk_assessment.get("domain_scores", {}),
-                "interpretation": interpretation,
-                "recommendations": risk_assessment.get("recommendations", [])
+                "model_type": risk_assessment.get("model_type", "gpt4o"),
+                "recommendations": risk_assessment.get("recommendations", []),
+                "evidence": risk_assessment.get("evidence", [])
             })
             
             # Add execution time
@@ -159,49 +160,57 @@ class TextAnalysisPipeline:
         if not analysis_results.get("success", False):
             return analysis_results
         
-        # Extract patterns from the features
+        # Extract patterns from the GPT-4o analysis
         patterns = {
             "detected_patterns": {},
-            "success": True
+            "success": True,
+            "model_type": "gpt4o"
         }
         
         features = analysis_results.get("linguistic_features", {})
+        evidence = analysis_results.get("evidence", [])
         
-        # Extract repetition patterns
-        if "repetitions" in patterns_of_interest and "repetition_patterns" in features:
-            repetition_data = features["repetition_patterns"]
-            patterns["detected_patterns"]["repetitions"] = {
-                "score": repetition_data.get("combined_repetition_score", 0),
-                "word_repetition_rate": repetition_data.get("word_repetition_rate", 0),
-                "phrase_repetition_rate": repetition_data.get("phrase_repetition_rate", 0)
-            }
+        # Add feature-based patterns if available
+        if features:
+            # Extract repetition patterns
+            if "repetitions" in patterns_of_interest and "repetition_patterns" in features:
+                repetition_data = features["repetition_patterns"]
+                patterns["detected_patterns"]["repetitions"] = {
+                    "score": repetition_data.get("combined_repetition_score", 0),
+                    "word_repetition_rate": repetition_data.get("word_repetition_rate", 0),
+                    "phrase_repetition_rate": repetition_data.get("phrase_repetition_rate", 0)
+                }
+            
+            # Extract hesitation patterns
+            if "hesitations" in patterns_of_interest and "hesitation_patterns" in features:
+                hesitation_data = features["hesitation_patterns"]
+                patterns["detected_patterns"]["hesitations"] = {
+                    "score": hesitation_data.get("hesitation_score", 0),
+                    "filler_ratio": hesitation_data.get("filler_ratio", 0),
+                    "revision_ratio": hesitation_data.get("revision_ratio", 0)
+                }
+            
+            # Extract simplification patterns (from syntactic complexity)
+            if "simplification" in patterns_of_interest and "syntactic_complexity" in features:
+                complexity_data = features["syntactic_complexity"]
+                patterns["detected_patterns"]["simplification"] = {
+                    "score": 1.0 - complexity_data.get("complex_sentence_ratio", 0),
+                    "mean_sentence_length": complexity_data.get("mean_sentence_length", 0),
+                    "max_tree_depth": complexity_data.get("max_tree_depth", 0)
+                }
+            
+            # Extract word finding difficulty (from lexical diversity)
+            if "word_finding_difficulty" in patterns_of_interest and "lexical_diversity" in features:
+                lexical_data = features["lexical_diversity"]
+                patterns["detected_patterns"]["word_finding_difficulty"] = {
+                    "score": 1.0 - lexical_data.get("type_token_ratio", 0),
+                    "unique_lemma_ratio": lexical_data.get("unique_lemma_ratio", 0)
+                }
         
-        # Extract hesitation patterns
-        if "hesitations" in patterns_of_interest and "hesitation_patterns" in features:
-            hesitation_data = features["hesitation_patterns"]
-            patterns["detected_patterns"]["hesitations"] = {
-                "score": hesitation_data.get("hesitation_score", 0),
-                "filler_ratio": hesitation_data.get("filler_ratio", 0),
-                "revision_ratio": hesitation_data.get("revision_ratio", 0)
-            }
-        
-        # Extract simplification patterns (from syntactic complexity)
-        if "simplification" in patterns_of_interest and "syntactic_complexity" in features:
-            complexity_data = features["syntactic_complexity"]
-            patterns["detected_patterns"]["simplification"] = {
-                "score": 1.0 - complexity_data.get("complex_sentence_ratio", 0),
-                "mean_sentence_length": complexity_data.get("mean_sentence_length", 0),
-                "max_tree_depth": complexity_data.get("max_tree_depth", 0)
-            }
-        
-        # Extract word finding difficulty (from lexical diversity)
-        if "word_finding_difficulty" in patterns_of_interest and "lexical_diversity" in features:
-            lexical_data = features["lexical_diversity"]
-            patterns["detected_patterns"]["word_finding_difficulty"] = {
-                "score": 1.0 - lexical_data.get("type_token_ratio", 0),
-                "unique_lemma_ratio": lexical_data.get("unique_lemma_ratio", 0)
-            }
-        
+        # Add evidence from GPT-4o analysis
+        if evidence:
+            patterns["evidence"] = evidence
+            
         # Add overall metrics
         patterns["risk_score"] = analysis_results.get("risk_score", 0.5)
         patterns["confidence_score"] = analysis_results.get("confidence_score", 0.7)

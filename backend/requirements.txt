@@ -16,6 +16,7 @@ pandas>=2.2.0
 langdetect>=1.0.9  # For language detection
 
 # Speech-to-Text
+openai>=1.16.0  # OpenAI client for Whisper and GPT APIs
 openai-whisper>=20231117
 ffmpeg-python>=0.2.0
 pydub>=0.25.1

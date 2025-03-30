@@ -28,7 +28,12 @@ def analyze_with_gpt(text: str, include_features: bool = False) -> Dict[str, Any
     
     try:
         # Call the GPT-based risk assessment function
-        result = gpt_calculate_risk(text, include_features=include_features)
+        # Note: calculate_cognitive_risk doesn't accept include_features parameter
+        result = gpt_calculate_risk(text)
+        
+        # If include_features is False, remove the features from the result
+        if not include_features and "features" in result:
+            del result["features"]
         
         if not result.get("success", False):
             logger.error(f"GPT analysis failed: {result.get('error')}")

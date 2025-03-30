@@ -2,10 +2,10 @@
 AI module for Alzheimer's detection platform.
 
 This module provides utilities for analyzing language to detect cognitive
-decline indicators.
+decline indicators using GPT-4o and OpenAI's Whisper API.
 
-It includes both spaCy-based and GPT-based models for text analysis,
-as well as Whisper-based speech-to-text processing.
+The system uses GPT-4o for all language analysis and cognitive assessment,
+and Whisper API for speech-to-text processing.
 """
 
 from app.ai.factory import (

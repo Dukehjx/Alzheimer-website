@@ -1,7 +1,7 @@
 """
 GPT Module Initialization.
 
-This module provides interfaces for GPT-4 based language analysis.
+This module provides interfaces for GPT-4o based language analysis.
 It will be initialized when an API key is provided.
 """
 

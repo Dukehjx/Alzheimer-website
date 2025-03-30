@@ -2,7 +2,7 @@
 AI Model Factory Module.
 
 This module provides a factory for creating and managing different AI models
-for language analysis, allowing easy switching between spaCy and GPT models.
+for language analysis, using GPT-4o for all cognitive analysis.
 """
 
 import os
@@ -11,7 +11,8 @@ from enum import Enum
 from typing import Dict, Any, Callable, Optional, Union, BinaryIO
 from pathlib import Path
 
-from app.ai.nlp.risk_assessment import calculate_cognitive_risk as spacy_calculate_risk
+# Removed import of spacy_calculate_risk to fix circular import issues
+# The GPT-4o model is now used exclusively for all cognitive analysis
 from app.ai.speech.whisper_processor import process_audio as whisper_process_audio
 
 # Initialize logger
@@ -19,8 +20,7 @@ logger = logging.getLogger(__name__)
 
 class ModelType(str, Enum):
     """Enum for available model types."""
-    SPACY = "spacy"
-    GPT4 = "gpt4"
+    GPT4O = "gpt4o"
 
 # Model sizes for Whisper
 class WhisperModelSize(str, Enum):
@@ -37,11 +37,10 @@ class AIModelFactory:
     def __init__(self):
         """Initialize the factory with available models."""
         self._models = {
-            ModelType.SPACY: spacy_calculate_risk,
             # GPT model will be registered when API key is provided
-            ModelType.GPT4: None
+            ModelType.GPT4O: None
         }
-        self._current_model = ModelType.SPACY
+        self._current_model = ModelType.GPT4O
         self._whisper_model_size = WhisperModelSize.BASE
     
     def register_gpt_model(self, gpt_function: Callable):
@@ -51,8 +50,9 @@ class AIModelFactory:
         Args:
             gpt_function: The function that implements GPT-based analysis
         """
-        self._models[ModelType.GPT4] = gpt_function
-        logger.info("GPT-4 model registered successfully")
+        self._models[ModelType.GPT4O] = gpt_function
+        logger.info("GPT-4o model registered successfully")
+        return True
     
     def set_model(self, model_type: ModelType) -> bool:
         """
@@ -110,7 +110,7 @@ class AIModelFactory:
     
     def analyze_text(self, text: str) -> Dict[str, Any]:
         """
-        Analyze text using the current model.
+        Analyze text using the GPT-4o model.
         
         Args:
             text: The text to analyze
@@ -147,7 +147,7 @@ class AIModelFactory:
         language: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Process audio file using Whisper.
+        Process audio file using OpenAI Whisper API.
         
         Args:
             audio_file: File-like object or path to audio file
@@ -174,14 +174,14 @@ model_factory = AIModelFactory()
 
 def analyze_text(text: str, include_features: bool = False) -> Dict[str, Any]:
     """
-    Analyze text using the current AI model.
+    Analyze text using the GPT-4o model.
     
     Args:
         text: The text to analyze
         include_features: Whether to include detailed linguistic features in response
         
     Returns:
-        Analysis results from the current model
+        Analysis results from the GPT-4o model
     """
     try:
         # Use the singleton instance, not creating a new one
@@ -190,18 +190,10 @@ def analyze_text(text: str, include_features: bool = False) -> Dict[str, Any]:
         
         logger.info(f"Analyzing text with {current_model} model")
         
-        if current_model == ModelType.SPACY:
-            from app.ai.nlp.risk_assessment import calculate_cognitive_risk
-            return calculate_cognitive_risk(text, include_features=include_features)
-        elif current_model == ModelType.GPT4:
-            # Import here to avoid circular imports
-            from app.ai.gpt.analyzer import analyze_with_gpt
-            return analyze_with_gpt(text, include_features=include_features)
-            
-        return {
-            "success": False,
-            "error": f"Unsupported model type: {current_model}"
-        }
+        # Always use the GPT-4o model
+        # Import inside function to avoid circular import
+        from app.ai.gpt.analyzer import analyze_with_gpt
+        return analyze_with_gpt(text, include_features=include_features)
         
     except Exception as e:
         logger.error(f"Error in text analysis: {str(e)}")
@@ -216,7 +208,7 @@ def process_audio(
     language: Optional[str] = None
 ) -> Dict[str, Any]:
     """
-    Process audio file using Whisper.
+    Process audio file using OpenAI Whisper API.
     
     Args:
         audio_file: File-like object or path to audio file
@@ -236,17 +228,21 @@ def process_audio(
 
 def set_model(model_type: str, api_key: Optional[str] = None) -> bool:
     """
-    Set the current model to use.
+    Set the current model to use. Only GPT-4o is supported.
     
     Args:
-        model_type: The model type to use ("spacy" or "gpt4")
-        api_key: API key for GPT-4 (required if model_type is "gpt4")
+        model_type: The model type to use (only "gpt4o" is valid)
+        api_key: API key for GPT-4o (required)
         
     Returns:
         True if model was set successfully, False otherwise
     """
     try:
-        if model_type.lower() == "gpt4" and api_key:
+        if model_type.lower() != "gpt4o":
+            logger.warning(f"Model type {model_type} is not supported. Using GPT-4o instead.")
+            model_type = "gpt4o"
+            
+        if api_key:
             # Register GPT model with API key
             if not register_gpt_model(api_key):
                 return False
@@ -274,7 +270,7 @@ def set_whisper_model_size(model_size: str) -> bool:
 
 def register_gpt_model(api_key: str) -> bool:
     """
-    Register GPT-4 model with the provided API key.
+    Register GPT-4o model with the provided API key.
     
     Args:
         api_key: OpenAI API key

@@ -1,7 +1,7 @@
 """
-GPT-4 based risk assessment for cognitive decline.
+GPT-4o based risk assessment for cognitive decline.
 
-This module provides GPT-4 powered language analysis for cognitive decline detection.
+This module provides GPT-4o powered language analysis for cognitive decline detection.
 It will be initialized and used when an OpenAI API key is provided.
 """
 
@@ -41,7 +41,7 @@ def initialize_gpt(api_key: str) -> bool:
         
         # Test the API key with a simple call
         response = openai_client.chat.completions.create(
-            model="gpt-4-turbo",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are a cognitive health assistant."},
                 {"role": "user", "content": "Hello, this is a test."}
@@ -49,25 +49,25 @@ def initialize_gpt(api_key: str) -> bool:
             max_tokens=10
         )
         
-        logger.info("GPT-4 model initialized successfully")
+        logger.info("GPT-4o model initialized successfully")
         return True
     except ImportError:
         logger.error("Failed to import openai package. Please install it with 'pip install openai'")
         return False
     except Exception as e:
-        logger.error(f"Error initializing GPT-4 model: {str(e)}")
+        logger.error(f"Error initializing GPT-4o model: {str(e)}")
         return False
 
 def generate_gpt_prompt(text: str, linguistic_features: Dict[str, Any]) -> str:
     """
-    Generate a prompt for GPT-4 analysis.
+    Generate a prompt for GPT-4o analysis.
     
     Args:
         text: Original text input
         linguistic_features: Extracted linguistic features from spaCy
         
     Returns:
-        Formatted prompt for GPT-4
+        Formatted prompt for GPT-4o
     """
     return f"""
 You are an expert cognitive linguist specializing in detecting early signs of cognitive decline through language analysis.
@@ -108,10 +108,10 @@ Format your response as JSON with the following structure:
 
 def parse_gpt_response(response: str) -> Dict[str, Any]:
     """
-    Parse the GPT-4 response into structured data.
+    Parse the GPT-4o response into structured data.
     
     Args:
-        response: Raw GPT-4 response
+        response: Raw GPT-4o response
         
     Returns:
         Structured response data
@@ -139,9 +139,9 @@ def parse_gpt_response(response: str) -> Dict[str, Any]:
 
 def calculate_cognitive_risk(text: str) -> Dict[str, Any]:
     """
-    Calculate cognitive risk using GPT-4.
+    Calculate cognitive risk using GPT-4o.
     
-    This function leverages GPT-4's language understanding
+    This function leverages GPT-4o's language understanding
     to assess cognitive decline risks from text.
     
     Args:
@@ -153,10 +153,10 @@ def calculate_cognitive_risk(text: str) -> Dict[str, Any]:
     global openai_client
     
     if openai_client is None:
-        logger.error("GPT-4 model not initialized. Call initialize_gpt() first.")
+        logger.error("GPT-4o model not initialized. Call initialize_gpt() first.")
         return {
             "success": False,
-            "error": "GPT-4 model not initialized"
+            "error": "GPT-4o model not initialized"
         }
     
     try:
@@ -171,12 +171,12 @@ def calculate_cognitive_risk(text: str) -> Dict[str, Any]:
                 "error": "Failed to extract linguistic features"
             }
         
-        # Generate prompt for GPT-4
+        # Generate prompt for GPT-4o
         prompt = generate_gpt_prompt(text, features)
         
-        # Call GPT-4 API
+        # Call GPT-4o API
         response = openai_client.chat.completions.create(
-            model="gpt-4-turbo",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are a cognitive health assessment system specializing in linguistic analysis."},
                 {"role": "user", "content": prompt}
@@ -192,10 +192,10 @@ def calculate_cognitive_risk(text: str) -> Dict[str, Any]:
         gpt_data = parse_gpt_response(response_text)
         
         if not gpt_data:
-            logger.error("Failed to parse GPT-4 response")
+            logger.error("Failed to parse GPT-4o response")
             return {
                 "success": False,
-                "error": "Failed to parse GPT-4 response"
+                "error": "Failed to parse GPT-4o response"
             }
         
         # Combine GPT results with the feature extraction
@@ -208,13 +208,13 @@ def calculate_cognitive_risk(text: str) -> Dict[str, Any]:
             "evidence": gpt_data.get("evidence", []),
             "features": features,
             "processing_time": datetime.now().isoformat(),
-            "model_type": "gpt4"
+            "model_type": "gpt4o"
         }
         
         return result
     
     except Exception as e:
-        logger.error(f"Error calculating cognitive risk with GPT-4: {str(e)}")
+        logger.error(f"Error calculating cognitive risk with GPT-4o: {str(e)}")
         return {
             "success": False,
             "error": str(e)

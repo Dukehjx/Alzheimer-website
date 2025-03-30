@@ -1,7 +1,7 @@
 """
 Whisper speech processing module.
 
-This module provides functions for speech-to-text conversion using the Whisper model.
+This module provides functions for speech-to-text conversion using the OpenAI Whisper API.
 """
 
 import logging
@@ -10,40 +10,18 @@ import tempfile
 from pathlib import Path
 from typing import BinaryIO, Dict, Any, Optional, Union
 
-import whisper
+# Import openai only when needed to avoid errors if not installed
+try:
+    import openai
+    OPENAI_AVAILABLE = True
+except ImportError:
+    OPENAI_AVAILABLE = False
+
 import ffmpeg
 from pydub import AudioSegment
 
 # Initialize logger
 logger = logging.getLogger(__name__)
-
-# Global variables
-_model = None
-_model_name = "base"  # Default model size
-
-def get_whisper_model(model_name: str = "base"):
-    """
-    Get or initialize the Whisper model.
-    
-    Args:
-        model_name: Whisper model size ('tiny', 'base', 'small', 'medium', 'large')
-    
-    Returns:
-        Loaded Whisper model
-    """
-    global _model, _model_name
-    
-    # Only load the model if it's not already loaded or if a different model is requested
-    if _model is None or model_name != _model_name:
-        try:
-            logger.info(f"Loading Whisper model: {model_name}")
-            _model = whisper.load_model(model_name)
-            _model_name = model_name
-        except Exception as e:
-            logger.error(f"Error loading Whisper model: {str(e)}")
-            raise RuntimeError(f"Failed to load Whisper model: {str(e)}")
-    
-    return _model
 
 def preprocess_audio(audio_file: Union[BinaryIO, str, Path]) -> str:
     """
@@ -82,13 +60,13 @@ def preprocess_audio(audio_file: Union[BinaryIO, str, Path]) -> str:
         logger.error(f"Error preprocessing audio: {str(e)}")
         raise RuntimeError(f"Audio preprocessing failed: {str(e)}")
 
-def transcribe_audio(
+def transcribe_audio_api(
     audio_path: Union[str, Path],
     model_name: str = "base",
     language: Optional[str] = None
 ) -> Dict[str, Any]:
     """
-    Transcribe audio file to text using Whisper model.
+    Transcribe audio file to text using OpenAI Whisper API.
     
     Args:
         audio_path: Path to audio file
@@ -98,28 +76,61 @@ def transcribe_audio(
     Returns:
         Dictionary containing transcription results
     """
+    if not OPENAI_AVAILABLE:
+        return {
+            "success": False,
+            "error": "OpenAI package not available. Install with 'pip install openai'."
+        }
+    
+    # Map model sizes to OpenAI Whisper API models
+    model_map = {
+        "tiny": "whisper-1",
+        "base": "whisper-1",
+        "small": "whisper-1",
+        "medium": "whisper-1",
+        "large": "whisper-1",
+    }
+    
+    # Always use whisper-1 model as it's the only one available via API
+    whisper_model = "whisper-1"
+    
     try:
-        # Get Whisper model
-        model = get_whisper_model(model_name)
+        # Get API key from environment
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            logger.error("OpenAI API key not found in environment variables")
+            return {
+                "success": False,
+                "error": "OpenAI API key not configured"
+            }
+        
+        # Create OpenAI client
+        client = openai.OpenAI(api_key=api_key)
         
         # Set transcription options
         options = {}
         if language:
             options["language"] = language
         
-        # Transcribe audio
-        logger.info(f"Transcribing audio file: {audio_path}")
-        result = model.transcribe(str(audio_path), **options)
+        # Transcribe audio using the API
+        logger.info(f"Transcribing audio file with OpenAI Whisper API: {audio_path}")
+        
+        with open(audio_path, "rb") as audio_file:
+            response = client.audio.transcriptions.create(
+                file=audio_file,
+                model=whisper_model,
+                **options
+            )
         
         return {
-            "text": result["text"],
-            "segments": result["segments"],
-            "language": result.get("language"),
+            "text": response.text,
+            "segments": [],  # OpenAI API doesn't return segments like the local model
+            "language": language,
             "success": True
         }
     
     except Exception as e:
-        logger.error(f"Error transcribing audio: {str(e)}")
+        logger.error(f"Error transcribing audio with OpenAI API: {str(e)}")
         return {
             "success": False,
             "error": str(e)
@@ -147,8 +158,8 @@ def process_audio(
         # Preprocess audio
         temp_path = preprocess_audio(audio_file)
         
-        # Transcribe preprocessed audio
-        result = transcribe_audio(temp_path, model_name, language)
+        # Transcribe preprocessed audio using the API
+        result = transcribe_audio_api(temp_path, model_name, language)
         
         return result
     

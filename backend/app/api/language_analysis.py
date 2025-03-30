@@ -7,12 +7,17 @@ from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query, Bod
 from typing import Optional, Dict, Any, List
 import json
 import asyncio
+import logging
 
 from app.ai.nlp import (
     text_analysis_pipeline,
     validate_and_preprocess_text,
     extract_segments
 )
+from app.ai.factory import model_factory
+
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 router = APIRouter(
     prefix="/language-analysis",
@@ -43,6 +48,10 @@ async def analyze_text(
         Analysis results with risk score and recommendations
     """
     try:
+        # Log which model is being used
+        current_model = model_factory.get_current_model_type()
+        logger.info(f"Language analysis using model: {current_model}")
+        
         # Validate and preprocess the text
         validation = validate_and_preprocess_text(text)
         if not validation["success"]:
