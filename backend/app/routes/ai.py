@@ -92,7 +92,7 @@ async def analyze_text_endpoint(
         
         # Create analysis record
         domain_scores = {
-            CognitiveDomain(k): float(v) 
+            CognitiveDomain(k.lower()): float(v) 
             for k, v in results.get("domain_scores", {}).items()
         }
         
@@ -326,7 +326,7 @@ async def process_audio_endpoint(
                 if analysis_results.get("success", False):
                     # Create analysis record
                     domain_scores = {
-                        CognitiveDomain(k): float(v) 
+                        CognitiveDomain(k.lower()): float(v) 
                         for k, v in analysis_results.get("domain_scores", {}).items()
                     }
                     

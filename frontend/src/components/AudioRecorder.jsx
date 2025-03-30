@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { processAudio } from '../api/aiService';
+import ScoreExplanation from './ScoreExplanation';
 
 /**
  * Component for recording audio or uploading audio files
@@ -873,6 +874,22 @@ const AudioRecorder = () => {
                                 </ul>
                             </div>
                         </>
+                    )}
+
+                    {results && results.analysis && results.analysis.domain_scores && (
+                        <div className="score-explanation-section mt-8">
+                            <h3 className="section-title text-xl font-semibold mb-4">Understanding Your Results</h3>
+                            <ScoreExplanation
+                                scores={{
+                                    lexicalDiversity: Math.round((1 - results.analysis.domain_scores.LANGUAGE) * 100),
+                                    syntacticComplexity: Math.round((1 - results.analysis.domain_scores.EXECUTIVE_FUNCTION) * 100),
+                                    semanticCoherence: results.analysis.domain_scores.VISUOSPATIAL ? 
+                                        Math.round((1 - results.analysis.domain_scores.VISUOSPATIAL) * 100) : 80,
+                                    speechFluency: Math.round((1 - results.analysis.domain_scores.ATTENTION) * 100),
+                                    memoryCues: Math.round((1 - results.analysis.domain_scores.MEMORY) * 100)
+                                }}
+                            />
+                        </div>
                     )}
                 </div>
             )}

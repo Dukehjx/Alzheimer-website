@@ -39,6 +39,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { analyzeText } from '../api/aiService';
+import ScoreExplanation from '../components/ScoreExplanation';
 
 // Register Chart.js components
 ChartJS.register(
@@ -655,6 +656,8 @@ const ScreeningPage = () => {
                   <Radar data={getChartData()} options={chartOptions} />
                 </Box>
               </Paper>
+
+              <ScoreExplanation scores={results.scores} />
 
               <Paper elevation={2} sx={{ p: 3 }}>
                 <Typography variant="h6" gutterBottom>
