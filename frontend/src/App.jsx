@@ -54,14 +54,6 @@ function App() {
                   </ProtectedRoute>
                 } />
                 <Route path="/resources" element={<ResourceHubPage />} />
-                <Route path="/health-monitoring" element={
-                  <ProtectedRoute>
-                    <div className="p-8 text-center">
-                      <h1 className="text-2xl mb-4">Health Monitoring</h1>
-                      <p>This feature is coming soon.</p>
-                    </div>
-                  </ProtectedRoute>
-                } />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="*" element={<NotFoundPage />} />

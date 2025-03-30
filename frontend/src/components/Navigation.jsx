@@ -10,7 +10,6 @@ const navigation = [
   { name: 'AI Screening', href: '/screening' },
   { name: 'Cognitive Training', href: '/cognitive-training' },
   { name: 'Resource Hub', href: '/resources' },
-  { name: 'Health Monitoring', href: '/health-monitoring' },
 ];
 
 export default function Navigation() {
