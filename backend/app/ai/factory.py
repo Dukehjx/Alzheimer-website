@@ -1,8 +1,8 @@
 """
 AI Model Factory Module.
 
-This module provides a factory for creating and managing different AI models
-for language analysis, using GPT-4o for all cognitive analysis.
+This module provides a factory for creating and managing OpenAI API calls
+for language analysis and speech-to-text conversion.
 """
 
 import os
@@ -11,8 +11,7 @@ from enum import Enum
 from typing import Dict, Any, Callable, Optional, Union, BinaryIO
 from pathlib import Path
 
-# Removed import of spacy_calculate_risk to fix circular import issues
-# The GPT-4o model is now used exclusively for all cognitive analysis
+# Import the speech processor
 from app.ai.speech.whisper_processor import process_audio as whisper_process_audio
 
 # Initialize logger
@@ -200,7 +199,7 @@ def analyze_text(text: str, include_features: bool = False) -> Dict[str, Any]:
         logger.exception(e)
         return {
             "success": False,
-            "error": f"Analysis failed: {str(e)}"
+            "error": f"Text analysis failed: {str(e)}"
         }
 
 def process_audio(
@@ -208,19 +207,25 @@ def process_audio(
     language: Optional[str] = None
 ) -> Dict[str, Any]:
     """
-    Process audio file using OpenAI Whisper API.
+    Process audio using the Whisper model.
     
     Args:
-        audio_file: File-like object or path to audio file
-        language: Language code (optional, auto-detect if None)
+        audio_file: The audio file to process
+        language: Language code (optional)
         
     Returns:
         Transcription results
     """
     try:
-        return model_factory.process_audio(audio_file, language)
+        factory = model_factory
+        model_size = factory.get_whisper_model_size()
+        
+        logger.info(f"Processing audio with Whisper {model_size} model")
+        
+        return factory.process_audio(audio_file, language)
     except Exception as e:
-        logger.error(f"Error in process_audio: {str(e)}")
+        logger.error(f"Error in audio processing: {str(e)}")
+        logger.exception(e)
         return {
             "success": False,
             "error": f"Audio processing failed: {str(e)}"
@@ -228,28 +233,24 @@ def process_audio(
 
 def set_model(model_type: str, api_key: Optional[str] = None) -> bool:
     """
-    Set the current model to use. Only GPT-4o is supported.
+    Set the current model to use.
     
     Args:
-        model_type: The model type to use (only "gpt4o" is valid)
-        api_key: API key for GPT-4o (required)
+        model_type: The model type to use (only 'gpt4o' is supported)
+        api_key: OpenAI API key (optional, will use environment variable if not provided)
         
     Returns:
         True if model was set successfully, False otherwise
     """
+    if model_type.lower() != "gpt4o":
+        logger.error(f"Unsupported model type: {model_type}")
+        return False
+    
     try:
-        if model_type.lower() != "gpt4o":
-            logger.warning(f"Model type {model_type} is not supported. Using GPT-4o instead.")
-            model_type = "gpt4o"
-            
-        if api_key:
-            # Register GPT model with API key
-            if not register_gpt_model(api_key):
-                return False
-        
-        return model_factory.set_model(ModelType(model_type.lower()))
-    except ValueError:
-        logger.error(f"Invalid model type: {model_type}")
+        factory = model_factory
+        return factory.set_model(ModelType.GPT4O)
+    except Exception as e:
+        logger.error(f"Error setting model: {str(e)}")
         return False
 
 def set_whisper_model_size(model_size: str) -> bool:
@@ -257,45 +258,48 @@ def set_whisper_model_size(model_size: str) -> bool:
     Set the Whisper model size to use.
     
     Args:
-        model_size: The model size to use ("tiny", "base", "small", "medium", "large")
+        model_size: The model size to use ('tiny', 'base', 'small', 'medium', 'large')
         
     Returns:
         True if model size was set successfully, False otherwise
     """
     try:
-        return model_factory.set_whisper_model_size(WhisperModelSize(model_size.lower()))
-    except ValueError:
-        logger.error(f"Invalid Whisper model size: {model_size}")
+        # Validate model size
+        model_size = model_size.lower()
+        if model_size not in [m.value for m in WhisperModelSize]:
+            logger.error(f"Unsupported Whisper model size: {model_size}")
+            return False
+        
+        factory = model_factory
+        return factory.set_whisper_model_size(WhisperModelSize(model_size))
+    except Exception as e:
+        logger.error(f"Error setting Whisper model size: {str(e)}")
         return False
 
 def register_gpt_model(api_key: str) -> bool:
     """
-    Register GPT-4o model with the provided API key.
+    Register the GPT-4o model with the provided API key.
     
     Args:
         api_key: OpenAI API key
         
     Returns:
-        True if model was registered successfully, False otherwise
+        True if registration was successful, False otherwise
     """
-    if not api_key:
-        logger.error("Empty API key provided")
-        return False
-    
     try:
-        # This import is done here to avoid loading OpenAI when not needed
-        from app.ai.gpt.risk_assessment import initialize_gpt, calculate_cognitive_risk as gpt_calculate_risk
+        # Import inside function to avoid circular import
+        from app.ai.gpt.risk_assessment import initialize_gpt, calculate_cognitive_risk
         
-        # Initialize GPT with the provided API key
-        initialize_gpt(api_key)
-        
-        # Register the GPT model
-        model_factory.register_gpt_model(gpt_calculate_risk)
-        
-        return True
-    except ImportError:
-        logger.error("Failed to import GPT modules. Make sure openai package is installed.")
-        return False
+        # Initialize the GPT-4o model
+        if initialize_gpt(api_key):
+            # Register the model function with the factory
+            factory = model_factory
+            factory.register_gpt_model(calculate_cognitive_risk)
+            logger.info("GPT-4o model registered successfully")
+            return True
+        else:
+            logger.error("Failed to initialize GPT-4o model")
+            return False
     except Exception as e:
-        logger.error(f"Error registering GPT model: {str(e)}")
+        logger.error(f"Error registering GPT-4o model: {str(e)}")
         return False 

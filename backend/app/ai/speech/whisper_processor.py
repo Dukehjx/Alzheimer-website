@@ -82,16 +82,7 @@ def transcribe_audio_api(
             "error": "OpenAI package not available. Install with 'pip install openai'."
         }
     
-    # Map model sizes to OpenAI Whisper API models
-    model_map = {
-        "tiny": "whisper-1",
-        "base": "whisper-1",
-        "small": "whisper-1",
-        "medium": "whisper-1",
-        "large": "whisper-1",
-    }
-    
-    # Always use whisper-1 model as it's the only one available via API
+    # Whisper API only has one model available
     whisper_model = "whisper-1"
     
     try:
@@ -146,7 +137,7 @@ def process_audio(
     
     Args:
         audio_file: File-like object or path to audio file
-        model_name: Whisper model size ('tiny', 'base', 'small', 'medium', 'large')
+        model_name: Whisper model size (ignored, always uses whisper-1 API)
         language: Language code (optional, auto-detect if None)
     
     Returns:

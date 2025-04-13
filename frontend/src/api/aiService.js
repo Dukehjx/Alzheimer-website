@@ -171,7 +171,7 @@ function generateMockAnalysisResults(text, includeFeatures) {
         confidence_score: 0.75,
         recommendations: recommendations,
         features: features,
-        model_type: "demo",
+        model_type: "gpt4o",
         timestamp: new Date().toISOString()
     };
 }
@@ -498,7 +498,7 @@ function generateMockSpeechAnalysisResults(text) {
             "Stay mentally active by reading, solving puzzles, and learning new skills",
             "Physical exercise has been shown to improve cognitive function"
         ],
-        model_type: "demo",
+        model_type: "gpt4o",
         timestamp: new Date().toISOString()
     };
 } 

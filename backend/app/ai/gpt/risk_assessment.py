@@ -58,13 +58,12 @@ def initialize_gpt(api_key: str) -> bool:
         logger.error(f"Error initializing GPT-4o model: {str(e)}")
         return False
 
-def generate_gpt_prompt(text: str, linguistic_features: Dict[str, Any]) -> str:
+def generate_gpt_prompt(text: str) -> str:
     """
     Generate a prompt for GPT-4o analysis.
     
     Args:
         text: Original text input
-        linguistic_features: Extracted linguistic features from spaCy
         
     Returns:
         Formatted prompt for GPT-4o
@@ -75,10 +74,7 @@ Analyze the following text for indicators of Mild Cognitive Impairment (MCI) or 
 
 TEXT: "{text}"
 
-LINGUISTIC FEATURES:
-{json.dumps(linguistic_features, indent=2)}
-
-Based on the text and extracted linguistic features, please:
+Based on the text, please:
 1. Assess the cognitive risk level (0.0-1.0 scale, where 1.0 is highest risk)
 2. Provide scores for specific cognitive domains: LANGUAGE, MEMORY, EXECUTIVE_FUNCTION, ATTENTION
 3. Provide specific evidence from the text that supports your assessment
@@ -160,19 +156,8 @@ def calculate_cognitive_risk(text: str) -> Dict[str, Any]:
         }
     
     try:
-        # First, extract basic linguistic features using spaCy
-        from app.ai.nlp.feature_extraction import extract_linguistic_features
-        features = extract_linguistic_features(text)
-        
-        if not features.get("success", False):
-            logger.error(f"Failed to extract linguistic features: {features.get('error')}")
-            return {
-                "success": False,
-                "error": "Failed to extract linguistic features"
-            }
-        
         # Generate prompt for GPT-4o
-        prompt = generate_gpt_prompt(text, features)
+        prompt = generate_gpt_prompt(text)
         
         # Call GPT-4o API
         response = openai_client.chat.completions.create(
@@ -198,24 +183,21 @@ def calculate_cognitive_risk(text: str) -> Dict[str, Any]:
                 "error": "Failed to parse GPT-4o response"
             }
         
-        # Combine GPT results with the feature extraction
+        # Format the result
         result = {
             "success": True,
-            "risk_score": gpt_data.get("risk_score", 0.5),
-            "confidence": 0.9,  # GPT typically provides high-confidence assessments
+            "timestamp": datetime.utcnow().isoformat(),
+            "risk_score": gpt_data.get("risk_score", 0.0),
             "domain_scores": gpt_data.get("domain_scores", {}),
-            "recommendations": gpt_data.get("recommendations", []),
             "evidence": gpt_data.get("evidence", []),
-            "features": features,
-            "processing_time": datetime.now().isoformat(),
-            "model_type": "gpt4o"
+            "recommendations": gpt_data.get("recommendations", []),
         }
         
         return result
     
     except Exception as e:
-        logger.error(f"Error calculating cognitive risk with GPT-4o: {str(e)}")
+        logger.error(f"Error in GPT-4o analysis: {str(e)}")
         return {
             "success": False,
-            "error": str(e)
+            "error": f"GPT-4o analysis failed: {str(e)}"
         } 

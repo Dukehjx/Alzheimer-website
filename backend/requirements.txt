@@ -4,24 +4,13 @@ uvicorn>=0.27.1
 python-multipart>=0.0.9
 email-validator>=2.1.0  # For Pydantic's EmailStr
 
-# Database (choose one)
-# SQLAlchemy>=2.0.27
-# pymongo>=4.6.1
-
-# NLP and ML libraries
-spacy>=3.7.2
-scikit-learn>=1.4.0
-numpy>=1.26.3
-pandas>=2.2.0
-langdetect>=1.0.9  # For language detection
+# Database
+pymongo>=4.6.1
 
 # Speech-to-Text
 openai>=1.16.0  # OpenAI client for Whisper and GPT APIs
-openai-whisper>=20231117
 ffmpeg-python>=0.2.0
 pydub>=0.25.1
-torch>=2.1.0  # Required for whisper
-torchaudio>=2.1.0  # Required for audio processing
 
 # Utilities
 python-dotenv>=1.0.1

@@ -119,6 +119,7 @@ async def analyze_text_endpoint(
             "confidence_score": results.get("confidence_score", 0.0),
             "domain_scores": results.get("domain_scores", {}),
             "recommendations": results.get("recommendations", []),
+            "model_type": results.get("model_type", "gpt4o"),
             "timestamp": analysis_record.timestamp.isoformat()
         }
         
@@ -352,7 +353,7 @@ async def process_audio_endpoint(
                         "confidence_score": analysis_results.get("confidence_score", 0.0),
                         "domain_scores": analysis_results.get("domain_scores", {}),
                         "recommendations": analysis_results.get("recommendations", []),
-                        "model_type": analysis_results.get("model_type", "spacy"),
+                        "model_type": analysis_results.get("model_type", "gpt4o"),
                         "timestamp": analysis_record.timestamp.isoformat()
                     }
                 else:
