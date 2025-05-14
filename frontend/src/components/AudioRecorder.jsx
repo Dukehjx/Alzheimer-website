@@ -1,6 +1,56 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { processAudio } from '../api/aiService';
+import apiClient, { uploadClient, testApiConnection } from '../api/apiClient';
 import ScoreExplanation from './ScoreExplanation';
+import AudioProcessingError from './AudioProcessingError';
+import axios from 'axios';
+
+/**
+ * Status indicator component for service availability
+ */
+const StatusIndicator = ({ status, message }) => {
+    let bgColor = 'bg-gray-200';
+    let textColor = 'text-gray-700';
+    let statusText = 'Unknown';
+    let icon = null;
+
+    if (status === 'online') {
+        bgColor = 'bg-green-100';
+        textColor = 'text-green-800';
+        statusText = 'Online';
+        icon = (
+            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+        );
+    } else if (status === 'degraded') {
+        bgColor = 'bg-yellow-100';
+        textColor = 'text-yellow-800';
+        statusText = 'Degraded';
+        icon = (
+            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+        );
+    } else if (status === 'offline') {
+        bgColor = 'bg-red-100';
+        textColor = 'text-red-800';
+        statusText = 'Offline';
+        icon = (
+            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        );
+    }
+
+    return (
+        <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${bgColor} ${textColor}`}>
+            {icon}
+            <span>{statusText}</span>
+            {message && <span className="ml-1 text-xs opacity-75">({message})</span>}
+        </div>
+    );
+};
 
 /**
  * Component for recording audio or uploading audio files
@@ -14,8 +64,10 @@ const AudioRecorder = () => {
     const [uploadedFile, setUploadedFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [apiError, setApiError] = useState(null);
     const [results, setResults] = useState(null);
     const [includeAnalysis, setIncludeAnalysis] = useState(true);
+    const [serviceStatus, setServiceStatus] = useState({ status: 'unknown', message: null });
 
     // Audio player state
     const [isPlaying, setIsPlaying] = useState(false);
@@ -116,6 +168,13 @@ const AudioRecorder = () => {
         setAudioDuration(0);
     };
 
+    // Reset error state
+    const resetErrorState = () => {
+        setError(null);
+        setApiError(null);
+        setServiceStatus({ status: 'unknown', message: null });
+    };
+
     // Start recording audio
     const startRecording = async () => {
         try {
@@ -131,7 +190,10 @@ const AudioRecorder = () => {
             // Reset audio player state
             resetAudioPlayerState();
 
-            // We no longer need to set recordingDuration here since useEffect handles it
+            // Check if we're in a secure context (HTTPS) which is required for getUserMedia
+            if (window.isSecureContext === false) {
+                throw new Error('Audio recording requires a secure context (HTTPS). Please use HTTPS to enable this feature.');
+            }
 
             // Request microphone access with specific audio constraints
             const stream = await navigator.mediaDevices.getUserMedia({
@@ -166,42 +228,63 @@ const AudioRecorder = () => {
             };
 
             mediaRecorder.onstop = () => {
-                // Create blob from audio chunks with proper MIME type
-                const audioBlob = new Blob(chunksRef.current, {
-                    type: mimeType
-                });
-                const audioUrl = URL.createObjectURL(audioBlob);
+                // Create a new Blob from the recorded chunks with specific mime type
+                const mimeType = MediaRecorder.isTypeSupported('audio/webm')
+                    ? 'audio/webm'
+                    : 'audio/ogg';
 
-                console.log(`Recording complete: ${recordingDuration}s, MIME type: ${mimeType}`);
+                // Create a new blob with the recorded audio data
+                const blob = new Blob(chunksRef.current, { type: mimeType });
 
-                // Be sure to set the audio duration from the recording duration
-                if (recordingDuration > 0) {
-                    const duration = Math.round(recordingDuration);
-                    console.log(`Setting audioDuration in onstop: ${duration}s`);
-                    setAudioDuration(duration);
-                }
+                // Reset the chunks array
+                chunksRef.current = [];
 
-                setAudioBlob(audioBlob);
-                setAudioUrl(audioUrl);
+                // Create a URL for the audio blob
+                const audioURL = URL.createObjectURL(blob);
+
+                // Update state with the recorded audio
+                setAudioBlob(blob);
+                setAudioUrl(audioURL);
                 setIsRecording(false);
 
-                // Stop all tracks
+                // Stop all tracks in the stream
                 if (streamRef.current) {
                     streamRef.current.getTracks().forEach(track => track.stop());
+                    streamRef.current = null;
                 }
-
-                // No need to clear timer here as it's handled by the useEffect
             };
 
-            // Set data available interval to 1 second to ensure smaller chunks
-            mediaRecorder.start(1000);
+            // Start recording
+            mediaRecorder.start();
             setIsRecording(true);
 
-            // Timer is now managed by the useEffect hook
+            // Set a maximum recording duration of 5 minutes (300,000 ms)
+            setTimeout(() => {
+                if (isRecording && mediaRecorderRef.current) {
+                    stopRecording();
+                }
+            }, 5 * 60 * 1000);
 
-        } catch (err) {
-            console.error('Error starting recording:', err);
-            setError('Could not access microphone. Please ensure you have granted permission.');
+        } catch (error) {
+            console.error('Error starting recording:', error);
+
+            // Handle specific error cases with user-friendly messages
+            let errorMessage = 'An error occurred while trying to record audio.';
+
+            if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+                errorMessage = 'Microphone access was denied. Please allow microphone access in your browser settings to use the audio recording feature.';
+            } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+                errorMessage = 'No microphone was found. Please connect a microphone and try again.';
+            } else if (error.name === 'NotReadableError') {
+                errorMessage = 'Your microphone is busy or unavailable. Please close other applications that might be using your microphone.';
+            } else if (error.name === 'SecurityError' || error.message.includes('secure context')) {
+                errorMessage = 'Audio recording requires a secure connection (HTTPS). Please ensure you are using HTTPS to access this site.';
+            } else if (error.name === 'AbortError') {
+                errorMessage = 'Recording was aborted. This might be due to a hardware error or system issue.';
+            }
+
+            setError(errorMessage);
+            setIsRecording(false);
         }
     };
 
@@ -259,123 +342,291 @@ const AudioRecorder = () => {
         return `${mins}:${secs}`;
     };
 
-    // Handle click on process audio button
+    // Handle click on process button
     const handleProcessClick = (e) => {
         e.preventDefault();
         console.log('Process audio button clicked');
+        // Add debugging to track flow
+        if (!uploadedFile && !audioBlob) {
+            console.log('No audio available to process');
+            setError('No audio available. Please record or upload an audio file first.');
+            return;
+        }
+        console.log('Audio available, proceeding to process');
         handleProcessAudio();
     };
 
     // Process audio for transcription and analysis
     const handleProcessAudio = async () => {
-        // Check if we have audio to process
-        if (!audioBlob && !uploadedFile) {
-            console.error('No audio to process');
-            setError('No audio to process. Please record or upload an audio file.');
+        setLoading(true);
+        resetErrorState();
+        console.log('Processing audio...');
+
+        // Determine which file to use
+        const audioFile = uploadedFile || audioBlob;
+        if (!audioFile) {
+            console.error('No audio file available');
+            setError('No audio file available. Please record or upload an audio file.');
+            setLoading(false);
             return;
         }
 
-        console.log('Processing audio:', {
-            hasBlob: !!audioBlob,
-            uploadedFile: uploadedFile?.name,
-            includeAnalysis
-        });
-
-        setLoading(true);
-        setError(null);
-
         try {
-            // Prepare file for upload
-            let audioFile;
-            if (audioBlob) {
-                // Get the MIME type from the blob or default to audio/wav
-                const blobType = audioBlob.type || 'audio/wav';
-                const fileExtension = blobType.includes('webm') ? 'webm' :
-                    blobType.includes('ogg') ? 'ogg' : 'wav';
+            // First run a diagnostic test to check API connectivity
+            console.log('Running API connectivity test...');
+            const diagnosticResult = await testApiConnection();
 
-                audioFile = new File([audioBlob], `recording.${fileExtension}`, {
-                    type: blobType,
-                    lastModified: Date.now()
-                });
-                console.log(`Created file from recorded blob: ${audioFile.name}, type: ${audioFile.type}, size: ${audioFile.size} bytes`);
-            } else {
-                audioFile = uploadedFile;
-                console.log(`Using uploaded file: ${audioFile.name}, type: ${audioFile.type}, size: ${audioFile.size} bytes`);
-            }
-
-            // Process audio with real API (no demo mode)
-            const response = await processAudio(audioFile, {
-                includeAnalysis,
-                demoMode: false // Use real API to get actual transcription results
-            });
-
-            console.log('Process audio response:', response);
-
-            if (!response.success) {
-                console.error('API Error:', response.error);
-                const errorMsg = response.error || 'Failed to process audio';
-
-                // Show error to user
-                setError(errorMsg);
-
-                // If the error is a backend connection issue, offer option to try demo mode
-                if (response.status === 503 || response.status === 504 || response.status === 500) {
-                    if (window.confirm('Could not connect to the backend speech processing server. Would you like to try demo mode instead?')) {
-                        await processDemoAudio(audioFile);
-                    }
-                }
+            if (!diagnosticResult.success) {
+                console.error('API connectivity test failed:', diagnosticResult);
+                setError(`API connectivity issue detected: ${diagnosticResult.error}. The API may be unavailable or misconfigured.`);
+                setServiceStatus({ status: 'offline', message: 'Connection failed' });
+                setLoading(false);
                 return;
             }
 
-            // Set results if successful
-            setResults(response);
-            // Show success notification for real transcription
-            setError(null);
-            // Set a notification message indicating real transcription was used
-            const infoMessage = document.createElement('div');
-            infoMessage.className = 'info-message';
-            infoMessage.textContent = '✓ Successfully processed audio with real Whisper transcription.';
-            infoMessage.style.color = 'green';
-            infoMessage.style.marginBottom = '10px';
-            const resultElement = document.querySelector('.results-container');
-            if (resultElement && !resultElement.querySelector('.info-message')) {
-                resultElement.prepend(infoMessage);
-                // Remove after 5 seconds
-                setTimeout(() => {
-                    if (infoMessage.parentNode) {
-                        infoMessage.parentNode.removeChild(infoMessage);
+            console.log('API connectivity test successful:', diagnosticResult.data);
+
+            // Now check if the audio processing endpoint is available
+            try {
+                console.log('Verifying audio processing endpoint availability...');
+                // Directly use the process-audio endpoint with a HEAD request instead of the health endpoint
+                const endpoint = '/api/v1/ai/process-audio';
+                console.log(`Checking process-audio endpoint at: ${endpoint}`);
+
+                // Try to check if the endpoint exists
+                try {
+                    // Use OPTIONS request which is lightweight
+                    const healthCheck = await uploadClient.options(endpoint);
+                    console.log('Endpoint check result:', healthCheck.status);
+
+                    // If we get here, the endpoint exists
+                    setServiceStatus({
+                        status: 'online',
+                        message: 'Ready'
+                    });
+                } catch (endpointError) {
+                    // If it's a 405 Method Not Allowed, it means the endpoint exists but doesn't support OPTIONS
+                    if (endpointError.response && endpointError.response.status === 405) {
+                        console.log('Endpoint exists but OPTIONS not supported - this is fine');
+                        setServiceStatus({
+                            status: 'online',
+                            message: 'Ready'
+                        });
+                    } else if (endpointError.response && endpointError.response.status === 404) {
+                        // Try an alternative health check endpoint
+                        try {
+                            console.log('Endpoint not found, trying health check...');
+                            const healthResponse = await apiClient.get('/api/v1/ai/process-audio-health');
+                            if (healthResponse.status === 200) {
+                                console.log('Health check successful, API available');
+                                setServiceStatus({
+                                    status: 'online',
+                                    message: 'Ready'
+                                });
+                            }
+                        } catch (healthCheckError) {
+                            console.warn('Audio processing health check failed:', healthCheckError.message);
+                            setServiceStatus({
+                                status: 'degraded',
+                                message: 'Health check failed'
+                            });
+                            // We'll continue with processing in demo/fallback mode
+                        }
+                    } else {
+                        // For any other error, we'll treat it as if the service is degraded
+                        // but still proceed with the upload
+                        console.warn('Non-critical endpoint check error:', endpointError.message);
+                        setServiceStatus({
+                            status: 'degraded',
+                            message: 'Endpoint check failed'
+                        });
                     }
-                }, 5000);
+                }
+            } catch (healthError) {
+                console.error('Audio processing endpoint health check failed:', healthError);
+                console.error('Health check error details:', {
+                    message: healthError.message,
+                    status: healthError.response?.status,
+                    data: healthError.response?.data,
+                    config: healthError.config,
+                });
+
+                // We'll continue anyway with a warning
+                setServiceStatus({
+                    status: 'degraded',
+                    message: 'Health check failed'
+                });
+                console.log('Continuing despite health check failure');
             }
 
+            console.log(`Processing ${uploadedFile ? 'uploaded' : 'recorded'} audio file:`,
+                { name: uploadedFile?.name, size: audioFile.size });
+
+            // Check if we have an auth token
+            const hasToken = !!localStorage.getItem('token');
+            const demoMode = !hasToken;
+
+            // If in demo mode, notify the user but continue processing
+            if (demoMode) {
+                console.log('Using public mode for processing (no login)');
+                // We'll show a demo mode message only after successful processing
+            }
+
+            // For uploaded files, create a proper File object if needed
+            let fileToProcess = audioFile;
+            if (uploadedFile) {
+                fileToProcess = uploadedFile;
+            } else if (audioBlob) {
+                // Ensure we have a named File object for recorded audio
+                fileToProcess = new File([audioBlob], "recorded-audio.wav", {
+                    type: audioBlob.type,
+                    lastModified: new Date().getTime()
+                });
+            }
+
+            const options = {
+                includeAnalysis: includeAnalysis,
+                language: null, // Auto-detect language
+                demoMode: demoMode // Use demo mode without authentication
+            };
+
+            // Direct call to processAudio API service with explicit endpoint
+            const endpoint = '/api/v1/ai/process-audio';
+            console.log('Calling API for audio processing at:', endpoint);
+
+            try {
+                // Log detailed request info for debugging
+                console.log('Audio file details:', {
+                    name: fileToProcess.name || 'unnamed file',
+                    type: fileToProcess.type,
+                    size: fileToProcess.size,
+                    lastModified: fileToProcess.lastModified ? new Date(fileToProcess.lastModified).toISOString() : 'unknown'
+                });
+
+                console.log('Starting upload and processing with uploadClient');
+                const result = await processAudio(fileToProcess, options);
+                console.log('Audio processing result:', result);
+
+                // Display info message for demo mode
+                if (demoMode && result.success) {
+                    setError('Note: Using public mode - your results are not saved to an account. Create an account to save your history.');
+                }
+
+                // If we have error_info, it means we're using fallback mode
+                if (result.error_info) {
+                    // Check if it's a 404 error specifically
+                    if (result.error_info.original_error.includes("404")) {
+                        setError('The audio processing service is currently unavailable (404). Using simulated results instead. Please try again later or contact support if this persists.');
+                    } else {
+                        setError(`Using simulated results due to API error: ${result.error_info.original_error}`);
+                    }
+                    setServiceStatus({ status: 'degraded', message: 'Using fallback' });
+
+                    // Create a synthetic API error for the detailed view
+                    const syntheticError = new Error(result.error_info.original_error);
+                    syntheticError.response = {
+                        data: {
+                            detail: result.error_info.original_error,
+                            fallback_mode: true,
+                            timestamp: result.error_info.timestamp
+                        }
+                    };
+                    setApiError(syntheticError);
+                }
+
+                // Handle success
+                if (result && result.success) {
+                    setResults(result);
+                    // Only set status to online if we're not in fallback mode
+                    if (!result.error_info) {
+                        setServiceStatus({ status: 'online', message: null });
+                    }
+                } else {
+                    // Handle API error
+                    const errorObj = new Error(result?.error || 'Audio processing failed. Please try again.');
+                    errorObj.response = { data: result };
+                    setApiError(errorObj);
+                    throw errorObj;
+                }
+            } catch (apiError) {
+                console.error('API call error:', apiError);
+                console.error('API error details:', {
+                    message: apiError.message,
+                    status: apiError.response?.status,
+                    data: apiError.response?.data,
+                    config: apiError.config
+                });
+
+                // Store the full API error object for detailed debugging
+                setApiError(apiError);
+
+                // Check if this is an Axios error with a response
+                if (apiError.response) {
+                    const status = apiError.response.status;
+                    const errorData = apiError.response.data;
+
+                    if (status === 404) {
+                        setError(`The audio processing endpoint (${endpoint}) could not be found (404). The API may be misconfigured or unavailable.`);
+                        setServiceStatus({ status: 'offline', message: 'Not found (404)' });
+                    } else {
+                        // Extract detailed error information from API response
+                        let errorMessage = 'Unknown error';
+
+                        // Try to extract the most useful error message
+                        if (errorData?.detail) {
+                            errorMessage = errorData.detail;
+                        } else if (errorData?.message) {
+                            errorMessage = errorData.message;
+                        } else if (errorData?.error) {
+                            errorMessage = errorData.error;
+                        } else if (typeof errorData === 'string') {
+                            errorMessage = errorData;
+                        }
+
+                        // Check for specific Whisper API errors
+                        if (errorMessage.includes('Whisper') || errorMessage.includes('audio')) {
+                            if (errorMessage.includes('too short')) {
+                                errorMessage = 'The audio file is too short. Please record a longer message.';
+                            } else if (errorMessage.includes('too long')) {
+                                errorMessage = 'The audio file is too long. Please limit recordings to under 10 minutes.';
+                            } else if (errorMessage.includes('format')) {
+                                errorMessage = 'The audio format is not supported. Please use WAV, MP3, or M4A files.';
+                            }
+                        }
+
+                        setError(`Audio processing error (${status}): ${errorMessage}`);
+                        setServiceStatus({ status: 'degraded', message: `Error ${status}` });
+                    }
+                } else {
+                    throw apiError; // Re-throw to be caught by the outer catch
+                }
+            }
         } catch (err) {
             console.error('Error processing audio:', err);
-            setError(err.message || 'An error occurred while processing the audio');
+
+            // Store the error object for detailed debugging
+            if (!apiError) {
+                setApiError(err);
+            }
+
+            // Provide more user-friendly error messages based on the type of error
+            let errorMessage = err.message || 'An error occurred during audio processing. Please try again.';
+
+            // If it's a network error, suggest it might be a CORS or HTTPS issue
+            if (errorMessage.includes('Network Error') || errorMessage.includes('CORS')) {
+                errorMessage = 'Network error: Could not connect to the audio processing service. This might be due to connection issues or HTTPS restrictions.';
+                setServiceStatus({ status: 'offline', message: 'Network error' });
+            }
+
+            // If it mentions OpenAI or Whisper, it's likely an AI service issue
+            if (errorMessage.includes('OpenAI') || errorMessage.includes('Whisper')) {
+                errorMessage = 'AI service error: The speech recognition service is currently unavailable. Please try again later.';
+                setServiceStatus({ status: 'degraded', message: 'AI service issue' });
+            }
+
+            setError(errorMessage);
         } finally {
             setLoading(false);
-        }
-    };
-
-    // Helper function to process audio in demo mode
-    const processDemoAudio = async (audioFile) => {
-        try {
-            console.log('Falling back to demo mode for audio processing');
-            setError('Using demo mode - showing simulated results instead of actual transcription');
-
-            const demoResponse = await processAudio(audioFile, {
-                includeAnalysis,
-                demoMode: true
-            });
-
-            if (demoResponse.success) {
-                console.log('Demo processing successful:', demoResponse);
-                setResults(demoResponse);
-            } else {
-                throw new Error('Failed to process audio in demo mode');
-            }
-        } catch (err) {
-            console.error('Demo mode error:', err);
-            setError('Failed to process audio even in demo mode: ' + err.message);
         }
     };
 
@@ -763,29 +1014,43 @@ const AudioRecorder = () => {
                 </div>
 
                 {/* Process Button */}
-                <button
-                    onClick={handleProcessClick}
-                    className="w-full mt-4 bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-md flex justify-center items-center"
-                    disabled={loading || (!audioBlob && !uploadedFile)}
-                    type="button"
-                >
-                    {loading ? (
-                        <>
-                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Processing Audio...
-                        </>
-                    ) : 'Process Audio'}
-                </button>
+                <div className="mt-4">
+                    <div className="flex justify-between items-center mb-2">
+                        <button
+                            onClick={handleProcessClick}
+                            className="flex-grow bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-md flex justify-center items-center"
+                            disabled={loading || (!audioBlob && !uploadedFile)}
+                            type="button"
+                        >
+                            {loading ? (
+                                <>
+                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Processing Audio...
+                                </>
+                            ) : 'Process Audio'}
+                        </button>
+
+                        {/* Service status indicator */}
+                        {serviceStatus.status !== 'unknown' && (
+                            <div className="ml-2">
+                                <StatusIndicator status={serviceStatus.status} message={serviceStatus.message} />
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
 
-            {/* Error Display */}
+            {/* Replace simple error display with enhanced error component */}
             {error && (
-                <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 dark:bg-red-900 dark:text-red-200" role="alert">
-                    <p>{error}</p>
-                </div>
+                <AudioProcessingError
+                    error={error}
+                    apiError={apiError}
+                    serviceStatus={serviceStatus}
+                    onRetry={handleProcessClick}
+                />
             )}
 
             {/* Results Display */}
@@ -883,7 +1148,7 @@ const AudioRecorder = () => {
                                 scores={{
                                     lexicalDiversity: Math.round((1 - results.analysis.domain_scores.LANGUAGE) * 100),
                                     syntacticComplexity: Math.round((1 - results.analysis.domain_scores.EXECUTIVE_FUNCTION) * 100),
-                                    semanticCoherence: results.analysis.domain_scores.VISUOSPATIAL ? 
+                                    semanticCoherence: results.analysis.domain_scores.VISUOSPATIAL ?
                                         Math.round((1 - results.analysis.domain_scores.VISUOSPATIAL) * 100) : 80,
                                     speechFluency: Math.round((1 - results.analysis.domain_scores.ATTENTION) * 100),
                                     memoryCues: Math.round((1 - results.analysis.domain_scores.MEMORY) * 100)

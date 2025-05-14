@@ -8,8 +8,9 @@ import {
   ExclamationTriangleIcon,
   InformationCircleIcon,
   XCircleIcon,
+  ArrowUpTrayIcon,
 } from '@heroicons/react/24/outline';
-import { analyzeText } from '../api/aiService';
+import { analyzeText, processAudio } from '../api/aiService';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -22,6 +23,7 @@ export default function AIScreening() {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [error, setError] = useState(null);
   const [isDemoMode, setIsDemoMode] = useState(false);
+  const [audioFile, setAudioFile] = useState(null);
 
   // Check if user is authenticated on component mount
   useEffect(() => {
@@ -67,6 +69,7 @@ export default function AIScreening() {
   // Start recording audio
   const startRecording = () => {
     setIsRecording(true);
+    setError(null); // Clear any previous errors
 
     // Simulate recording for demo
     setTimeout(() => {
@@ -85,6 +88,62 @@ export default function AIScreening() {
         handleAnalysis(dummyText, 'speech');
       }, 2000);
     }, 3000);
+  };
+
+  // Handle file upload
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAudioFile(file);
+      setError(null);
+    }
+  };
+
+  // Process audio file
+  const processAudioFile = async () => {
+    if (!audioFile) {
+      setError('Please select an audio file to process');
+      return;
+    }
+
+    try {
+      setIsProcessing(true);
+      setError(null);
+
+      // Process the audio file with demo mode if not authenticated
+      const result = await processAudio(audioFile, {
+        includeAnalysis: true,
+        demoMode: isDemoMode
+      });
+
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to process audio');
+      }
+
+      // If we have analysis results, transform them for the UI
+      if (result.analysis) {
+        const transformedResult = {
+          overallScore: Math.round((1 - result.analysis.overall_score) * 100),
+          cognitiveRisk: getCognitiveRiskLevel(result.analysis.overall_score),
+          categories: transformCategories(result.analysis.domain_scores),
+          insights: generateInsights(result.analysis),
+          recommendations: result.analysis.recommendations || []
+        };
+        setAnalysisResult(transformedResult);
+      } else {
+        // If no analysis, just process the transcription
+        handleAnalysis(result.transcription.text, 'text');
+      }
+    } catch (err) {
+      console.error('Audio processing error:', err);
+      setError(err.message || 'An error occurred during audio processing. Using simulated data instead.');
+
+      // Fall back to demo mode with dummy text
+      const dummyText = "This is simulated text because we encountered an error processing your audio. In a production environment, we would handle this more gracefully.";
+      handleAnalysis(dummyText, 'speech');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   // Process text analysis
@@ -317,45 +376,106 @@ export default function AIScreening() {
             </Tab.List>
             <Tab.Panels className="py-6 px-4 sm:px-6">
               <Tab.Panel>
-                <div className="flex flex-col items-center justify-center py-10">
-                  <div className="mb-6 text-center">
-                    <p className="text-neutral-700 dark:text-neutral-300">
-                      Record yourself describing what you did yesterday in as much detail as possible.
-                      Aim to speak for at least 1 minute.
-                    </p>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="flex flex-col items-center justify-center py-10">
+                    <div className="mb-6 text-center">
+                      <h3 className="text-lg font-medium text-neutral-900 dark:text-white mb-2">Record Audio</h3>
+                      <p className="text-neutral-700 dark:text-neutral-300">
+                        Record yourself describing what you did yesterday in as much detail as possible.
+                        Aim to speak for at least 1 minute.
+                      </p>
+                    </div>
 
-                  <div className="relative w-40 h-40 mb-6">
-                    <button
-                      onClick={startRecording}
-                      disabled={isRecording || isProcessing}
-                      className={classNames(
-                        'w-full h-full rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 flex items-center justify-center',
-                        isRecording
-                          ? 'bg-red-100 dark:bg-red-900/30 animate-pulse'
-                          : isProcessing
-                            ? 'bg-neutral-100 dark:bg-neutral-700 cursor-wait'
-                            : 'bg-primary-100 dark:bg-primary-900/30 hover:bg-primary-200 dark:hover:bg-primary-900/50'
-                      )}
-                    >
+                    <div className="relative w-40 h-40 mb-6">
+                      <button
+                        onClick={startRecording}
+                        disabled={isRecording || isProcessing}
+                        className={classNames(
+                          'w-full h-full rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 flex items-center justify-center',
+                          isRecording
+                            ? 'bg-red-100 dark:bg-red-900/30 animate-pulse'
+                            : isProcessing
+                              ? 'bg-neutral-100 dark:bg-neutral-700 cursor-wait'
+                              : 'bg-primary-100 dark:bg-primary-900/30 hover:bg-primary-200 dark:hover:bg-primary-900/50'
+                        )}
+                      >
+                        {isRecording ? (
+                          <span className="h-24 w-24 rounded-full bg-red-600 flex items-center justify-center animate-pulse"></span>
+                        ) : isProcessing ? (
+                          <ArrowPathIcon className="h-20 w-20 text-neutral-500 dark:text-neutral-400 animate-spin" />
+                        ) : (
+                          <MicrophoneIcon className="h-20 w-20 text-primary-600 dark:text-primary-400" />
+                        )}
+                      </button>
+                    </div>
+
+                    <div className="text-center">
                       {isRecording ? (
-                        <span className="h-24 w-24 rounded-full bg-red-600 flex items-center justify-center animate-pulse"></span>
+                        <p className="text-red-600 dark:text-red-400 font-medium">Recording... (tap to stop)</p>
                       ) : isProcessing ? (
-                        <ArrowPathIcon className="h-20 w-20 text-neutral-500 dark:text-neutral-400 animate-spin" />
+                        <p className="text-neutral-600 dark:text-neutral-400">Processing your speech...</p>
                       ) : (
-                        <MicrophoneIcon className="h-20 w-20 text-primary-600 dark:text-primary-400" />
+                        <p className="text-neutral-600 dark:text-neutral-400">Tap the microphone to start recording</p>
                       )}
-                    </button>
+                    </div>
                   </div>
 
-                  <div className="text-center">
-                    {isRecording ? (
-                      <p className="text-red-600 dark:text-red-400 font-medium">Recording... (tap to stop)</p>
-                    ) : isProcessing ? (
-                      <p className="text-neutral-600 dark:text-neutral-400">Processing your speech...</p>
-                    ) : (
-                      <p className="text-neutral-600 dark:text-neutral-400">Tap the microphone to start recording</p>
-                    )}
+                  <div className="flex flex-col items-center justify-center py-10">
+                    <div className="mb-6 text-center">
+                      <h3 className="text-lg font-medium text-neutral-900 dark:text-white mb-2">Upload Audio</h3>
+                      <p className="text-neutral-700 dark:text-neutral-300">
+                        Upload a pre-recorded audio file for analysis.
+                        Supported formats: WAV, MP3, M4A (max 10MB).
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col items-center space-y-6">
+                      <label className="block w-full max-w-xs">
+                        <span className="sr-only">Choose audio file</span>
+                        <input
+                          type="file"
+                          className="block w-full text-sm text-neutral-700 dark:text-neutral-300
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-md file:border-0
+                            file:text-sm file:font-medium
+                            file:bg-primary-50 file:text-primary-700
+                            dark:file:bg-primary-900/30 dark:file:text-primary-400
+                            hover:file:bg-primary-100 dark:hover:file:bg-primary-900/40"
+                          accept="audio/*"
+                          onChange={handleFileUpload}
+                          disabled={isProcessing}
+                        />
+                      </label>
+
+                      {audioFile && (
+                        <div className="text-sm text-neutral-600 dark:text-neutral-400">
+                          Selected: <span className="font-medium">{audioFile.name}</span>
+                        </div>
+                      )}
+
+                      <button
+                        onClick={processAudioFile}
+                        disabled={!audioFile || isProcessing}
+                        className={classNames(
+                          'inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500',
+                          (!audioFile || isProcessing)
+                            ? 'opacity-50 cursor-not-allowed'
+                            : 'hover:bg-primary-700'
+                        )}
+                      >
+                        {isProcessing ? (
+                          <>
+                            <ArrowPathIcon className="animate-spin -ml-1 mr-2 h-4 w-4" />
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            <ArrowUpTrayIcon className="-ml-1 mr-2 h-4 w-4" />
+                            Process Audio File
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </Tab.Panel>

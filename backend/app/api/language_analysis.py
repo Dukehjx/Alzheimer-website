@@ -8,6 +8,8 @@ from typing import Optional, Dict, Any, List
 import json
 import asyncio
 import logging
+import tempfile
+import os
 
 from app.ai.nlp import (
     text_analysis_pipeline,
@@ -169,40 +171,63 @@ async def analyze_text_segments(
         raise HTTPException(status_code=500, detail=f"Segment analysis failed: {str(e)}")
 
 @router.post("/analyze-speech")
-async def analyze_speech(audio_file: UploadFile = File(...)):
+async def analyze_speech(
+    audio_file: UploadFile = File(...),
+    language: Optional[str] = Form(None),
+    include_features: bool = Form(False)
+):
     """
     Analyze a speech recording for signs of cognitive decline.
     
     This endpoint accepts audio files, transcribes them to text using
-    a speech-to-text service, and then performs linguistic analysis.
+    OpenAI Whisper, and then performs linguistic analysis using GPT-4o.
     """
     try:
-        # In a real implementation:
-        # 1. Save the uploaded audio file
-        # 2. Convert speech to text using OpenAI Whisper API or similar
-        # 3. Perform NLP analysis on the transcribed text
-        # 4. Return results
-        
-        # For now, we return mock data
+        # Process audio to get transcription
+        # model_factory.process_audio expects a file path or a seekable BinaryIO.
+        # audio_file.file is a SpooledTemporaryFile, which is a BinaryIO.
+        transcription_result = model_factory.process_audio(
+            audio_file=audio_file.file, 
+            language=language
+        )
+
+        if not transcription_result.get("success"):
+            error_detail = transcription_result.get("error", "Speech-to-text failed")
+            logger.error(f"Speech transcription failed: {error_detail}")
+            raise HTTPException(status_code=400, detail=error_detail)
+
+        transcribed_text = transcription_result.get("text")
+        if not transcribed_text or not transcribed_text.strip():
+            logger.error("Transcription resulted in empty text.")
+            raise HTTPException(status_code=400, detail="Transcription resulted in empty text.")
+
+        # Analyze the transcribed text
+        logger.info(f"Analyzing transcribed text (length {len(transcribed_text)} characters).")
+        analysis_result = model_factory.analyze_text(
+            text=transcribed_text,
+            include_features=include_features
+        )
+
+        if not analysis_result.get("success"):
+            error_detail = analysis_result.get("error", "Text analysis failed")
+            logger.error(f"Text analysis of transcription failed: {error_detail}")
+            # Still return transcription even if analysis fails
+            return {
+                "transcription_details": transcription_result,
+                "analysis_details": analysis_result,
+                "warning": "Text analysis failed, only transcription is available."
+            }
+            
         return {
-            "analysis_id": "speech-123",
-            "audio_duration": "35 seconds",
-            "transcription": "This would be the transcribed text from the audio file.",
-            "metrics": {
-                "lexical_diversity": 0.72,
-                "syntactic_complexity": 0.65,
-                "hesitations": 0.08,
-                "repetitions": 0.03,
-                "speech_rate": 0.9,
-                "pause_patterns": 0.85
-            },
-            "risk_score": 0.3,
-            "recommendations": [
-                "Consider speech fluency exercises",
-                "Schedule a follow-up assessment in 3 months"
-            ]
+            "transcription_details": transcription_result,
+            "analysis_details": analysis_result
         }
+
+    except HTTPException as http_exc:
+        # Re-raise HTTPException to ensure FastAPI handles it correctly
+        raise http_exc
     except Exception as e:
+        logger.exception(f"Error in /analyze-speech endpoint: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Speech analysis failed: {str(e)}")
 
 @router.get("/history/{user_id}")

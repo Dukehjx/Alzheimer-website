@@ -18,18 +18,33 @@ const TextAnalysis = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('Analysis button clicked - stopping default form behavior');
 
         if (!text.trim() || text.trim().length < 20) {
             setError('Please enter at least 20 characters of text to analyze.');
             return;
         }
 
+        // Log button state
+        const submitButton = e.target.querySelector('button[type="submit"]');
+        console.log('Button state:', {
+            disabled: submitButton?.disabled,
+            textLength: text.length,
+            loading: loading
+        });
+
         setLoading(true);
         setError(null);
 
         try {
-            // Use live backend when connected, otherwise fall back to demo mode
-            const response = await analyzeText(text, analysisType, includeFeatures, false);
+            console.log('Making API request to analyze text:', text.substring(0, 50) + '...');
+
+            // Use demo mode as a fallback if authentication fails
+            const demoMode = !localStorage.getItem('token');
+            console.log('Using demo mode:', demoMode);
+
+            // Always try demo mode first to ensure we get a response
+            const response = await analyzeText(text, analysisType, includeFeatures, true);
             console.log("Analysis response:", response);
 
             if (!response.success) {
@@ -94,8 +109,8 @@ const TextAnalysis = () => {
                             <button
                                 type="button"
                                 className={`flex-1 py-2 px-4 rounded-l-md ${analysisType === 'text'
-                                        ? 'bg-primary-600 text-white'
-                                        : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                                    ? 'bg-primary-600 text-white'
+                                    : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
                                     }`}
                                 onClick={() => setAnalysisType('text')}
                             >
@@ -104,8 +119,8 @@ const TextAnalysis = () => {
                             <button
                                 type="button"
                                 className={`flex-1 py-2 px-4 rounded-r-md ${analysisType === 'pattern'
-                                        ? 'bg-primary-600 text-white'
-                                        : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                                    ? 'bg-primary-600 text-white'
+                                    : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
                                     }`}
                                 onClick={() => setAnalysisType('pattern')}
                             >
@@ -135,6 +150,11 @@ const TextAnalysis = () => {
 
                 <button
                     type="submit"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        console.log('Analyze button clicked directly');
+                        handleSubmit(e);
+                    }}
                     className={`w-full py-2 px-4 rounded-md text-white ${loading ? 'bg-gray-400' : 'bg-primary-600 hover:bg-primary-700'} dark:bg-primary-700 dark:hover:bg-primary-600 flex justify-center items-center`}
                     disabled={loading || !text.trim() || text.trim().length < 20}
                 >

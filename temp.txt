@@ -1,0 +1,46 @@
+Root AI Module Files:
+__init__.py: Main module initialization that exports key functions for text analysis and speech processing
+openai_init.py: Handles OpenAI API initialization, key validation, and model setup
+factory.py: Core factory pattern implementation for managing AI models and their configurations
+GPT Module (/gpt):
+analyzer.py: Main GPT model interface for text analysis
+risk_assessment.py: Specialized module for cognitive decline risk assessment using GPT
+Primary function: Handles interactions with GPT-4o for text analysis and cognitive assessment
+NLP Module (/nlp):
+preprocessing.py: Text cleaning and normalization
+feature_extraction.py: Extracts linguistic features from text
+pattern_detection.py: Identifies linguistic patterns indicative of cognitive decline
+text_analysis.py: Core text analysis pipeline
+risk_assessment.py: Risk scoring and assessment algorithms
+input_validation.py: Validates and sanitizes input text
+normalization.py: Normalizes extracted features and scores
+Primary function: Handles all natural language processing tasks and feature extraction
+Speech Module (/speech):
+whisper_processor.py: Handles speech-to-text conversion using OpenAI's Whisper API
+Primary function: Processes audio files and converts speech to text for analysis
+Key Functionalities:
+Text Analysis Pipeline:
+Apply to factory.py
+Analyzes text for cognitive decline indicators
+Uses GPT-4o for advanced language understanding
+Extracts linguistic features and patterns
+Audio Processing:
+Apply to factory.py
+Converts speech to text using Whisper API
+Supports multiple languages
+Handles various audio file formats
+Model Management:
+Apply to factory.py
+Manages AI model configurations
+Handles model switching and initialization
+Configures Whisper model sizes
+Risk Assessment:
+Comprehensive cognitive decline risk assessment
+Pattern detection in language use
+Feature extraction and normalization
+Score calculation and interpretation
+The module is well-organized with clear separation of concerns:
+Factory pattern for model management
+Modular architecture for easy maintenance
+Comprehensive error handling and logging
+Clear API interfaces for external integration

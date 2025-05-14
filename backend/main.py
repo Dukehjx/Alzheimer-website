@@ -76,10 +76,18 @@ app = FastAPI(
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins in development
+    allow_origins=[
+        "https://www.neuroaegis.com",
+        "https://neuroaegis.com",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:8000"
+    ],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+    expose_headers=["Content-Type", "X-CSRFToken"],
+    max_age=86400,  # Cache CORS preflight responses for 24 hours
 )
 
 # Mount static files directory
@@ -93,11 +101,63 @@ async def get_favicon():
 
 # Include routers
 api_prefix = os.getenv("API_PREFIX", "/api/v1")
+
+# Mount API routers with explicit prefixes for clarity
 app.include_router(auth_router, prefix=api_prefix)
 app.include_router(language_router, prefix=api_prefix)
 app.include_router(cognitive_training_router, prefix=api_prefix)
 app.include_router(resources_router, prefix=f"{api_prefix}/resources")
-app.include_router(ai_router)  # AI router already has prefix defined
+
+# Mount the AI router - it already has the complete prefix in its definition
+logger.info(f"Mounting AI router (which already includes prefix: /api/v1/ai)")
+app.include_router(ai_router)  # AI router already includes '/api/v1/ai' prefix
+
+# Diagnostic endpoint
+@app.get(f"{api_prefix}/diagnostic")
+async def diagnostic():
+    """API diagnostic endpoint to check API connectivity."""
+    from datetime import datetime
+    
+    # Check OpenAI API availability
+    openai_available = False
+    if os.getenv("OPENAI_API_KEY"):
+        try:
+            from app.ai.factory import model_factory
+            current_model = model_factory.get_current_model_type()
+            openai_available = True
+        except:
+            current_model = "unknown"
+    else:
+        current_model = "not_configured"
+        
+    # Check MongoDB connection
+    db_available = False
+    try:
+        from app.db import get_database
+        db = get_database()
+        await db.admin.command('ping')
+        db_available = True
+    except Exception as e:
+        logger.error(f"Database connectivity error in diagnostic: {str(e)}")
+    
+    return {
+        "status": "available",
+        "timestamp": datetime.now().isoformat(),
+        "version": "0.1.0",
+        "services": {
+            "api": "online",
+            "database": "online" if db_available else "offline",
+            "ai": "online" if openai_available else "offline",
+            "audio_processing": "online" if openai_available else "degraded"
+        },
+        "environment": os.getenv("ENVIRONMENT", "production"),
+        "current_model": current_model,
+        "message": "API is functioning properly"
+    }
+
+# Log all registered routes for debugging
+for route in app.routes:
+    logger.info(f"Registered route: {route.path}")
 
 # Error handling
 @app.exception_handler(StarletteHTTPException)
@@ -145,6 +205,16 @@ async def root():
     return {
         "status": "online",
         "message": "Welcome to the NeuroAegis Platform API",
+        "version": "0.1.0",
+    }
+
+# API root endpoint
+@app.get(f"{api_prefix}")
+async def api_root():
+    """API root endpoint that returns API status."""
+    return {
+        "status": "available",
+        "message": "NeuroAegis Platform API - See /api/v1/diagnostic for detailed status",
         "version": "0.1.0",
     }
 

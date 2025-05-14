@@ -62,7 +62,6 @@ def preprocess_audio(audio_file: Union[BinaryIO, str, Path]) -> str:
 
 def transcribe_audio_api(
     audio_path: Union[str, Path],
-    model_name: str = "base",
     language: Optional[str] = None
 ) -> Dict[str, Any]:
     """
@@ -70,13 +69,13 @@ def transcribe_audio_api(
     
     Args:
         audio_path: Path to audio file
-        model_name: Whisper model size ('tiny', 'base', 'small', 'medium', 'large')
         language: Language code (optional, auto-detect if None)
     
     Returns:
         Dictionary containing transcription results
     """
     if not OPENAI_AVAILABLE:
+        logger.error("OpenAI package not available")
         return {
             "success": False,
             "error": "OpenAI package not available. Install with 'pip install openai'."
@@ -95,36 +94,109 @@ def transcribe_audio_api(
                 "error": "OpenAI API key not configured"
             }
         
-        # Create OpenAI client
-        client = openai.OpenAI(api_key=api_key)
+        # Log API key first few chars for debugging (NEVER log the full key)
+        key_prefix = api_key[:5] if len(api_key) > 5 else "****"
+        logger.info(f"Using OpenAI API key starting with: {key_prefix}...")
+        
+        # Create OpenAI client with additional configuration
+        client = openai.OpenAI(
+            api_key=api_key,
+            timeout=90.0,  # Increased timeout for larger files
+            max_retries=5   # More retries for reliability
+        )
         
         # Set transcription options
         options = {}
         if language:
             options["language"] = language
+            
+        logger.info(f"Transcription options: {options}")
         
         # Transcribe audio using the API
         logger.info(f"Transcribing audio file with OpenAI Whisper API: {audio_path}")
         
-        with open(audio_path, "rb") as audio_file:
-            response = client.audio.transcriptions.create(
-                file=audio_file,
-                model=whisper_model,
-                **options
-            )
+        # Check file exists and is readable
+        if not os.path.exists(audio_path):
+            logger.error(f"Audio file does not exist: {audio_path}")
+            return {
+                "success": False, 
+                "error": f"Audio file not found: {audio_path}"
+            }
+            
+        if not os.access(audio_path, os.R_OK):
+            logger.error(f"Audio file is not readable: {audio_path}")
+            return {
+                "success": False,
+                "error": f"Audio file is not readable: {audio_path}"
+            }
+        
+        # Log file size
+        file_size = os.path.getsize(audio_path)
+        logger.info(f"Audio file size: {file_size} bytes")
+        
+        # Transcribe with enhanced error handling
+        try:
+            logger.info("Opening audio file for transcription...")
+            with open(audio_path, "rb") as audio_file_obj:
+                logger.info("Sending to OpenAI Whisper API...")
+                response = client.audio.transcriptions.create(
+                    file=audio_file_obj,
+                    model=whisper_model,
+                    **options
+                )
+                logger.info("Transcription response received from OpenAI")
+        except openai.APIConnectionError as conn_error:
+            logger.error(f"OpenAI API connection error: {str(conn_error)}")
+            return {
+                "success": False,
+                "error": f"OpenAI API connection error: {str(conn_error)}"
+            }
+        except openai.APITimeoutError as timeout_error:
+            logger.error(f"OpenAI API timeout: {str(timeout_error)}")
+            return {
+                "success": False,
+                "error": f"OpenAI API timeout: {str(timeout_error)}"
+            }
+        except openai.RateLimitError as rate_limit_error:
+            logger.error(f"OpenAI API rate limit exceeded: {str(rate_limit_error)}")
+            return {
+                "success": False,
+                "error": f"OpenAI API rate limit exceeded: {str(rate_limit_error)}"
+            }
+        except openai.AuthenticationError as auth_error:
+            logger.error(f"OpenAI API authentication error: {str(auth_error)}")
+            return {
+                "success": False,
+                "error": f"OpenAI API authentication error: The API key provided is invalid or has expired."
+            }
+        except openai.OpenAIError as api_error:
+            logger.error(f"OpenAI API error: {str(api_error)}")
+            return {
+                "success": False,
+                "error": f"OpenAI API error: {str(api_error)}"
+            }
+        except (ConnectionError, TimeoutError) as conn_error:
+            logger.error(f"Connection error with OpenAI API: {str(conn_error)}")
+            return {
+                "success": False,
+                "error": f"Connection error: {str(conn_error)}. Please check your internet connection."
+            }
+            
+        logger.info("Transcription completed successfully")
+        logger.info(f"Transcribed text: {response.text[:100]}...")
         
         return {
             "text": response.text,
             "segments": [],  # OpenAI API doesn't return segments like the local model
-            "language": language,
+            "language": language or "auto-detected",
             "success": True
         }
     
     except Exception as e:
-        logger.error(f"Error transcribing audio with OpenAI API: {str(e)}")
+        logger.error(f"Error transcribing audio with OpenAI API: {str(e)}", exc_info=True)
         return {
             "success": False,
-            "error": str(e)
+            "error": f"Transcription error: {str(e)}"
         }
 
 def process_audio(
@@ -137,7 +209,8 @@ def process_audio(
     
     Args:
         audio_file: File-like object or path to audio file
-        model_name: Whisper model size (ignored, always uses whisper-1 API)
+        model_name: Whisper model identifier (e.g., 'base', 'whisper-1'). 
+                    Used for metadata; the API itself uses 'whisper-1'.
         language: Language code (optional, auto-detect if None)
     
     Returns:
@@ -146,16 +219,57 @@ def process_audio(
     temp_path = None
     
     try:
+        # Validate the audio file
+        if isinstance(audio_file, (str, Path)) and not os.path.exists(audio_file):
+            logger.error(f"Audio file not found: {audio_file}")
+            return {
+                "success": False,
+                "error": f"Audio file not found: {audio_file}"
+            }
+            
+        # Check for API key
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            logger.error("OpenAI API key not found in environment variables")
+            return {
+                "success": False,
+                "error": "OpenAI API key not configured"
+            }
+            
+        # Log audio file information
+        if isinstance(audio_file, (str, Path)):
+            logger.info(f"Processing audio file: {audio_file}")
+            file_size = os.path.getsize(audio_file)
+            logger.info(f"Audio file size: {file_size} bytes")
+        else:
+            audio_file.seek(0, os.SEEK_END)
+            file_size = audio_file.tell()
+            audio_file.seek(0)
+            logger.info(f"Processing audio from file-like object, size: {file_size} bytes")
+
         # Preprocess audio
+        logger.info("Preprocessing audio file...")
         temp_path = preprocess_audio(audio_file)
+        logger.info(f"Audio preprocessed successfully: {temp_path}")
         
         # Transcribe preprocessed audio using the API
-        result = transcribe_audio_api(temp_path, model_name, language)
+        logger.info(f"Transcribing audio... (Note: API uses 'whisper-1' model)")
+        result = transcribe_audio_api(temp_path, language)
+        
+        if not result.get("success", False):
+            logger.error(f"Transcription failed: {result.get('error', 'Unknown error')}")
+            return result
+            
+        logger.info("Audio transcription completed successfully")
+        
+        # Add additional metadata to result
+        result["model_name"] = model_name
+        result["file_size"] = file_size
         
         return result
     
     except Exception as e:
-        logger.error(f"Error processing audio: {str(e)}")
+        logger.error(f"Error processing audio: {str(e)}", exc_info=True)
         return {
             "success": False,
             "error": str(e)
@@ -166,5 +280,6 @@ def process_audio(
         if temp_path and os.path.exists(temp_path):
             try:
                 os.unlink(temp_path)
+                logger.debug(f"Removed temporary file: {temp_path}")
             except Exception as e:
                 logger.warning(f"Failed to remove temporary file {temp_path}: {str(e)}") 

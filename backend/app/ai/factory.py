@@ -175,7 +175,7 @@ def analyze_text(text: str, include_features: bool = False) -> Dict[str, Any]:
     """
     Analyze text using the GPT-4o model.
     
-    Args:
+    Args:F
         text: The text to analyze
         include_features: Whether to include detailed linguistic features in response
         
@@ -222,6 +222,24 @@ def process_audio(
         
         logger.info(f"Processing audio with Whisper {model_size} model")
         
+        # Log file information if it's a path
+        if isinstance(audio_file, (str, Path)):
+            try:
+                file_size = os.path.getsize(audio_file)
+                logger.info(f"Audio file path: {audio_file}, size: {file_size} bytes")
+            except Exception as e:
+                logger.warning(f"Could not get file info: {str(e)}")
+        
+        # Check if OpenAI API key is available
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            logger.error("OpenAI API key not configured in environment variables")
+            return {
+                "success": False,
+                "error": "OpenAI API key not configured"
+            }
+        
+        # Process the audio file
         return factory.process_audio(audio_file, language)
     except Exception as e:
         logger.error(f"Error in audio processing: {str(e)}")

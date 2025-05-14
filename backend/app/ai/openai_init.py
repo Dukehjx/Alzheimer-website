@@ -25,12 +25,30 @@ def initialize_openai_api() -> bool:
         logger.warning("OpenAI API key is not set in environment variables.")
         return False
     
+    if api_key.startswith("sk-"):
+        logger.info(f"Found API key starting with: {api_key[:8]}...")
+    else:
+        logger.warning("API key format appears incorrect (should start with 'sk-')")
+    
     try:
         # Import OpenAI package
         import openai
         
         # Set API key
         openai.api_key = api_key
+        
+        # Test API connection with a simple request
+        client = openai.OpenAI(api_key=api_key)
+        try:
+            response = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[{"role": "user", "content": "Hello"}],
+                max_tokens=5
+            )
+            logger.info("Successfully tested OpenAI API connection")
+        except Exception as api_error:
+            logger.error(f"API test failed: {str(api_error)}")
+            return False
         
         logger.info("OpenAI API initialized successfully.")
         
