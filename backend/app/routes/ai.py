@@ -199,57 +199,57 @@ async def analyze_text_endpoint(
             detail=f"An error occurred during analysis: {str(e)}"
         )
 
-@router.post("/set-model")
-async def set_model_endpoint(
-    model_type: str = Body(..., embed=True),
-    api_key: Optional[str] = Body(None, embed=True),
-    current_user: UserInDB = Depends(get_current_user)
-):
-    """
-    Set the API key for the GPT-4o model.
+# @router.post("/set-model")
+# async def set_model_endpoint(
+#     model_type: str = Body(..., embed=True),
+#     api_key: Optional[str] = Body(None, embed=True),
+#     current_user: UserInDB = Depends(get_current_user)
+# ):
+#     """
+#     Set the API key for the GPT-4o model.
     
-    Args:
-        model_type: Will always be 'gpt4o' regardless of input
-        api_key: API key for GPT-4o (required)
-        current_user: The authenticated user
+#     Args:
+#         model_type: Will always be 'gpt4o' regardless of input
+#         api_key: API key for GPT-4o (required)
+#         current_user: The authenticated user
         
-    Returns:
-        Success message
-    """
-    # Check if user has admin role
-    if "admin" not in current_user.roles:
-        raise HTTPException(
-            status_code=403,
-            detail="Only administrators can update the API key"
-        )
+#     Returns:
+#         Success message
+#     """
+#     # Check if user has admin role
+#     if "admin" not in current_user.roles:
+#         raise HTTPException(
+#             status_code=403,
+#             detail="Only administrators can update the API key"
+#         )
     
-    # Force model_type to 'gpt4o'
-    model_type = 'gpt4o'
+#     # Force model_type to 'gpt4o'
+#     model_type = 'gpt4o'
     
-    # API key is required
-    if not api_key:
-        raise HTTPException(
-            status_code=400,
-            detail="API key is required for GPT-4o"
-        )
+#     # API key is required
+#     if not api_key:
+#         raise HTTPException(
+#             status_code=400,
+#             detail="API key is required for GPT-4o"
+#         )
     
-    try:
-        success = set_model(model_type, api_key)
+#     try:
+#         success = set_model(model_type, api_key)
         
-        if not success:
-            raise HTTPException(
-                status_code=400,
-                detail="Failed to set API key. Please check if the API key is valid."
-            )
+#         if not success:
+#             raise HTTPException(
+#                 status_code=400,
+#                 detail="Failed to set API key. Please check if the API key is valid."
+#             )
         
-        return {"success": True, "message": "GPT-4o API key updated successfully"}
+#         return {"success": True, "message": "GPT-4o API key updated successfully"}
     
-    except Exception as e:
-        logger.error(f"Error setting API key: {str(e)}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"An error occurred while updating the API key: {str(e)}"
-        )
+#     except Exception as e:
+#         logger.error(f"Error setting API key: {str(e)}")
+#         raise HTTPException(
+#             status_code=500,
+#             detail=f"An error occurred while updating the API key: {str(e)}"
+#         )
 
 @router.get("/history")
 async def get_analysis_history(

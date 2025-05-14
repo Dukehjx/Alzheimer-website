@@ -6,59 +6,46 @@ It will be initialized and used when an OpenAI API key is provided.
 """
 
 import logging
-import os
+import os # Keep for other potential uses, though API key is now via shared client
 import json
 from datetime import datetime
 from typing import Dict, Any, List, Optional, Set
 
 from app.models.analysis import CognitiveDomain
+from app.ai.openai_init import get_openai_client # Import the shared client getter
 
 # Initialize logger
 logger = logging.getLogger(__name__)
 
-# Global OpenAI API client
-openai_client = None
+# Global OpenAI API client (now obtained via get_openai_client)
+# openai_client = None # Replaced by shared client logic
 
-# Valid cognitive domains
 VALID_DOMAINS: Set[str] = {domain.value.upper() for domain in CognitiveDomain}
 
-def initialize_gpt(api_key: str) -> bool:
+def initialize_gpt(api_key: str) -> bool: # api_key param might become redundant if only shared client is used
     """
-    Initialize the GPT model with the provided API key.
-    
-    Args:
-        api_key: OpenAI API key
-        
-    Returns:
-        True if initialization was successful, False otherwise
+    Initialize and test the GPT model setup using the shared OpenAI client.
+    The api_key parameter is kept for compatibility but the shared client is preferred.
     """
-    global openai_client
+    openai_client_instance = get_openai_client()
+    if not openai_client_instance:
+        logger.error("GPT module: Shared OpenAI client not available. Initialization failed.")
+        return False
     
     try:
-        # Only import openai when we actually need it
-        import openai
-        
-        # Set API key and initialize client
-        openai.api_key = api_key
-        openai_client = openai.OpenAI(api_key=api_key)
-        
-        # Test the API key with a simple call
-        response = openai_client.chat.completions.create(
+        # Test the API key via the shared client
+        response = openai_client_instance.chat.completions.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "You are a cognitive health assistant."},
-                {"role": "user", "content": "Hello, this is a test."}
+                {"role": "system", "content": "You are a cognitive health assistant (GPT module test)."},
+                {"role": "user", "content": "Test call from GPT risk assessment module."}
             ],
             max_tokens=10
         )
-        
-        logger.info("GPT-4o model initialized successfully")
+        logger.info("GPT module (risk_assessment): Successfully tested API connection via shared client.")
         return True
-    except ImportError:
-        logger.error("Failed to import openai package. Please install it with 'pip install openai'")
-        return False
     except Exception as e:
-        logger.error(f"Error initializing GPT-4o model: {str(e)}")
+        logger.error(f"GPT module (risk_assessment): Error testing API via shared client: {str(e)}")
         return False
 
 def generate_gpt_prompt(text: str, include_features: bool = False) -> str:
@@ -179,76 +166,56 @@ def parse_gpt_response(response: str) -> Dict[str, Any]:
         return None
 
 def calculate_cognitive_risk(text: str, include_features: bool = False) -> Dict[str, Any]:
-    """
-    Calculate cognitive risk using GPT-4o.
+    """Calculate cognitive risk using GPT-4o via the shared OpenAI client."""
+    openai_client_instance = get_openai_client()
     
-    This function leverages GPT-4o's language understanding
-    to assess cognitive decline risks from text.
-    
-    Args:
-        text: The text to analyze
-        include_features: Whether to include detailed linguistic features
-        
-    Returns:
-        Dictionary with analysis results
-    """
-    global openai_client
-    
-    if openai_client is None:
-        logger.error("GPT-4o model not initialized. Call initialize_gpt() first.")
+    if not openai_client_instance:
+        logger.error("GPT risk assessment: Shared OpenAI client not available.")
         return {
             "success": False,
-            "error": "GPT-4o model not initialized"
+            "error": "OpenAI client not initialized or available."
         }
     
     try:
-        # Generate prompt for GPT-4o
         prompt = generate_gpt_prompt(text, include_features)
         
-        # Call GPT-4o API
-        response = openai_client.chat.completions.create(
+        response = openai_client_instance.chat.completions.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are a cognitive health assessment system specializing in linguistic analysis."},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=1500,
-            temperature=0.3  # Lower temperature for more deterministic results
+            temperature=0.3
         )
         
-        # Extract response text
         response_text = response.choices[0].message.content
-        
-        # Parse the response
         gpt_data = parse_gpt_response(response_text)
         
         if not gpt_data:
-            logger.error("Failed to parse GPT-4o response")
             return {
                 "success": False,
                 "error": "Failed to parse GPT-4o response"
             }
         
-        # Format the result
         result = {
             "success": True,
             "timestamp": datetime.utcnow().isoformat(),
-            "risk_score": gpt_data.get("risk_score", 0.0),
-            "domain_scores": gpt_data.get("domain_scores", {}),
-            "evidence": gpt_data.get("evidence", []),
-            "recommendations": gpt_data.get("recommendations", []),
-            "confidence_score": gpt_data.get("confidence_score", 0.8)
+            "risk_score": gpt_data["risk_score"],
+            "domain_scores": gpt_data["domain_scores"],
+            "evidence": gpt_data["evidence"],
+            "recommendations": gpt_data["recommendations"],
+            "confidence_score": gpt_data["confidence_score"]
         }
         
-        # Include linguistic features if requested
         if include_features and "linguistic_features" in gpt_data:
             result["features"] = gpt_data["linguistic_features"]
         
         return result
     
     except Exception as e:
-        logger.error(f"Error in GPT-4o analysis: {str(e)}")
+        logger.error(f"Error in GPT-4o risk calculation: {str(e)}", exc_info=True)
         return {
             "success": False,
-            "error": f"GPT-4o analysis failed: {str(e)}"
+            "error": f"GPT-4o risk calculation failed: {str(e)}"
         } 

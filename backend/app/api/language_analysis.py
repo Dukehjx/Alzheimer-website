@@ -1,22 +1,24 @@
 """
 Language Analysis API routes for analyzing speech and text samples
-to detect early signs of cognitive decline.
+to detect early signs of cognitive decline. All endpoints in this router
+now use the central model_factory for consistent AI processing.
 """
 
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Query, Body, Depends
 from typing import Optional, Dict, Any, List
-import json
+# import json # No longer directly used
 import asyncio
 import logging
-import tempfile
-import os
+# import tempfile # No longer directly used here, handled by UploadFile or in model_factory
+# import os # No longer directly used here
 
-from app.ai.nlp import (
-    text_analysis_pipeline,
-    validate_and_preprocess_text,
-    extract_segments
-)
-from app.ai.factory import model_factory
+# Removed NLP specific imports, using model_factory instead
+# from app.ai.nlp import (
+#     text_analysis_pipeline,
+#     validate_and_preprocess_text,
+#     extract_segments
+# )
+from app.ai.factory import model_factory # Central factory for AI operations
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -28,146 +30,194 @@ router = APIRouter(
 )
 
 @router.post("/analyze-text")
-async def analyze_text(
+async def analyze_text_endpoint( # Renamed to avoid conflict if we re-import analyze_text from factory
     text: str = Form(...),
-    include_features: bool = Form(False),
-    include_raw_text: bool = Form(False),
-    detect_patterns: bool = Form(False)
+    include_features: bool = Form(False)
+    # include_raw_text: bool = Form(False), # Removed, not directly supported by model_factory.analyze_text
+    # detect_patterns: bool = Form(False) # Removed, not directly supported by model_factory.analyze_text
 ):
     """
-    Analyze a text sample for signs of cognitive decline.
-    
-    This endpoint processes text input and returns linguistic metrics
-    that may indicate early signs of MCI or Alzheimer's.
+    Analyze a text sample for signs of cognitive decline using the model_factory.
     
     Args:
-        text: The text to analyze
-        include_features: Whether to include detailed linguistic features
-        include_raw_text: Whether to include the original text in the response
-        detect_patterns: Whether to detect specific linguistic patterns
+        text: The text to analyze.
+        include_features: Whether to include detailed linguistic features from GPT analysis.
     
     Returns:
-        Analysis results with risk score and recommendations
+        Analysis results with risk score and recommendations.
     """
     try:
-        # Log which model is being used
-        current_model = model_factory.get_current_model_type()
-        logger.info(f"Language analysis using model: {current_model}")
+        current_model_type = model_factory.get_current_model_type()
+        logger.info(f"Analyzing text using model_factory (model type: {current_model_type}) with input text: '{text[:100]}...'")
+
+        if not text or not text.strip():
+            raise HTTPException(status_code=400, detail="Text input cannot be empty.")
+
+        # Use model_factory for analysis
+        analysis_result = model_factory.analyze_text(
+            text=text,
+            include_features=include_features
+        )
+
+        if not analysis_result.get("success"):
+            error_detail = analysis_result.get("error", "Text analysis failed via model_factory")
+            logger.error(f"Text analysis failed: {error_detail}")
+            raise HTTPException(status_code=500, detail=error_detail)
         
-        # Validate and preprocess the text
-        validation = validate_and_preprocess_text(text)
-        if not validation["success"]:
-            raise HTTPException(
-                status_code=400, 
-                detail=f"Invalid text input: {', '.join(validation.get('errors', ['Unknown error']))}"
-            )
-        
-        # Analyze the text
-        if detect_patterns:
-            results = await text_analysis_pipeline.detect_linguistic_patterns(validation["text"])
-        else:
-            results = await text_analysis_pipeline.analyze_text(
-                validation["text"],
-                include_features=include_features,
-                include_raw_text=include_raw_text
-            )
-        
-        # Add validation metadata
-        results["language"] = validation["language"]
-        results["language_name"] = validation["language_name"]
-        
-        # Add warnings if any
-        if validation.get("warnings"):
-            results["warnings"] = validation["warnings"]
-        
-        return results
+        return analysis_result
     
+    except HTTPException as http_exc:
+        raise http_exc # Re-raise FastAPI's HTTP exceptions
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+        logger.exception(f"Error in /analyze-text endpoint: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Text analysis failed: {str(e)}")
+
+# Helper function for text segmentation (simplified)
+def _segment_text(text: str, min_segment_length: int = 50) -> List[Dict[str, Any]]:
+    """Rudimentary text segmentation by paragraphs or sentences if long enough."""
+    if not text or not text.strip():
+        return []
+
+    segments_data = []
+    # Simple paragraph-based segmentation
+    paragraphs = [p.strip() for p in text.split('\n') if p.strip()]
+    
+    current_segment_text = ""
+    segment_id_counter = 1
+
+    for para in paragraphs:
+        if len(current_segment_text) + len(para) + (1 if current_segment_text else 0) > min_segment_length * 5 and current_segment_text: # Heuristic to avoid overly long segments
+            if len(current_segment_text) >= min_segment_length:
+                segments_data.append({
+                    "id": f"segment_{segment_id_counter}",
+                    "text": current_segment_text,
+                    "length": len(current_segment_text),
+                    "char_start_index": text.find(current_segment_text), # Approximate
+                    "char_end_index": text.find(current_segment_text) + len(current_segment_text) # Approximate
+                })
+                segment_id_counter += 1
+                current_segment_text = para
+            else: # If current segment is too short, append new para
+                 current_segment_text += ("\n" + para) if current_segment_text else para
+        else:
+            current_segment_text += ("\n" + para) if current_segment_text else para
+
+    # Add the last segment if it's valid
+    if current_segment_text and len(current_segment_text) >= min_segment_length:
+        segments_data.append({
+            "id": f"segment_{segment_id_counter}",
+            "text": current_segment_text,
+            "length": len(current_segment_text),
+            "char_start_index": text.rfind(current_segment_text), # Approximate
+            "char_end_index": text.rfind(current_segment_text) + len(current_segment_text) # Approximate
+        })
+    
+    # If no segments were created by paragraph splitting and text is long enough, treat as one segment
+    if not segments_data and len(text) >= min_segment_length:
+         segments_data.append({
+            "id": "segment_1",
+            "text": text,
+            "length": len(text),
+            "char_start_index": 0,
+            "char_end_index": len(text)
+        })
+
+    logger.info(f"Segmented text into {len(segments_data)} parts.")
+    return segments_data
+
 
 @router.post("/analyze-text-segments")
-async def analyze_text_segments(
+async def analyze_text_segments_endpoint( # Renamed to avoid conflict
     text: str = Form(...),
-    min_segment_length: int = Form(50),
+    min_segment_length: int = Form(50, ge=10), # Ensure min_segment_length is reasonable
     include_features: bool = Form(False)
 ):
     """
-    Analyze segments of a text sample separately and return results for each segment.
-    
-    This is useful for analyzing longer texts by breaking them into paragraphs
-    or sections and analyzing each independently.
+    Analyze segments of a text sample using model_factory.
     
     Args:
-        text: The text to analyze
-        min_segment_length: Minimum length for a valid segment
-        include_features: Whether to include detailed linguistic features
+        text: The text to analyze.
+        min_segment_length: Minimum character length for a segment to be analyzed.
+        include_features: Whether to include detailed linguistic features for each segment.
     
     Returns:
-        Analysis results for each segment and overall assessment
+        Analysis results for each segment and an overall assessment.
     """
     try:
-        # Validate and preprocess the text
-        validation = validate_and_preprocess_text(text)
-        if not validation["success"]:
-            raise HTTPException(
-                status_code=400, 
-                detail=f"Invalid text input: {', '.join(validation.get('errors', ['Unknown error']))}"
-            )
-        
-        # Extract segments
-        segments = extract_segments(validation["text"], min_segment_length=min_segment_length)
+        if not text or not text.strip():
+            raise HTTPException(status_code=400, detail="Text input cannot be empty.")
+        if min_segment_length < 10: # Basic validation
+             raise HTTPException(status_code=400, detail="Minimum segment length must be at least 10.")
+
+        logger.info(f"Analyzing text segments. Total length: {len(text)}, min_segment_length: {min_segment_length}")
+
+        segments = _segment_text(text, min_segment_length)
         
         if not segments:
-            raise HTTPException(
-                status_code=400,
-                detail="Could not extract valid segments from text"
+            logger.warning("No valid segments found for analysis after segmentation.")
+            # Optionally, analyze the whole text if no segments? Or return error?
+            # For now, if no segments, analyze the whole text as one if it meets min_segment_length
+            if len(text) >= min_segment_length:
+                logger.info("No segments extracted, analyzing the whole text as a single segment.")
+                analysis_result = model_factory.analyze_text(text=text, include_features=include_features)
+                return {
+                     "success": True, # Assuming success if analyze_text doesn't fail
+                     "segments_analysis": [analysis_result] if analysis_result.get("success") else [],
+                     "overall_assessment": analysis_result if analysis_result.get("success") else {"success": False, "error": "Single segment analysis failed"},
+                     "segment_count": 1 if analysis_result.get("success") else 0,
+                     "message": "Analyzed as a single segment as no smaller segments could be extracted."
+                }
+            else:
+                 raise HTTPException(status_code=400, detail="Text is too short to be segmented or analyzed.")
+
+        segment_analysis_results = []
+        successful_analyses = []
+
+        for segment_data in segments:
+            logger.info(f"Analyzing segment ID {segment_data['id']}: '{segment_data['text'][:50]}...'")
+            analysis_result = model_factory.analyze_text(
+                text=segment_data["text"],
+                include_features=include_features
             )
+            segment_analysis_results.append({
+                "segment_info": segment_data,
+                "analysis": analysis_result
+            })
+            if analysis_result.get("success"):
+                successful_analyses.append(analysis_result)
         
-        # Analyze each segment
-        segment_results = []
-        analysis_tasks = []
-        
-        for segment in segments:
-            # Create analysis tasks
-            task = text_analysis_pipeline.analyze_text(
-                segment["text"],
-                include_features=include_features,
-                include_raw_text=False
-            )
-            analysis_tasks.append(task)
-        
-        # Run all analyses concurrently
-        segment_analyses = await asyncio.gather(*analysis_tasks)
-        
-        # Combine segment data with analysis results
-        for i, segment in enumerate(segments):
-            segment_result = {
-                "segment": segment,
-                "analysis": segment_analyses[i]
+        # Calculate overall assessment (e.g., average score if applicable)
+        # This is a simplified overall assessment.
+        overall_assessment = {}
+        if successful_analyses:
+            avg_overall_score = sum(res.get("overall_score", 0.0) for res in successful_analyses) / len(successful_analyses)
+            # Potentially aggregate recommendations or evidence if needed
+            overall_assessment = {
+                "success": True,
+                "average_overall_score": avg_overall_score,
+                "message": "Aggregated from successful segment analyses.",
+                "analyzed_segment_count": len(successful_analyses),
+                "total_segments_processed": len(segments)
             }
-            segment_results.append(segment_result)
-        
-        # Calculate overall risk score (average of segment scores weighted by length)
-        total_length = sum(segment["length"] for segment in segments)
-        overall_score = 0.0
-        
-        if total_length > 0:
-            for i, segment in enumerate(segments):
-                if segment_analyses[i].get("success", False):
-                    weight = segment["length"] / total_length
-                    overall_score += segment_analyses[i].get("risk_score", 0.5) * weight
-        
-        # Return combined results
+        else:
+            overall_assessment = {
+                "success": False,
+                "error": "No segments could be successfully analyzed.",
+                "analyzed_segment_count": 0,
+                "total_segments_processed": len(segments)
+            }
+            
         return {
-            "success": True,
-            "segments": segment_results,
-            "overall_risk_score": overall_score,
-            "segment_count": len(segments),
-            "language": validation["language"],
-            "language_name": validation["language_name"]
+            "success": True, # Overall success of the endpoint call
+            "segments_analysis": segment_analysis_results,
+            "overall_assessment": overall_assessment,
+            "segment_count": len(segments)
         }
-    
+
+    except HTTPException as http_exc:
+        raise http_exc
     except Exception as e:
+        logger.exception(f"Error in /analyze-text-segments endpoint: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Segment analysis failed: {str(e)}")
 
 @router.post("/analyze-speech")
