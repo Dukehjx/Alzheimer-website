@@ -1,5 +1,5 @@
 import React from 'react';
-import ResourceHub from './ResourceHub';
+import ResourceHub from './ResourceHub.jsx';
 
 function ResourceHubPage() {
   return (

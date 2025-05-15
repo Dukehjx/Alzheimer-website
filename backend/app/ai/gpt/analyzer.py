@@ -42,9 +42,9 @@ def analyze_with_gpt(text: str, include_features: bool = False) -> Dict[str, Any
         # Ensure consistent naming (risk_score -> overall_score)
         if "risk_score" in result:
             result["overall_score"] = result.pop("risk_score")
-            
-        return result
         
+        return result
+    
     except Exception as e:
         logger.error(f"Error in GPT analysis: {str(e)}")
         logger.exception(e)

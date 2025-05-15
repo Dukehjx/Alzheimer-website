@@ -81,6 +81,8 @@ app.add_middleware(
         "https://neuroaegis.com",
         "http://localhost:3000",
         "http://127.0.0.1:3000",
+        "http://localhost:3001",
+        "http://127.0.0.1:3001",
         "http://localhost:8000"
     ],
     allow_credentials=True,
@@ -135,7 +137,7 @@ async def diagnostic():
     try:
         from app.db import get_database
         db = get_database()
-        await db.admin.command('ping')
+        await db.command('ping')
         db_available = True
     except Exception as e:
         logger.error(f"Database connectivity error in diagnostic: {str(e)}")

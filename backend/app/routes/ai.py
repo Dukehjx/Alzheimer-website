@@ -4,7 +4,8 @@ AI analysis API routes.
 This module provides endpoints for AI-powered text analysis and cognitive risk assessment.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Body, BackgroundTasks, UploadFile, File, Form
+from fastapi import APIRouter, Depends, HTTPException, Body, BackgroundTasks, UploadFile, File, Form, Query
+from fastapi.concurrency import run_in_threadpool
 from fastapi.security import OAuth2PasswordBearer
 from typing import Dict, Any, Optional, List
 import logging
@@ -82,12 +83,13 @@ async def process_audio_health():
     }
 
 # Print available endpoints on startup
-@router.on_startup
-async def on_startup():
+async def on_startup_event():
     """Log all endpoints when the application starts."""
     logger.info("Available AI endpoints:")
-    for route in router.routes:
-        logger.info(f"  - {route.path} ({route.name})")
+    for route_item in router.routes:
+        logger.info(f"  - {route_item.path} ({route_item.name})")
+
+router.on_startup.append(on_startup_event)
 
 # Analysis database model
 class AnalysisInDB(BaseModel):
@@ -293,40 +295,52 @@ async def get_analysis_history(
         )
 
 @router.post("/process-audio", response_model=Dict[str, Any], name="process_audio")
+@router.post("/analyze-speech", response_model=Dict[str, Any], name="analyze_speech", include_in_schema=False)
 async def process_audio_endpoint(
     audio_file: UploadFile = File(...),
-    language: Optional[str] = Form(None),
-    include_analysis: str = Form("false"),
+    language: Optional[str] = Query(None),
+    include_analysis: Optional[str] = Form(None),
+    include_features: Optional[bool] = Query(None),
     request_id: Optional[str] = Form(None),
     current_user: Optional[UserInDB] = Depends(get_current_user, use_cache=False),
     db = Depends(get_database)
 ):
     """
     Process audio file for speech-to-text and optional cognitive analysis.
+    Can be called via /process-audio or /analyze-speech.
     
     Args:
         audio_file: The audio file to process
-        language: Language code (optional, auto-detect if None)
-        include_analysis: Whether to analyze the transcribed text (string "true" or "false")
-        request_id: Unique identifier for the request
+        language: Language code (optional, auto-detect if None), from query.
+        include_analysis: Whether to analyze the transcribed text (string "true" or "false"), from form.
+        include_features: Whether to include detailed linguistic features in analysis, from query.
+        request_id: Unique identifier for the request, from form.
         current_user: The authenticated user (optional)
         db: Database connection
         
     Returns:
         Transcription and optional analysis results
     """
-    logger.info(f"Process audio endpoint called at path: /api/v1/ai/process-audio")
+    logger.info(f"Process audio/analyze-speech endpoint called.")
     
-    # Convert include_analysis from string to boolean
-    # Frontend sends 'true' or 'false' as strings in form data
-    should_include_analysis = include_analysis.lower() == 'true'
+    # Determine if analysis should be performed and if features should be included
+    perform_analysis = False
+    if include_analysis is not None and include_analysis.lower() == 'true':
+        perform_analysis = True
+    
+    # If include_features is explicitly True, it implies analysis should be performed
+    if include_features is True:
+        perform_analysis = True
+        
+    # Determine if features should be sent to the analysis function
+    send_features_to_analysis = include_features if include_features is not None else False
     
     # Create temporary file
     temp_file = None
     
     try:
         # Log the request with more details
-        logger.info(f"Audio processing request received: ID={request_id}, file={audio_file.filename}, include_analysis={should_include_analysis}")
+        logger.info(f"Audio processing request received: ID={{request_id}}, file={{audio_file.filename}}, perform_analysis={{perform_analysis}}, include_features_in_analysis={{send_features_to_analysis}}")
         
         # Log file details for debugging
         logger.info(f"Audio file details - name: {audio_file.filename}, content_type: {audio_file.content_type}, size: {audio_file.size if hasattr(audio_file, 'size') else 'unknown'}")
@@ -416,11 +430,11 @@ async def process_audio_endpoint(
                 }
             )
         
-        # Process audio file - calling with correct parameters
-        audio_results = process_audio(temp_file.name, language)
+        # Process audio file - run in threadpool
+        audio_results = await run_in_threadpool(process_audio, temp_file.name, language)
         
         if not audio_results.get("success", False):
-            logger.error(f"Audio processing failed: {audio_results.get('error')}")
+            logger.error(f"Audio processing failed: {{audio_results.get('error')}}")
             error_message = audio_results.get('error', 'Unknown error')
             
             # Determine specific error category and response code
@@ -505,19 +519,19 @@ async def process_audio_endpoint(
             },
             "processing_info": {
                 "language_requested": language or "auto-detect",
-                "include_analysis": should_include_analysis
+                "include_analysis": perform_analysis
             }
         }
         
         # Analyze the transcribed text if requested and user is authenticated
         # Skip analysis in public mode when user is not authenticated
-        if should_include_analysis and transcribed_text and current_user:
+        if perform_analysis and transcribed_text and current_user:
             # Check if text is long enough for analysis
             if len(transcribed_text.strip()) < 10:
                 response["analysis_skipped"] = "Text too short for analysis"
             else:
-                # Analyze the transcribed text
-                analysis_results = analyze_text(transcribed_text, include_features=False)
+                # Analyze the transcribed text - run in threadpool
+                analysis_results = await run_in_threadpool(analyze_text, transcribed_text, include_features=send_features_to_analysis)
                 
                 if analysis_results.get("success", False):
                     # Create analysis record
@@ -554,13 +568,13 @@ async def process_audio_endpoint(
                 else:
                     response["analysis_error"] = analysis_results.get("error", "Unknown error")
         # For anonymous users, we still want to provide basic analysis results
-        elif should_include_analysis and transcribed_text and not current_user:
+        elif perform_analysis and transcribed_text and not current_user:
             # Check if text is long enough for analysis
             if len(transcribed_text.strip()) < 10:
                 response["analysis_skipped"] = "Text too short for analysis"
             else:
-                # Analyze the transcribed text without saving to database
-                analysis_results = analyze_text(transcribed_text, include_features=False)
+                # Analyze the transcribed text without saving to database - run in threadpool
+                analysis_results = await run_in_threadpool(analyze_text, transcribed_text, include_features=send_features_to_analysis)
                 
                 if analysis_results.get("success", False):
                     # Add analysis results to response without saving to database

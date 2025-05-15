@@ -248,7 +248,7 @@ def register_gpt_model(api_key_for_gpt_init: str) -> bool:
             return False
             
     except ImportError as e:
-        logger.error(f"Failed to import GPT module components for registration: {str(e)}")
+        logger.error(f"Failed to import GPT module components: {str(e)}")
         return False
     except Exception as e:
         logger.error(f"Error during GPT model registration process: {str(e)}", exc_info=True)

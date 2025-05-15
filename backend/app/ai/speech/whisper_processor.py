@@ -95,7 +95,7 @@ def transcribe_audio_api(
             "success": False,
             "error": "OpenAI package not available. Install with 'pip install openai'."
         }
-
+    
     openai_client_instance = get_openai_client()
     if not openai_client_instance:
         logger.error("Whisper transcription: Shared OpenAI client not available.")

@@ -52,7 +52,7 @@ async def analyze_text_endpoint( # Renamed to avoid conflict if we re-import ana
 
         if not text or not text.strip():
             raise HTTPException(status_code=400, detail="Text input cannot be empty.")
-
+        
         # Use model_factory for analysis
         analysis_result = model_factory.analyze_text(
             text=text,

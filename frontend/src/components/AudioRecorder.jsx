@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { analyzeSpeech } from '../api/aiService';
-import apiClient, { uploadClient, testApiConnection } from '../api/apiClient';
+import { apiClient, uploadClient, testApiConnection } from '../api/apiClient';
 import ScoreExplanation from './ScoreExplanation';
 import AudioProcessingError from './AudioProcessingError';
 import axios from 'axios';

@@ -15,7 +15,7 @@ const formattedBaseUrl = formatBaseUrl(API_BASE_URL);
 console.log('Formatted API URL:', formattedBaseUrl);
 
 // Create axios instance with default config
-const apiClient = axios.create({
+export const apiClient = axios.create({
     baseURL: formattedBaseUrl,
     timeout: 30000, // 30 seconds default timeout
     headers: {
@@ -236,6 +236,4 @@ export const testApiConnection = async () => {
             response: error.response?.data
         };
     }
-};
-
-export default apiClient; 
+}; 

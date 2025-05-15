@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 // Import contexts
-import { AuthProvider } from './contexts/AuthContext'
-import { ThemeProvider } from './contexts/ThemeContext'
+import { AuthProvider } from './contexts/AuthContext.jsx'
+import { ThemeProvider } from './contexts/ThemeContext.jsx'
 
 // Import components
 import Navigation from './components/Navigation.jsx'
