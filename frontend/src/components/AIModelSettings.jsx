@@ -16,93 +16,61 @@ import {
     MenuItem,
     InputLabel
 } from '@mui/material';
-import { setAiModel, setWhisperModelSize } from '../api/aiService';
+// Removed imports for setAiModel, setWhisperModelSize as backend endpoints do not exist
+// import { setAiModel, setWhisperModelSize } from '../api/aiService';
 
 const AIModelSettings = () => {
-    // Always use GPT-4o model
     const [apiKey, setApiKey] = useState('');
     const [whisperModelSize, setWhisperModelSize] = useState('base');
     const [loading, setLoading] = useState(false);
     const [whisperLoading, setWhisperLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [whisperError, setWhisperError] = useState(null);
+
+    const [error, setError] = useState('API key configuration is now handled on the backend via environment variables. This section is for display purposes only and does not submit data.');
+    const [whisperError, setWhisperError] = useState('Whisper model selection is currently managed by the backend. This section is for display purposes only.');
     const [success, setSuccess] = useState(null);
     const [whisperSuccess, setWhisperSuccess] = useState(null);
 
     const handleApiKeyChange = (e) => {
         setApiKey(e.target.value);
-        // Clear messages when API key changes
-        if (error) setError(null);
-        if (success) setSuccess(null);
+        // setError(null); // No need to clear if form is disabled
+        // setSuccess(null);
     };
 
     const handleWhisperModelChange = (e) => {
         setWhisperModelSize(e.target.value);
-        // Clear messages when Whisper model changes
-        if (whisperError) setWhisperError(null);
-        if (whisperSuccess) setWhisperSuccess(null);
+        // setWhisperError(null);
+        // setWhisperSuccess(null);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Validate form
-        if (!apiKey.trim()) {
-            setError('API key is required for GPT-4o model');
-            return;
-        }
-
-        setLoading(true);
-        setError(null);
-        setSuccess(null);
-
-        try {
-            // Always set model to GPT-4o
-            const response = await setAiModel('gpt4o', apiKey);
-
-            if (response.success) {
-                setSuccess('Successfully set API key for GPT-4o model');
-            } else {
-                setError('Failed to update API key');
-            }
-        } catch (err) {
-            console.error('Error setting AI model:', err);
-            setError(err.response?.data?.detail || 'Failed to update API key');
-        } finally {
-            setLoading(false);
-        }
+        // setError('API key configuration is handled on the backend.');
+        // setLoading(false);
+        // Functionality disabled as backend endpoint does not exist
+        console.warn('Attempted to submit API key, but this functionality is disabled.');
     };
 
     const handleWhisperSubmit = async (e) => {
         e.preventDefault();
-
-        setWhisperLoading(true);
-        setWhisperError(null);
-        setWhisperSuccess(null);
-
-        try {
-            const response = await setWhisperModelSize(whisperModelSize);
-
-            if (response.success) {
-                setWhisperSuccess(`Successfully set Whisper model size to ${whisperModelSize.toUpperCase()}`);
-            } else {
-                setWhisperError('Failed to update Whisper model settings');
-            }
-        } catch (err) {
-            console.error('Error setting Whisper model size:', err);
-            setWhisperError(err.response?.data?.detail || 'Failed to update Whisper model settings');
-        } finally {
-            setWhisperLoading(false);
-        }
+        // setWhisperError('Whisper model selection is handled on the backend.');
+        // setWhisperLoading(false);
+        // Functionality disabled as backend endpoint does not exist
+        console.warn('Attempted to submit Whisper model size, but this functionality is disabled.');
     };
 
     return (
         <Grid container spacing={3}>
+            <Grid item xs={12}>
+                <Alert severity="info" sx={{ mb: 2 }}>
+                    Model configurations such as API keys and Whisper model versions are managed by the backend.
+                    This page is currently a placeholder and does not actively configure the AI models.
+                </Alert>
+            </Grid>
             <Grid item xs={12} md={6}>
                 <Card variant="outlined">
                     <CardHeader
-                        title="OpenAI API Configuration"
-                        subheader="Set your API key for GPT-4o powered cognitive analysis"
+                        title="OpenAI API Configuration (Display Only)"
+                        subheader="API key is set via backend environment variables"
                     />
                     <Divider />
                     <CardContent>
@@ -110,21 +78,22 @@ const AIModelSettings = () => {
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
                                     <Typography variant="subtitle1" gutterBottom>
-                                        GPT-4o API Key
+                                        GPT-4o API Key (Informational)
                                     </Typography>
                                     <TextField
                                         fullWidth
                                         type="password"
                                         variant="outlined"
-                                        label="OpenAI API Key"
+                                        label="OpenAI API Key (Not Submitted)"
                                         value={apiKey}
                                         onChange={handleApiKeyChange}
-                                        placeholder="Enter your OpenAI API key"
+                                        placeholder="API Key is managed by backend"
                                         required
+                                        disabled // Disable the form field
                                         autoComplete="off"
                                     />
                                     <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-                                        Your API key is required for GPT-4o powered analysis and is only used to initialize the model.
+                                        The OpenAI API key is configured securely on the server.
                                     </Typography>
                                 </Grid>
 
@@ -133,24 +102,19 @@ const AIModelSettings = () => {
                                         type="submit"
                                         variant="contained"
                                         color="primary"
-                                        disabled={loading || !apiKey.trim()}
+                                        disabled // Disable the button
                                         startIcon={loading && <CircularProgress size={20} color="inherit" />}
                                     >
-                                        {loading ? 'Updating...' : 'Save API Key'}
+                                        Save API Key (Disabled)
                                     </Button>
                                 </Grid>
 
                                 {error && (
                                     <Grid item xs={12}>
-                                        <Alert severity="error">{error}</Alert>
+                                        <Alert severity="warning">{error}</Alert>
                                     </Grid>
                                 )}
-
-                                {success && (
-                                    <Grid item xs={12}>
-                                        <Alert severity="success">{success}</Alert>
-                                    </Grid>
-                                )}
+                                {/* {success && (...)} */}
                             </Grid>
                         </form>
                     </CardContent>
@@ -160,8 +124,8 @@ const AIModelSettings = () => {
             <Grid item xs={12} md={6}>
                 <Card variant="outlined">
                     <CardHeader
-                        title="Speech-to-Text Model"
-                        subheader="Configure Whisper model settings for speech processing"
+                        title="Speech-to-Text Model (Display Only)"
+                        subheader="Whisper model is configured on the backend"
                     />
                     <Divider />
                     <CardContent>
@@ -169,24 +133,24 @@ const AIModelSettings = () => {
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
                                     <Typography variant="subtitle1" gutterBottom>
-                                        Whisper Model Size
+                                        Whisper Model Size (Informational)
                                     </Typography>
-                                    <FormControl fullWidth>
+                                    <FormControl fullWidth disabled> {/* Disable the form control */}
                                         <InputLabel>Model Size</InputLabel>
                                         <Select
                                             value={whisperModelSize}
                                             onChange={handleWhisperModelChange}
-                                            label="Model Size"
+                                            label="Model Size (Not Submitted)"
                                         >
-                                            <MenuItem value="tiny">Tiny (Fastest, Least Accurate)</MenuItem>
-                                            <MenuItem value="base">Base (Default)</MenuItem>
+                                            <MenuItem value="tiny">Tiny</MenuItem>
+                                            <MenuItem value="base">Base (Current Backend Default)</MenuItem>
                                             <MenuItem value="small">Small</MenuItem>
                                             <MenuItem value="medium">Medium</MenuItem>
-                                            <MenuItem value="large">Large (Slowest, Most Accurate)</MenuItem>
+                                            <MenuItem value="large">Large</MenuItem>
                                         </Select>
                                     </FormControl>
                                     <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-                                        Larger models provide better accuracy but require more processing power and memory.
+                                        The Whisper model is configured on the server.
                                     </Typography>
                                 </Grid>
 
@@ -195,24 +159,19 @@ const AIModelSettings = () => {
                                         type="submit"
                                         variant="contained"
                                         color="primary"
-                                        disabled={whisperLoading}
+                                        disabled // Disable the button
                                         startIcon={whisperLoading && <CircularProgress size={20} color="inherit" />}
                                     >
-                                        {whisperLoading ? 'Updating...' : 'Save Settings'}
+                                        Save Settings (Disabled)
                                     </Button>
                                 </Grid>
 
                                 {whisperError && (
                                     <Grid item xs={12}>
-                                        <Alert severity="error">{whisperError}</Alert>
+                                        <Alert severity="warning">{whisperError}</Alert>
                                     </Grid>
                                 )}
-
-                                {whisperSuccess && (
-                                    <Grid item xs={12}>
-                                        <Alert severity="success">{whisperSuccess}</Alert>
-                                    </Grid>
-                                )}
+                                {/* {whisperSuccess && (...)} */}
                             </Grid>
                         </form>
                     </CardContent>

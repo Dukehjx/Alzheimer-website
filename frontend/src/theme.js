@@ -36,7 +36,7 @@ let theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Google Sans", "Roboto", "Arial", sans-serif',
+    fontFamily: '"Inter", "Roboto", "Arial", sans-serif',
     h1: {
       fontWeight: 700,
       fontSize: '3.5rem',

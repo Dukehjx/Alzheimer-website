@@ -71,9 +71,14 @@ apiClient.interceptors.response.use(
             const status = error.response.status;
 
             if (status === 401) {
-                console.log('Authentication error (401) - user needs to login');
-                // Could handle auth redirect here
+                console.log('Authentication error (401) - redirecting to login');
                 error.userMessage = 'Your session has expired. Please log in again.';
+                // Clear token and redirect to login
+                localStorage.removeItem('token');
+                // Ensure this only runs in the browser context
+                if (typeof window !== 'undefined') {
+                    window.location.href = '/login';
+                }
             } else if (status === 403) {
                 console.log('Authorization error (403) - user lacks permission');
                 error.userMessage = 'You do not have permission to access this resource.';

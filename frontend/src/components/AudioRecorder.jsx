@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { processAudio } from '../api/aiService';
+import { analyzeSpeech } from '../api/aiService';
 import apiClient, { uploadClient, testApiConnection } from '../api/apiClient';
 import ScoreExplanation from './ScoreExplanation';
 import AudioProcessingError from './AudioProcessingError';
@@ -362,20 +362,18 @@ const AudioRecorder = () => {
         resetErrorState();
         console.log('Processing audio...');
 
-        // Determine which file to use
-        const audioFile = uploadedFile || audioBlob;
-        if (!audioFile) {
+        const audioFileToProcess = uploadedFile || audioBlob;
+        if (!audioFileToProcess) {
             console.error('No audio file available');
             setError('No audio file available. Please record or upload an audio file.');
             setLoading(false);
             return;
         }
 
+        // Optional: Keep a general API connectivity test if desired
         try {
-            // First run a diagnostic test to check API connectivity
-            console.log('Running API connectivity test...');
+            console.log('Running general API connectivity test...');
             const diagnosticResult = await testApiConnection();
-
             if (!diagnosticResult.success) {
                 console.error('API connectivity test failed:', diagnosticResult);
                 setError(`API connectivity issue detected: ${diagnosticResult.error}. The API may be unavailable or misconfigured.`);
@@ -383,248 +381,74 @@ const AudioRecorder = () => {
                 setLoading(false);
                 return;
             }
+            console.log('API connectivity test successful.');
+            setServiceStatus({ status: 'online', message: 'Ready' });
+        } catch (connError) {
+            console.error('API connectivity test threw an error:', connError);
+            setError(`API connectivity test failed: ${connError.message}. The API might be down.`);
+            setServiceStatus({ status: 'offline', message: 'Test failed' });
+            setLoading(false);
+            return;
+        }
 
-            console.log('API connectivity test successful:', diagnosticResult.data);
+        console.log(`Processing ${uploadedFile ? 'uploaded' : 'recorded'} audio file:`,
+            { name: audioFileToProcess.name || (audioFileToProcess instanceof File ? audioFileToProcess.name : 'recorded_audio'), size: audioFileToProcess.size });
 
-            // Now check if the audio processing endpoint is available
-            try {
-                console.log('Verifying audio processing endpoint availability...');
-                // Directly use the process-audio endpoint with a HEAD request instead of the health endpoint
-                const endpoint = '/api/v1/ai/process-audio';
-                console.log(`Checking process-audio endpoint at: ${endpoint}`);
+        let fileForForm;
+        if (audioFileToProcess instanceof File) {
+            fileForForm = audioFileToProcess;
+        } else if (audioFileToProcess instanceof Blob) {
+            // Ensure we have a named File object for recorded audio
+            fileForForm = new File([audioFileToProcess], "recorded-audio.wav", { // Or derive name/type if possible
+                type: audioFileToProcess.type || 'audio/wav',
+                lastModified: new Date().getTime()
+            });
+        } else {
+            console.error('Invalid audio file type for FormData');
+            setError('Invalid audio data. Please record or upload again.');
+            setLoading(false);
+            return;
+        }
 
-                // Try to check if the endpoint exists
-                try {
-                    // Use OPTIONS request which is lightweight
-                    const healthCheck = await uploadClient.options(endpoint);
-                    console.log('Endpoint check result:', healthCheck.status);
+        const formData = new FormData();
+        formData.append('audio_file', fileForForm);
 
-                    // If we get here, the endpoint exists
-                    setServiceStatus({
-                        status: 'online',
-                        message: 'Ready'
-                    });
-                } catch (endpointError) {
-                    // If it's a 405 Method Not Allowed, it means the endpoint exists but doesn't support OPTIONS
-                    if (endpointError.response && endpointError.response.status === 405) {
-                        console.log('Endpoint exists but OPTIONS not supported - this is fine');
-                        setServiceStatus({
-                            status: 'online',
-                            message: 'Ready'
-                        });
-                    } else if (endpointError.response && endpointError.response.status === 404) {
-                        // Try an alternative health check endpoint
-                        try {
-                            console.log('Endpoint not found, trying health check...');
-                            const healthResponse = await apiClient.get('/api/v1/ai/process-audio-health');
-                            if (healthResponse.status === 200) {
-                                console.log('Health check successful, API available');
-                                setServiceStatus({
-                                    status: 'online',
-                                    message: 'Ready'
-                                });
-                            }
-                        } catch (healthCheckError) {
-                            console.warn('Audio processing health check failed:', healthCheckError.message);
-                            setServiceStatus({
-                                status: 'degraded',
-                                message: 'Health check failed'
-                            });
-                            // We'll continue with processing in demo/fallback mode
-                        }
-                    } else {
-                        // For any other error, we'll treat it as if the service is degraded
-                        // but still proceed with the upload
-                        console.warn('Non-critical endpoint check error:', endpointError.message);
-                        setServiceStatus({
-                            status: 'degraded',
-                            message: 'Endpoint check failed'
-                        });
-                    }
-                }
-            } catch (healthError) {
-                console.error('Audio processing endpoint health check failed:', healthError);
-                console.error('Health check error details:', {
-                    message: healthError.message,
-                    status: healthError.response?.status,
-                    data: healthError.response?.data,
-                    config: healthError.config,
-                });
+        const apiOptions = {
+            // language: 'en', // Example: set a default or make it configurable
+            include_features: includeAnalysis, // Assuming includeAnalysis is a state variable
+        };
 
-                // We'll continue anyway with a warning
-                setServiceStatus({
-                    status: 'degraded',
-                    message: 'Health check failed'
-                });
-                console.log('Continuing despite health check failure');
+        try {
+            console.log('Calling analyzeSpeech service...');
+            // console.log('FormData content:');
+            // for (let [key, value] of formData.entries()) {
+            //     console.log(key, value);
+            // }
+            // console.log('API Options:', apiOptions);
+
+            const result = await analyzeSpeech(formData, apiOptions);
+            console.log('Audio processing result:', result);
+
+            // The analyzeSpeech service now returns the direct data (or throws an error handled by apiClient)
+            // The 'success' field might not be present if apiClient directly returns data or error.
+            // Assuming 'result' is the actual data payload upon success.
+            setResults(result);
+            setServiceStatus({ status: 'online', message: 'Analysis complete' });
+            setError(null); // Clear previous errors
+
+        } catch (error) {
+            console.error('Error processing audio with analyzeSpeech:', error);
+            let errorMessage = 'Audio processing failed. Please try again.';
+            if (error.response && error.response.data && error.response.data.detail) {
+                errorMessage = error.response.data.detail;
+            } else if (error.message) {
+                errorMessage = error.message;
             }
 
-            console.log(`Processing ${uploadedFile ? 'uploaded' : 'recorded'} audio file:`,
-                { name: uploadedFile?.name, size: audioFile.size });
-
-            // Check if we have an auth token
-            const hasToken = !!localStorage.getItem('token');
-            const demoMode = !hasToken;
-
-            // If in demo mode, notify the user but continue processing
-            if (demoMode) {
-                console.log('Using public mode for processing (no login)');
-                // We'll show a demo mode message only after successful processing
-            }
-
-            // For uploaded files, create a proper File object if needed
-            let fileToProcess = audioFile;
-            if (uploadedFile) {
-                fileToProcess = uploadedFile;
-            } else if (audioBlob) {
-                // Ensure we have a named File object for recorded audio
-                fileToProcess = new File([audioBlob], "recorded-audio.wav", {
-                    type: audioBlob.type,
-                    lastModified: new Date().getTime()
-                });
-            }
-
-            const options = {
-                includeAnalysis: includeAnalysis,
-                language: null, // Auto-detect language
-                demoMode: demoMode // Use demo mode without authentication
-            };
-
-            // Direct call to processAudio API service with explicit endpoint
-            const endpoint = '/api/v1/ai/process-audio';
-            console.log('Calling API for audio processing at:', endpoint);
-
-            try {
-                // Log detailed request info for debugging
-                console.log('Audio file details:', {
-                    name: fileToProcess.name || 'unnamed file',
-                    type: fileToProcess.type,
-                    size: fileToProcess.size,
-                    lastModified: fileToProcess.lastModified ? new Date(fileToProcess.lastModified).toISOString() : 'unknown'
-                });
-
-                console.log('Starting upload and processing with uploadClient');
-                const result = await processAudio(fileToProcess, options);
-                console.log('Audio processing result:', result);
-
-                // Display info message for demo mode
-                if (demoMode && result.success) {
-                    setError('Note: Using public mode - your results are not saved to an account. Create an account to save your history.');
-                }
-
-                // If we have error_info, it means we're using fallback mode
-                if (result.error_info) {
-                    // Check if it's a 404 error specifically
-                    if (result.error_info.original_error.includes("404")) {
-                        setError('The audio processing service is currently unavailable (404). Using simulated results instead. Please try again later or contact support if this persists.');
-                    } else {
-                        setError(`Using simulated results due to API error: ${result.error_info.original_error}`);
-                    }
-                    setServiceStatus({ status: 'degraded', message: 'Using fallback' });
-
-                    // Create a synthetic API error for the detailed view
-                    const syntheticError = new Error(result.error_info.original_error);
-                    syntheticError.response = {
-                        data: {
-                            detail: result.error_info.original_error,
-                            fallback_mode: true,
-                            timestamp: result.error_info.timestamp
-                        }
-                    };
-                    setApiError(syntheticError);
-                }
-
-                // Handle success
-                if (result && result.success) {
-                    setResults(result);
-                    // Only set status to online if we're not in fallback mode
-                    if (!result.error_info) {
-                        setServiceStatus({ status: 'online', message: null });
-                    }
-                } else {
-                    // Handle API error
-                    const errorObj = new Error(result?.error || 'Audio processing failed. Please try again.');
-                    errorObj.response = { data: result };
-                    setApiError(errorObj);
-                    throw errorObj;
-                }
-            } catch (apiError) {
-                console.error('API call error:', apiError);
-                console.error('API error details:', {
-                    message: apiError.message,
-                    status: apiError.response?.status,
-                    data: apiError.response?.data,
-                    config: apiError.config
-                });
-
-                // Store the full API error object for detailed debugging
-                setApiError(apiError);
-
-                // Check if this is an Axios error with a response
-                if (apiError.response) {
-                    const status = apiError.response.status;
-                    const errorData = apiError.response.data;
-
-                    if (status === 404) {
-                        setError(`The audio processing endpoint (${endpoint}) could not be found (404). The API may be misconfigured or unavailable.`);
-                        setServiceStatus({ status: 'offline', message: 'Not found (404)' });
-                    } else {
-                        // Extract detailed error information from API response
-                        let errorMessage = 'Unknown error';
-
-                        // Try to extract the most useful error message
-                        if (errorData?.detail) {
-                            errorMessage = errorData.detail;
-                        } else if (errorData?.message) {
-                            errorMessage = errorData.message;
-                        } else if (errorData?.error) {
-                            errorMessage = errorData.error;
-                        } else if (typeof errorData === 'string') {
-                            errorMessage = errorData;
-                        }
-
-                        // Check for specific Whisper API errors
-                        if (errorMessage.includes('Whisper') || errorMessage.includes('audio')) {
-                            if (errorMessage.includes('too short')) {
-                                errorMessage = 'The audio file is too short. Please record a longer message.';
-                            } else if (errorMessage.includes('too long')) {
-                                errorMessage = 'The audio file is too long. Please limit recordings to under 10 minutes.';
-                            } else if (errorMessage.includes('format')) {
-                                errorMessage = 'The audio format is not supported. Please use WAV, MP3, or M4A files.';
-                            }
-                        }
-
-                        setError(`Audio processing error (${status}): ${errorMessage}`);
-                        setServiceStatus({ status: 'degraded', message: `Error ${status}` });
-                    }
-                } else {
-                    throw apiError; // Re-throw to be caught by the outer catch
-                }
-            }
-        } catch (err) {
-            console.error('Error processing audio:', err);
-
-            // Store the error object for detailed debugging
-            if (!apiError) {
-                setApiError(err);
-            }
-
-            // Provide more user-friendly error messages based on the type of error
-            let errorMessage = err.message || 'An error occurred during audio processing. Please try again.';
-
-            // If it's a network error, suggest it might be a CORS or HTTPS issue
-            if (errorMessage.includes('Network Error') || errorMessage.includes('CORS')) {
-                errorMessage = 'Network error: Could not connect to the audio processing service. This might be due to connection issues or HTTPS restrictions.';
-                setServiceStatus({ status: 'offline', message: 'Network error' });
-            }
-
-            // If it mentions OpenAI or Whisper, it's likely an AI service issue
-            if (errorMessage.includes('OpenAI') || errorMessage.includes('Whisper')) {
-                errorMessage = 'AI service error: The speech recognition service is currently unavailable. Please try again later.';
-                setServiceStatus({ status: 'degraded', message: 'AI service issue' });
-            }
-
-            setError(errorMessage);
+            setApiError(error); // Store the full error object if needed by AudioProcessingError
+            setError(errorMessage); // Set a user-friendly message
+            setResults(null);
+            setServiceStatus({ status: 'degraded', message: 'Processing failed' });
         } finally {
             setLoading(false);
         }

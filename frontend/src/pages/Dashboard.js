@@ -9,6 +9,7 @@ import {
   DocumentTextIcon,
 } from '@heroicons/react/24/outline';
 import { getAnalysisHistory } from '../api/aiService';
+import { useAuth } from '../contexts/AuthContext';
 
 // Custom Brain icon if not available in Heroicons
 const BrainCustomIcon = (props) => (
@@ -37,8 +38,8 @@ const BrainCustomIcon = (props) => (
 const initialStats = [
   {
     name: 'Cognitive Score',
-    value: '0/100',
-    change: '0%',
+    value: 'N/A',
+    change: '-',
     trend: 'up',
     icon: BrainCustomIcon,
     iconBackground: 'bg-primary-100 dark:bg-primary-900',
@@ -55,8 +56,8 @@ const initialStats = [
   },
   {
     name: 'Language Complexity',
-    value: '0/100',
-    change: '0%',
+    value: 'N/A',
+    change: '-',
     trend: 'up',
     icon: ChatBubbleLeftRightIcon,
     iconBackground: 'bg-yellow-100 dark:bg-yellow-900',
@@ -108,87 +109,69 @@ const activities = [
 ];
 
 export default function Dashboard() {
+  const { currentUser } = useAuth();
   const [stats, setStats] = useState(initialStats);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchDashboardData() {
+      if (!currentUser || !currentUser.id) {
+        setError('User not available for fetching history.');
+        setLoading(false);
+        setStats(initialStats);
+        return;
+      }
+
       try {
         setLoading(true);
-        // Fetch analysis history from the API
-        const historyData = await getAnalysisHistory(5);
+        setError(null);
+        const historyData = await getAnalysisHistory(currentUser.id, 5);
 
         if (historyData && historyData.length > 0) {
-          // Get the most recent analysis
           const latestAnalysis = historyData[0];
-          // Compare with the previous analysis if available
           const previousAnalysis = historyData.length > 1 ? historyData[1] : null;
 
-          // Calculate the cognitive score from the analysis
-          const cognitiveScore = Math.round(latestAnalysis.cognitive_score * 100);
-          let cognitiveChange = '0%';
+          const cognitiveScore = latestAnalysis.risk_score !== undefined
+            ? Math.round((1 - latestAnalysis.risk_score) * 100)
+            : null;
+
+          let cognitiveChange = '-';
           let cognitiveTrend = 'up';
 
-          if (previousAnalysis) {
-            const prevScore = Math.round(previousAnalysis.cognitive_score * 100);
-            const diff = cognitiveScore - prevScore;
+          if (cognitiveScore !== null && previousAnalysis && previousAnalysis.risk_score !== undefined) {
+            const prevCognitiveScore = Math.round((1 - previousAnalysis.risk_score) * 100);
+            const diff = cognitiveScore - prevCognitiveScore;
             cognitiveChange = `${diff >= 0 ? '+' : ''}${diff}%`;
             cognitiveTrend = diff >= 0 ? 'up' : 'down';
           }
 
-          // Calculate language complexity from domain scores (if available)
-          let languageScore = 0;
-          let languageChange = '0%';
-          let languageTrend = 'up';
-
-          if (latestAnalysis.domain_scores) {
-            // Find the language domain score
-            const languageDomain = Object.keys(latestAnalysis.domain_scores)
-              .find(key => key.toLowerCase().includes('language'));
-
-            if (languageDomain) {
-              languageScore = Math.round(latestAnalysis.domain_scores[languageDomain] * 100);
-
-              if (previousAnalysis && previousAnalysis.domain_scores) {
-                const prevLanguageScore = Math.round(previousAnalysis.domain_scores[languageDomain] * 100);
-                const diff = languageScore - prevLanguageScore;
-                languageChange = `${diff >= 0 ? '+' : ''}${diff}%`;
-                languageTrend = diff >= 0 ? 'up' : 'down';
-              }
-            }
-          }
-
-          // Update the stats with real data
           setStats(prevStats => [
             {
               ...prevStats[0],
-              value: `${cognitiveScore}/100`,
-              change: cognitiveChange,
+              value: cognitiveScore !== null ? `${cognitiveScore}/100` : 'N/A',
+              change: cognitiveScore !== null ? cognitiveChange : '-',
               trend: cognitiveTrend
             },
-            // Keep training sessions as is for now (would need another API for this)
             prevStats[1],
-            {
-              ...prevStats[2],
-              value: `${languageScore || 0}/100`,
-              change: languageChange,
-              trend: languageTrend
-            },
-            // Keep reaction time as is for now (would need another API for this)
+            prevStats[2],
             prevStats[3]
           ]);
+        } else {
+          setStats(initialStats);
+          setError('No analysis history found to display dashboard stats.');
         }
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
-        setError('Failed to load dashboard data. Please try again later.');
+        setError(err.message || 'Failed to load dashboard data. Please try again later.');
+        setStats(initialStats);
       } finally {
         setLoading(false);
       }
     }
 
     fetchDashboardData();
-  }, []);
+  }, [currentUser]);
 
   return (
     <div className="max-w-7xl mx-auto">

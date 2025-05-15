@@ -1,7 +1,7 @@
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
-    "./public/index.html",
+    "./index.html",
   ],
   darkMode: 'class', // Enable dark mode with class strategy
   theme: {
