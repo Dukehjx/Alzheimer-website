@@ -412,29 +412,39 @@ const AudioRecorder = () => {
 
         const formData = new FormData();
         formData.append('audio_file', fileForForm);
+        // Add include_analysis to formData if it's true, backend expects this as a form field
+        if (includeAnalysis) {
+            formData.append('include_analysis', 'true');
+        }
 
         const apiOptions = {
-            // language: 'en', // Example: set a default or make it configurable
-            include_features: includeAnalysis, // Assuming includeAnalysis is a state variable
+            language: 'en', // Default to English, can be made configurable
+            include_features: includeAnalysis, // This will be a query parameter
         };
 
         try {
-            console.log('Calling analyzeSpeech service...');
-            // console.log('FormData content:');
-            // for (let [key, value] of formData.entries()) {
+            console.log('Calling analyzeSpeech service with formData and apiOptions:', apiOptions);
+            // for (let [key, value] of formData.entries()) { // For debugging FormData
             //     console.log(key, value);
             // }
-            // console.log('API Options:', apiOptions);
+            const response = await analyzeSpeech(formData, apiOptions);
+            console.log('Audio processing API response:', response);
 
-            const result = await analyzeSpeech(formData, apiOptions);
-            console.log('Audio processing result:', result);
-
-            // The analyzeSpeech service now returns the direct data (or throws an error handled by apiClient)
-            // The 'success' field might not be present if apiClient directly returns data or error.
-            // Assuming 'result' is the actual data payload upon success.
-            setResults(result);
-            setServiceStatus({ status: 'online', message: 'Analysis complete' });
-            setError(null); // Clear previous errors
+            // apiClient.post returns the full Axios response object.
+            // The actual data from the server is in response.data.
+            if (response && response.data) {
+                setResults(response.data);
+                setServiceStatus({ status: 'online', message: 'Analysis complete' });
+                setError(null); // Clear previous errors
+                setApiError(null);
+            } else {
+                // This case should ideally be handled by error interceptors in apiClient
+                // but as a fallback:
+                console.error('Received an empty or invalid response from analyzeSpeech', response);
+                setError('Received an invalid response from the server.');
+                setResults(null);
+                setServiceStatus({ status: 'degraded', message: 'Invalid response' });
+            }
 
         } catch (error) {
             console.error('Error processing audio with analyzeSpeech:', error);
@@ -970,12 +980,13 @@ const AudioRecorder = () => {
                             <h3 className="section-title text-xl font-semibold mb-4">Understanding Your Results</h3>
                             <ScoreExplanation
                                 scores={{
-                                    lexicalDiversity: Math.round((1 - results.analysis.domain_scores.LANGUAGE) * 100),
-                                    syntacticComplexity: Math.round((1 - results.analysis.domain_scores.EXECUTIVE_FUNCTION) * 100),
-                                    semanticCoherence: results.analysis.domain_scores.VISUOSPATIAL ?
-                                        Math.round((1 - results.analysis.domain_scores.VISUOSPATIAL) * 100) : 80,
-                                    speechFluency: Math.round((1 - results.analysis.domain_scores.ATTENTION) * 100),
-                                    memoryCues: Math.round((1 - results.analysis.domain_scores.MEMORY) * 100)
+                                    lexicalDiversity: Math.round((1 - (results.analysis.domain_scores?.['language'] ?? 1)) * 100),
+                                    syntacticComplexity: Math.round((1 - (results.analysis.domain_scores?.['executive_function'] ?? 1)) * 100),
+                                    semanticCoherence: results.analysis.domain_scores?.['visuospatial'] !== undefined ?
+                                        Math.round((1 - results.analysis.domain_scores['visuospatial']) * 100) :
+                                        0, // Default to 0 if visuospatial is missing, was 80 previously
+                                    speechFluency: Math.round((1 - (results.analysis.domain_scores?.['attention'] ?? 1)) * 100),
+                                    memoryCues: Math.round((1 - (results.analysis.domain_scores?.['memory'] ?? 1)) * 100)
                                 }}
                             />
                         </div>

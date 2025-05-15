@@ -20,7 +20,8 @@ export default function ResourceHub() {
         setError(null);
         try {
             const response = await apiClient.get('/resources/');
-            const fetchedResources = response.resources || [];
+            // Access response.data.resources for the actual data
+            const fetchedResources = response.data?.resources || [];
             setAllResources(fetchedResources);
             setFilteredResources(fetchedResources);
 
@@ -53,7 +54,8 @@ export default function ResourceHub() {
         try {
             if (category) {
                 const response = await apiClient.get(`/resources/categories/${category}`);
-                setFilteredResources(response.resources || []);
+                // Access response.data.resources for the actual data
+                setFilteredResources(response.data?.resources || []);
             } else {
                 // Show all resources if 'All Categories' is selected
                 setFilteredResources(allResources);
@@ -70,29 +72,25 @@ export default function ResourceHub() {
     // Handle search
     const handleSearch = async (e) => {
         e.preventDefault();
-        const query = searchQuery.trim(); // Keep original case for API, backend handles case-insensitivity
+        const query = searchQuery.trim();
         setIsLoading(true);
         setError(null);
 
         if (!query) {
             // If search is empty, reset to current category or all resources
             if (selectedCategory) {
-                // Re-fetch for the selected category to ensure fresh data if needed,
-                // or simply filter from allResources if offline-like behavior is preferred after initial load.
-                // For now, re-fetch from category to be consistent.
                 handleCategoryChange(selectedCategory);
             } else {
                 setFilteredResources(allResources);
-                setIsLoading(false); // Already have all resources
+                setIsLoading(false);
             }
             return;
         }
 
         try {
             const response = await apiClient.get(`/resources/search?query=${encodeURIComponent(query)}`);
-            setFilteredResources(response.resources || []);
-            // Note: After a search, the category filter might not strictly apply unless we re-filter client-side
-            // or the backend search supports category filtering. For now, search overrides category.
+            // Access response.data.resources for the actual data
+            setFilteredResources(response.data?.resources || []);
         } catch (err) {
             console.error(`Error searching resources with query "${query}":`, err);
             setError(err.message || 'Failed to perform search. Please try again.');

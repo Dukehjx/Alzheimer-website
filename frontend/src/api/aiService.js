@@ -45,7 +45,7 @@ export const analyzeText = async (text, language = 'en', includeFeatures = false
 
     try {
         // console.log('Sending payload to /ai/analyze-text:', payload);
-        const response = await apiClient.post('/ai/analyze-text', payload);
+        const response = await apiClient.post('/ai/analyze', payload);
         // console.log('Received response from /ai/analyze-text:', response);
         return response;
     } catch (error) {

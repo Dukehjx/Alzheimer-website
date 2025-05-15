@@ -33,7 +33,13 @@ const TextAnalysis = () => {
         try {
             const response = await analyzeText(text, language, includeFeatures);
 
-            setResults(response);
+            if (response && response.data) {
+                setResults(response.data);
+            } else {
+                console.error('Received an empty or invalid response from analyzeText', response);
+                setError('Received an invalid response from the server.');
+                setResults(null);
+            }
 
         } catch (err) {
             console.error('Analysis error:', err);
