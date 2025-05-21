@@ -2,10 +2,10 @@
 AI module for Alzheimer's detection platform.
 
 This module provides utilities for analyzing language to detect cognitive
-decline indicators.
+decline indicators using GPT-4o and OpenAI's Whisper API.
 
-It includes both spaCy-based and GPT-based models for text analysis,
-as well as Whisper-based speech-to-text processing.
+The system uses GPT-4o for all language analysis and cognitive assessment,
+and Whisper API for speech-to-text processing.
 """
 
 from app.ai.factory import (
@@ -16,25 +16,11 @@ from app.ai.factory import (
     register_gpt_model
 )
 
-# Import NLP pipeline components
-from app.ai.nlp import (
-    text_analysis_pipeline,
-    detect_linguistic_patterns,
-    normalize_and_score_features,
-    validate_and_preprocess_text
-)
-
 __all__ = [
     # Factory functions
     "analyze_text",
     "process_audio",
     "set_model",
     "set_whisper_model_size",
-    "register_gpt_model",
-    
-    # NLP pipeline components
-    "text_analysis_pipeline",
-    "detect_linguistic_patterns",
-    "normalize_and_score_features",
-    "validate_and_preprocess_text"
+    "register_gpt_model"
 ] 

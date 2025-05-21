@@ -1,0 +1,4 @@
+aaPanel Internet Address: https://8.222.250.252:18725/bfcf0858
+aaPanel Internal Address: https://172.19.41.27:18725/bfcf0858
+username: q2318i5i
+password: 66d62097

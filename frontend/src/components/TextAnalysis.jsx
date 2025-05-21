@@ -6,14 +6,17 @@ const TextAnalysis = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [results, setResults] = useState(null);
-    const [analysisType, setAnalysisType] = useState('text'); // 'text' or 'pattern'
     const [includeFeatures, setIncludeFeatures] = useState(false);
+    const [language, setLanguage] = useState('en');
 
     const handleTextChange = (e) => {
         setText(e.target.value);
-        // Clear results when text changes
         if (results) setResults(null);
         if (error) setError(null);
+    };
+
+    const handleLanguageChange = (e) => {
+        setLanguage(e.target.value);
     };
 
     const handleSubmit = async (e) => {
@@ -28,18 +31,20 @@ const TextAnalysis = () => {
         setError(null);
 
         try {
-            // Use live backend when connected, otherwise fall back to demo mode
-            const response = await analyzeText(text, analysisType, includeFeatures, false);
-            console.log("Analysis response:", response);
+            const response = await analyzeText(text, language, includeFeatures);
 
-            if (!response.success) {
-                throw new Error(response.error || 'Analysis failed. Please try again.');
+            if (response && response.data) {
+                setResults(response.data);
+            } else {
+                console.error('Received an empty or invalid response from analyzeText', response);
+                setError('Received an invalid response from the server.');
+                setResults(null);
             }
 
-            setResults(response);
         } catch (err) {
             console.error('Analysis error:', err);
             setError(err.message || 'An error occurred during analysis. Please try again.');
+            setResults(null);
         } finally {
             setLoading(false);
         }
@@ -85,36 +90,24 @@ const TextAnalysis = () => {
                     />
                 </div>
 
-                <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-4">
-                    <div className="w-full md:w-1/2">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Analysis Type
-                        </label>
-                        <div className="flex">
-                            <button
-                                type="button"
-                                className={`flex-1 py-2 px-4 rounded-l-md ${analysisType === 'text'
-                                        ? 'bg-primary-600 text-white'
-                                        : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-                                    }`}
-                                onClick={() => setAnalysisType('text')}
-                            >
-                                Standard Analysis
-                            </button>
-                            <button
-                                type="button"
-                                className={`flex-1 py-2 px-4 rounded-r-md ${analysisType === 'pattern'
-                                        ? 'bg-primary-600 text-white'
-                                        : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-                                    }`}
-                                onClick={() => setAnalysisType('pattern')}
-                            >
-                                Pattern Detection
-                            </button>
-                        </div>
-                    </div>
+                <div className="mb-4">
+                    <label htmlFor="language-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Language
+                    </label>
+                    <select
+                        id="language-select"
+                        value={language}
+                        onChange={handleLanguageChange}
+                        className="w-full md:w-1/2 border border-gray-300 rounded-md p-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    >
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                    </select>
+                </div>
 
-                    <div className="w-full md:w-1/2">
+                <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-4">
+                    <div className="w-full">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Options
                         </label>

@@ -1,18 +1,21 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 // Import contexts
-import { AuthProvider } from './contexts/AuthContext'
-import { ThemeProvider } from './contexts/ThemeContext'
+import { AuthProvider } from './contexts/AuthContext.jsx'
+import { ThemeProvider } from './contexts/ThemeContext.jsx'
 
 // Import components
 import Navigation from './components/Navigation.jsx'
 import Footer from './components/Footer.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 
+// Import cognitive games components
+import { WordRecallChallenge, LanguageFluencyGame } from './components/cognitive-games'
+
 // Import pages
 import HomePage from './pages/HomePage.jsx'
 import AIScreeningPage from './pages/AIScreeningPage.jsx'
-import CognitiveTrainingPage from './pages/CognitiveTrainingPage.jsx'
+import CognitiveTraining from './pages/CognitiveTraining.jsx'
 import ResourceHubPage from './pages/ResourceHubPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
@@ -34,20 +37,23 @@ function App() {
                     <AIScreeningPage />
                   </ProtectedRoute>
                 } />
-                <Route path="/training" element={
+                <Route path="/cognitive-training" element={
                   <ProtectedRoute>
-                    <CognitiveTrainingPage />
+                    <CognitiveTraining />
+                  </ProtectedRoute>
+                } />
+                {/* Cognitive Training Exercises */}
+                <Route path="/cognitive-training/word-recall" element={
+                  <ProtectedRoute>
+                    <WordRecallChallenge />
+                  </ProtectedRoute>
+                } />
+                <Route path="/cognitive-training/language-fluency" element={
+                  <ProtectedRoute>
+                    <LanguageFluencyGame />
                   </ProtectedRoute>
                 } />
                 <Route path="/resources" element={<ResourceHubPage />} />
-                <Route path="/health-monitoring" element={
-                  <ProtectedRoute>
-                    <div className="p-8 text-center">
-                      <h1 className="text-2xl mb-4">Health Monitoring</h1>
-                      <p>This feature is coming soon.</p>
-                    </div>
-                  </ProtectedRoute>
-                } />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="*" element={<NotFoundPage />} />

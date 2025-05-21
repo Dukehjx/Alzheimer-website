@@ -1,8 +1,8 @@
 """
 AI Model Factory Module.
 
-This module provides a factory for creating and managing different AI models
-for language analysis, allowing easy switching between spaCy and GPT models.
+This module provides a factory for creating and managing OpenAI API calls
+for language analysis and speech-to-text conversion.
 """
 
 import os
@@ -11,16 +11,16 @@ from enum import Enum
 from typing import Dict, Any, Callable, Optional, Union, BinaryIO
 from pathlib import Path
 
-from app.ai.nlp.risk_assessment import calculate_cognitive_risk as spacy_calculate_risk
+# Import the speech processor and the shared client getter
 from app.ai.speech.whisper_processor import process_audio as whisper_process_audio
+# Note: get_openai_client will be used by submodules like gpt/speech later
 
 # Initialize logger
 logger = logging.getLogger(__name__)
 
 class ModelType(str, Enum):
     """Enum for available model types."""
-    SPACY = "spacy"
-    GPT4 = "gpt4"
+    GPT4O = "gpt4o"
 
 # Model sizes for Whisper
 class WhisperModelSize(str, Enum):
@@ -36,44 +36,47 @@ class AIModelFactory:
     
     def __init__(self):
         """Initialize the factory with available models."""
-        self._models = {
-            ModelType.SPACY: spacy_calculate_risk,
-            # GPT model will be registered when API key is provided
-            ModelType.GPT4: None
+        self._models: Dict[ModelType, Optional[Callable]] = {
+            ModelType.GPT4O: None
         }
-        self._current_model = ModelType.SPACY
+        self._current_model_type = ModelType.GPT4O
         self._whisper_model_size = WhisperModelSize.BASE
     
-    def register_gpt_model(self, gpt_function: Callable):
+    def register_gpt_model(self, gpt_analysis_function: Callable) -> bool:
         """
-        Register a GPT model function.
+        Register a GPT model analysis function.
         
         Args:
-            gpt_function: The function that implements GPT-based analysis
+            gpt_analysis_function: The function that implements GPT-based analysis.
+                                   Expected signature: func(text: str, include_features: bool) -> Dict[str, Any]
         """
-        self._models[ModelType.GPT4] = gpt_function
-        logger.info("GPT-4 model registered successfully")
+        if not callable(gpt_analysis_function):
+            logger.error("Failed to register GPT model: provided function is not callable.")
+            return False
+        self._models[ModelType.GPT4O] = gpt_analysis_function
+        logger.info(f"GPT model analysis function '{gpt_analysis_function.__name__}' registered for {ModelType.GPT4O.value}")
+        return True
     
     def set_model(self, model_type: ModelType) -> bool:
         """
-        Set the current model to use.
+        Set the current model type to use for text analysis.
         
         Args:
-            model_type: The model type to use
+            model_type: The model type to use.
             
         Returns:
-            True if model was set successfully, False otherwise
+            True if model type was set successfully, False otherwise.
         """
         if model_type not in self._models:
-            logger.error(f"Model type {model_type} not available")
+            logger.error(f"Model type {model_type.value} not available in factory.")
             return False
         
         if self._models[model_type] is None:
-            logger.error(f"Model {model_type} is not initialized")
+            logger.error(f"Model {model_type.value} is not registered or initialized in factory.")
             return False
         
-        self._current_model = model_type
-        logger.info(f"Current model set to {model_type}")
+        self._current_model_type = model_type
+        logger.info(f"Current text analysis model type set to {model_type.value}")
         return True
     
     def set_whisper_model_size(self, model_size: WhisperModelSize) -> bool:
@@ -87,7 +90,7 @@ class AIModelFactory:
             True if model size was set successfully
         """
         self._whisper_model_size = model_size
-        logger.info(f"Whisper model size set to {model_size}")
+        logger.info(f"Whisper model size set to {model_size.value}")
         return True
     
     def get_whisper_model_size(self) -> WhisperModelSize:
@@ -106,39 +109,41 @@ class AIModelFactory:
         Returns:
             Current model type
         """
-        return self._current_model
+        return self._current_model_type
     
-    def analyze_text(self, text: str) -> Dict[str, Any]:
+    def analyze_text(self, text: str, include_features: bool = False) -> Dict[str, Any]:
         """
-        Analyze text using the current model.
+        Analyze text using the currently set and registered model.
         
         Args:
-            text: The text to analyze
+            text: The text to analyze.
+            include_features: Whether to include detailed linguistic features.
             
         Returns:
-            Analysis results
+            Analysis results.
         """
-        model_function = self._models[self._current_model]
+        model_function = self._models.get(self._current_model_type)
         
         if model_function is None:
-            logger.error(f"Current model {self._current_model} is not initialized")
+            logger.error(f"Current model {self._current_model_type.value} is not registered or initialized.")
             return {
                 "success": False,
-                "error": f"Model {self._current_model} not initialized"
+                "error": f"Model {self._current_model_type.value} not available or not initialized.",
+                "model_type": self._current_model_type.value
             }
         
         try:
-            result = model_function(text)
-            # Add model type to result
-            if isinstance(result, dict) and result.get("success", False):
-                result["model_type"] = self._current_model
+            # Assuming the registered function can handle include_features
+            result = model_function(text, include_features=include_features)
+            if isinstance(result, dict) and "model_type" not in result:
+                 result["model_type"] = self._current_model_type.value
             return result
         except Exception as e:
-            logger.error(f"Error analyzing text with {self._current_model}: {str(e)}")
+            logger.error(f"Error analyzing text with {self._current_model_type.value}: {str(e)}", exc_info=True)
             return {
                 "success": False,
                 "error": str(e),
-                "model_type": self._current_model
+                "model_type": self._current_model_type.value
             }
     
     def process_audio(
@@ -146,160 +151,105 @@ class AIModelFactory:
         audio_file: Union[BinaryIO, str, Path],
         language: Optional[str] = None
     ) -> Dict[str, Any]:
-        """
-        Process audio file using Whisper.
-        
-        Args:
-            audio_file: File-like object or path to audio file
-            language: Language code (optional, auto-detect if None)
-            
-        Returns:
-            Transcription results
-        """
+        """Process audio file using OpenAI Whisper API via whisper_processor."""
         try:
-            logger.info(f"Processing audio with Whisper {self._whisper_model_size} model")
-            # Convert enum to string before passing to whisper_process_audio
-            model_size_str = str(self._whisper_model_size.value)
+            logger.info(f"Processing audio with Whisper model size configuration: {self._whisper_model_size.value}")
+            model_size_str = str(self._whisper_model_size.value) # whisper_process_audio expects a string
+            # whisper_process_audio will use the shared client from openai_init
             result = whisper_process_audio(audio_file, model_size_str, language)
             return result
         except Exception as e:
-            logger.error(f"Error processing audio: {str(e)}")
+            logger.error(f"Error processing audio: {str(e)}", exc_info=True)
             return {
                 "success": False,
                 "error": str(e)
             }
 
-# Create a singleton instance
+# Create a singleton instance of the factory
 model_factory = AIModelFactory()
+
+# --- Standalone functions ---
 
 def analyze_text(text: str, include_features: bool = False) -> Dict[str, Any]:
     """
-    Analyze text using the current AI model.
-    
-    Args:
-        text: The text to analyze
-        include_features: Whether to include detailed linguistic features in response
-        
-    Returns:
-        Analysis results from the current model
+    Standalone function to analyze text. Uses the model_factory instance.
+    DEPRECATED for external use. Prefer using `model_factory.analyze_text()` directly.
+    Ensures that the factory's configured model is used.
     """
-    try:
-        # Use the singleton instance, not creating a new one
-        factory = model_factory
-        current_model = factory.get_current_model_type()
-        
-        logger.info(f"Analyzing text with {current_model} model")
-        
-        if current_model == ModelType.SPACY:
-            from app.ai.nlp.risk_assessment import calculate_cognitive_risk
-            return calculate_cognitive_risk(text, include_features=include_features)
-        elif current_model == ModelType.GPT4:
-            # Import here to avoid circular imports
-            from app.ai.gpt.analyzer import analyze_with_gpt
-            return analyze_with_gpt(text, include_features=include_features)
-            
-        return {
-            "success": False,
-            "error": f"Unsupported model type: {current_model}"
-        }
-        
-    except Exception as e:
-        logger.error(f"Error in text analysis: {str(e)}")
-        logger.exception(e)
-        return {
-            "success": False,
-            "error": f"Analysis failed: {str(e)}"
-        }
+    logger.debug("Standalone analyze_text function called, deferring to model_factory instance. Consider direct use.")
+    return model_factory.analyze_text(text, include_features=include_features)
 
 def process_audio(
     audio_file: Union[BinaryIO, str, Path],
     language: Optional[str] = None
 ) -> Dict[str, Any]:
     """
-    Process audio file using Whisper.
-    
-    Args:
-        audio_file: File-like object or path to audio file
-        language: Language code (optional, auto-detect if None)
-        
-    Returns:
-        Transcription results
+    Standalone function to process audio. Uses the model_factory instance.
+    DEPRECATED for external use. Prefer using `model_factory.process_audio()` directly.
     """
-    try:
-        return model_factory.process_audio(audio_file, language)
-    except Exception as e:
-        logger.error(f"Error in process_audio: {str(e)}")
-        return {
-            "success": False,
-            "error": f"Audio processing failed: {str(e)}"
-        }
+    logger.debug("Standalone process_audio function called, deferring to model_factory instance. Consider direct use.")
+    return model_factory.process_audio(audio_file, language)
 
-def set_model(model_type: str, api_key: Optional[str] = None) -> bool:
+def set_model(model_type_str: str) -> bool:
     """
-    Set the current model to use.
-    
-    Args:
-        model_type: The model type to use ("spacy" or "gpt4")
-        api_key: API key for GPT-4 (required if model_type is "gpt4")
-        
-    Returns:
-        True if model was set successfully, False otherwise
+    Standalone function to set the model type in the factory.
+    This primarily handles string to ModelType conversion.
+    Prefer `model_factory.set_model(ModelType.VALUE)` if using enums directly.
     """
     try:
-        if model_type.lower() == "gpt4" and api_key:
-            # Register GPT model with API key
-            if not register_gpt_model(api_key):
-                return False
-        
-        return model_factory.set_model(ModelType(model_type.lower()))
+        model_type_enum = ModelType(model_type_str.lower())
+        logger.debug(f"Standalone set_model attempting to set model to {model_type_enum.value}")
+        return model_factory.set_model(model_type_enum)
     except ValueError:
-        logger.error(f"Invalid model type: {model_type}")
+        logger.error(f"Invalid model type string '{model_type_str}' for ModelType enum.")
         return False
 
-def set_whisper_model_size(model_size: str) -> bool:
+def set_whisper_model_size(model_size_str: str) -> bool:
     """
-    Set the Whisper model size to use.
-    
-    Args:
-        model_size: The model size to use ("tiny", "base", "small", "medium", "large")
-        
-    Returns:
-        True if model size was set successfully, False otherwise
+    Standalone function to set the Whisper model size in the factory.
+    Converts string to WhisperModelSize enum.
+    Prefer `model_factory.set_whisper_model_size(WhisperModelSize.VALUE)` if using enums directly.
     """
     try:
-        return model_factory.set_whisper_model_size(WhisperModelSize(model_size.lower()))
+        model_size_enum = WhisperModelSize(model_size_str.lower())
+        return model_factory.set_whisper_model_size(model_size_enum)
     except ValueError:
-        logger.error(f"Invalid Whisper model size: {model_size}")
+        logger.error(f"Invalid model size string '{model_size_str}' for WhisperModelSize enum.")
         return False
 
-def register_gpt_model(api_key: str) -> bool:
+def register_gpt_model(api_key_for_gpt_init: str) -> bool:
     """
-    Register GPT-4 model with the provided API key.
+    Standalone function to initialize the GPT module and register its analysis function 
+    with the model_factory.
+    This is a key setup function called during AI module initialization.
     
     Args:
-        api_key: OpenAI API key
-        
-    Returns:
-        True if model was registered successfully, False otherwise
+        api_key_for_gpt_init: API key, potentially used by the GPT module's own initialization.
     """
-    if not api_key:
-        logger.error("Empty API key provided")
-        return False
-    
+    logger.info("Attempting to initialize GPT module and register with factory...")
     try:
-        # This import is done here to avoid loading OpenAI when not needed
-        from app.ai.gpt.risk_assessment import initialize_gpt, calculate_cognitive_risk as gpt_calculate_risk
-        
-        # Initialize GPT with the provided API key
-        initialize_gpt(api_key)
-        
-        # Register the GPT model
-        model_factory.register_gpt_model(gpt_calculate_risk)
-        
-        return True
-    except ImportError:
-        logger.error("Failed to import GPT modules. Make sure openai package is installed.")
+        # Import GPT module components needed for registration
+        from app.ai.gpt.risk_assessment import initialize_gpt as gpt_module_initialize
+        from app.ai.gpt.analyzer import analyze_with_gpt as gpt_analyzer_function
+
+        # Initialize the GPT module (e.g., test API key, load resources if any for this module)
+        # This initialize_gpt will need to be updated to use the shared client for its tests.
+        if not gpt_module_initialize(api_key_for_gpt_init):
+            logger.error("GPT module initialization (gpt.risk_assessment.initialize_gpt) failed.")
+            return False
+        logger.info("GPT module (risk_assessment.initialize_gpt) initialized successfully.")
+
+        # Register the actual analysis function from gpt.analyzer with the factory instance
+        if model_factory.register_gpt_model(gpt_analyzer_function):
+            logger.info("Successfully registered GPT analyzer function with the model factory.")
+            return True
+        else:
+            logger.error("Failed to register GPT analyzer function with the model factory.")
+            return False
+            
+    except ImportError as e:
+        logger.error(f"Failed to import GPT module components: {str(e)}")
         return False
     except Exception as e:
-        logger.error(f"Error registering GPT model: {str(e)}")
+        logger.error(f"Error during GPT model registration process: {str(e)}", exc_info=True)
         return False 

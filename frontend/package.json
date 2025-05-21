@@ -1,7 +1,8 @@
 {
-  "name": "alzheimer-prevention-platform",
+  "name": "neuroaegis-platform",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@headlessui/react": "^1.7.19",
     "@heroicons/react": "^2.2.0",
@@ -15,21 +16,30 @@
     "@testing-library/user-event": "^14.5.2",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
-    "chart.js": "^4.4.1",
+    "chart.js": "^4.4.8",
     "framer-motion": "^11.0.5",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.9",
-    "react-chartjs-2": "^5.2.0",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.50.1",
+    "react-icons": "^5.5.0",
     "react-router-dom": "^6.22.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^3.5.2"
+    "web-vitals": "^3.5.2",
+    "@mui/material": "^5.15.20",
+    "@mui/icons-material": "^5.15.20",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "react-helmet-async": "^2.0.5"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.3.5",
     "autoprefixer": "^10.4.17",
-    "cross-env": "^7.0.3",
     "cssnano": "^6.0.3",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.4",
+    "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.19",
     "postcss": "^8.4.35",
     "postcss-import": "^16.0.0",
@@ -37,17 +47,10 @@
     "tailwindcss": "^3.4.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "dev": "react-scripts start",
-    "build": "cross-env GENERATE_SOURCEMAP=false react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "resolutions": {
     "postcss": "^8.4.35",

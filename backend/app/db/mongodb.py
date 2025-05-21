@@ -56,4 +56,7 @@ def get_database():
 COLLECTION_USERS = "users"
 COLLECTION_ANALYSIS_RESULTS = "analysis_results"
 COLLECTION_COGNITIVE_TRAINING = "cognitive_training"
-COLLECTION_RESOURCES = "resources" 
+COLLECTION_RESOURCES = "resources"
+COLLECTION_TRAINING_SESSIONS = "training_sessions"
+COLLECTION_USER_METRICS = "user_metrics"
+COLLECTION_JOURNAL_ENTRIES = "journal_entries" 

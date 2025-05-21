@@ -61,11 +61,25 @@ async def delete_collection(collection_name):
         db = await connect_to_mongodb()
         
         if collection_name == "all":
+            confirm = input("Are you sure you want to delete ALL collections? This is irreversible. (yes/no): ")
+            if confirm.lower() != "yes":
+                logger.info("Operation cancelled by user.")
+                await close_mongodb_connection()
+                return
             collections = await db.list_collection_names()
             for coll in collections:
-                await db.drop_collection(coll)
-                logger.info(f"Dropped collection: {coll}")
+                confirm_each = input(f"Delete collection '{coll}'? (yes/no): ")
+                if confirm_each.lower() == "yes":
+                    await db.drop_collection(coll)
+                    logger.info(f"Dropped collection: {coll}")
+                else:
+                    logger.info(f"Skipped deleting collection: {coll}")
         else:
+            confirm = input(f"Are you sure you want to delete the collection '{collection_name}'? This is irreversible. (yes/no): ")
+            if confirm.lower() != "yes":
+                logger.info("Operation cancelled by user.")
+                await close_mongodb_connection()
+                return
             await db.drop_collection(collection_name)
             logger.info(f"Dropped collection: {collection_name}")
         

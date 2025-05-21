@@ -43,11 +43,11 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center">
               <BoltIcon className="h-8 w-auto text-primary-600 dark:text-primary-400" />
-              <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">BrainGuard AI</span>
+              <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">NeuroAegis</span>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-300">
               AI-powered platform for early detection of Mild Cognitive Impairment (MCI) and Alzheimer's prevention,
-              providing cognitive training tools and resources to promote brain health.
+              developed by NeuroAegis.
             </p>
             <div className="flex space-x-4">
               <a href="https://facebook.com" className="text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">
@@ -93,7 +93,7 @@ export default function Footer() {
 
         <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            © {currentYear} BrainGuard AI. All rights reserved.
+            © {currentYear} NeuroAegis. All rights reserved.
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 sm:mt-0">
             Made with care for brain health and accessibility.

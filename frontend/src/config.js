@@ -1,19 +1,19 @@
 /**
  * Application Configuration
  * 
- * Central configuration settings for the Alzheimer's Early Detection Platform
+ * Central configuration settings for the NeuroAegis Platform
  */
 
 // API Configuration
-export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 // Feature Flags
 export const FEATURES = {
     DETAILED_ANALYSIS: true,
     ANALYSIS_HISTORY: true,
     USER_PROFILES: true,
-    COGNITIVE_EXERCISES: false, // Coming soon
-    GPT_INTEGRATION: false      // Requires API key
+    COGNITIVE_EXERCISES: true, // Updated from false, as features seem to exist
+    GPT_INTEGRATION: true      // Updated from false, as backend AI relies on GPT
 };
 
 // UI Configuration

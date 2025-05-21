@@ -14,8 +14,8 @@ function AIScreeningPage() {
       <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6">
         <button
           className={`py-2 px-4 font-medium ${activeTab === 'text'
-              ? 'text-primary-600 border-b-2 border-primary-600 dark:text-primary-400 dark:border-primary-400'
-              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+            ? 'text-primary-600 border-b-2 border-primary-600 dark:text-primary-400 dark:border-primary-400'
+            : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
             }`}
           onClick={() => setActiveTab('text')}
         >
@@ -23,8 +23,8 @@ function AIScreeningPage() {
         </button>
         <button
           className={`py-2 px-4 font-medium ${activeTab === 'audio'
-              ? 'text-primary-600 border-b-2 border-primary-600 dark:text-primary-400 dark:border-primary-400'
-              : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+            ? 'text-primary-600 border-b-2 border-primary-600 dark:text-primary-400 dark:border-primary-400'
+            : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
             }`}
           onClick={() => setActiveTab('audio')}
         >
