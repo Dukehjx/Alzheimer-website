@@ -20,6 +20,10 @@ import ResourceHubPage from './pages/ResourceHubPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
+import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
+import TermsOfService from './pages/TermsOfService.jsx'
+import CookiePolicy from './pages/CookiePolicy.jsx'
+import DataProtection from './pages/DataProtection.jsx'
 
 function App() {
   return (
@@ -56,6 +60,10 @@ function App() {
                 <Route path="/resources" element={<ResourceHubPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<TermsOfService />} />
+                <Route path="/cookies" element={<CookiePolicy />} />
+                <Route path="/data-protection" element={<DataProtection />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </main>

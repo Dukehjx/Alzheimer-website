@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import ThemeSwitcher from './ThemeSwitcher';
-import { useFontSize } from '../contexts/ThemeContext';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { BoltIcon } from '@heroicons/react/24/solid';
 
@@ -12,37 +11,6 @@ const navigation = [
   { name: 'Cognitive Training', href: '/cognitive-training' },
   { name: 'Resource Hub', href: '/resources' },
 ];
-
-function FontSizeSelector({ className = '' }) {
-  const { fontSize, setFontSize } = useFontSize();
-  const sizes = [
-    { value: 'small', label: 'A', style: 'text-xs' },
-    { value: 'medium', label: 'A', style: 'text-base' },
-    { value: 'large', label: 'A', style: 'text-xl' },
-  ];
-  return (
-    <div className={`flex items-center gap-1 ${className}`} aria-label="Font size selector">
-      <span className="sr-only">Font size</span>
-      <div className="flex rounded border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-1 py-0.5">
-        {sizes.map((s, idx) => (
-          <button
-            key={s.value}
-            type="button"
-            aria-label={`Set font size to ${s.value}`}
-            onClick={() => setFontSize(s.value)}
-            className={`font-bold px-1 mx-0.5 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500
-              ${s.style}
-              ${fontSize === s.value ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400 bg-primary-50 dark:bg-primary-900/30' : 'text-gray-700 dark:text-gray-300'}
-            `}
-            style={{ minWidth: 22 }}
-          >
-            {s.label}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -83,7 +51,6 @@ export default function Navigation() {
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center gap-4">
           <ThemeSwitcher />
-          <FontSizeSelector />
 
           {isAuthenticated ? (
             <div className="flex items-center">
@@ -147,9 +114,8 @@ export default function Navigation() {
                     {item.name}
                   </Link>
                 ))}
-                <div className="py-2 flex gap-2 items-center">
+                <div className="py-2">
                   <ThemeSwitcher className="mx-3" />
-                  <FontSizeSelector />
                 </div>
               </div>
               <div className="py-6">
