@@ -241,4 +241,25 @@ code {
     padding-right: env(safe-area-inset-right);
     padding-top: env(safe-area-inset-top);
   }
-} 
+}
+
+/* Font size accessibility (global) */
+[data-font-size="small"] {
+  font-size: 15px;
+}
+[data-font-size="medium"] {
+  font-size: 17px;
+}
+[data-font-size="large"] {
+  font-size: 20px;
+}
+
+/* Ensure text scales with font size setting */
+body, input, textarea, select, button {
+  font-size: inherit;
+}
+
+/* Accessibility: font size classes for utility use if needed */
+.font-size-small { font-size: 15px !important; }
+.font-size-medium { font-size: 17px !important; }
+.font-size-large { font-size: 20px !important; } 

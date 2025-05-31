@@ -1,24 +1,24 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
 const ThemeContext = createContext();
+const FontSizeContext = createContext();
 
 export function useTheme() {
     return useContext(ThemeContext);
 }
 
+export function useFontSize() {
+    return useContext(FontSizeContext);
+}
+
 export function ThemeProvider({ children }) {
-    // Check for user preference in localStorage, default to 'light' if none exists
+    // Theme state
     const [theme, setTheme] = useState(() => {
         const savedTheme = localStorage.getItem('theme');
-        // Check if user has previously selected a theme
-        if (savedTheme) {
-            return savedTheme;
-        }
-        // Check for system preference
+        if (savedTheme) return savedTheme;
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             return 'dark';
         }
-        // Default to light theme
         return 'light';
     });
 
@@ -46,16 +46,32 @@ export function ThemeProvider({ children }) {
         }
     };
 
+    // Font size state
+    const [fontSize, setFontSize] = useState(() => {
+        const saved = localStorage.getItem('fontSize');
+        return saved || 'medium';
+    });
+    useEffect(() => {
+        localStorage.setItem('fontSize', fontSize);
+        document.documentElement.setAttribute('data-font-size', fontSize);
+    }, [fontSize]);
+
     const value = {
         theme,
         isDarkMode: theme === 'dark',
         toggleTheme,
         setTheme: setThemeMode
     };
+    const fontSizeValue = {
+        fontSize,
+        setFontSize
+    };
 
     return (
         <ThemeContext.Provider value={value}>
-            {children}
+            <FontSizeContext.Provider value={fontSizeValue}>
+                {children}
+            </FontSizeContext.Provider>
         </ThemeContext.Provider>
     );
 } 
