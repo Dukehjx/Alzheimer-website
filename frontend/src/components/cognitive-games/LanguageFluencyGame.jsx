@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_BASE_URL } from '../../config';
+import languageFluencyWordBanks from './languageFluencyWordBanks';
 
 // Difficulty level options
 const DIFFICULTY_LEVELS = [
@@ -277,6 +278,17 @@ const LanguageFluencyGame = () => {
         });
     };
 
+    // Get the correct word list for the current difficulty, category, and letter
+    const getWordBank = (difficulty, category, letter) => {
+        const diff = difficulty.toLowerCase();
+        // Normalize category key (snake_case)
+        const catKey = Object.keys(languageFluencyWordBanks[diff]).find(
+            k => k.replace(/_/g, ' ').toLowerCase() === category.replace(/_/g, ' ').toLowerCase()
+        ) || category;
+        const bank = languageFluencyWordBanks[diff]?.[catKey]?.[letter.toUpperCase()];
+        return Array.isArray(bank) ? new Set(bank.map(w => w.toLowerCase())) : new Set();
+    };
+
     // Add a word to the current category
     const addWord = (e) => {
         e.preventDefault();
@@ -284,11 +296,11 @@ const LanguageFluencyGame = () => {
         const word = currentWords[activeCategory].trim();
         if (!word) return;
 
-        // Check if word starts with the required letter (case-insensitive)
-        const targetLetter = exercise.content.letter.toLowerCase();
-        if (!word.toLowerCase().startsWith(targetLetter)) {
-            setError(`Words must start with the letter "${exercise.content.letter}"`);
-            setTimeout(() => setError(null), 2000); // Clear error after 2 seconds
+        // Get the correct word list for the current difficulty, category, and letter
+        const wordBank = getWordBank(difficulty, activeCategory, exercise.content.letter);
+        if (!wordBank.has(word.toLowerCase())) {
+            setError(`"${word}" is not in the accepted word list for this category and letter.`);
+            setTimeout(() => setError(null), 2000);
             return;
         }
 
@@ -513,146 +525,152 @@ const LanguageFluencyGame = () => {
     );
 
     // Render results screen
-    const renderResults = () => (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 max-w-4xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                    Game Results
-                </h2>
-                <div className="text-right">
-                    <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                        {Math.round(results.score)}%
-                    </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                        Overall Score
-                    </div>
-                </div>
-            </div>
+    const renderResults = () => {
+        // Adaptive feedback
+        let adaptiveMessage = '';
+        if (results && results.score >= 90 && difficulty !== 'expert') {
+            const nextLevel = DIFFICULTY_LEVELS[DIFFICULTY_LEVELS.findIndex(l => l.value === difficulty) + 1];
+            adaptiveMessage = `Excellent! Try the ${nextLevel.label} level next for a bigger challenge.`;
+        } else if (results && results.score === 100) {
+            adaptiveMessage = 'Perfect fluency! You are on a streak!';
+        }
 
-            <div className="bg-gray-50 dark:bg-gray-750 rounded-lg p-4 mb-4">
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <p className="text-gray-700 dark:text-gray-300">
-                            <span className="font-medium">Difficulty:</span> {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
-                        </p>
-                    </div>
-                    <div>
-                        <p className="text-gray-700 dark:text-gray-300">
-                            <span className="font-medium">Time Taken:</span> {totalDuration ? `${Math.floor(totalDuration / 60)}m ${totalDuration % 60}s` : 'N/A'}
-                        </p>
-                    </div>
-                    <div>
-                        <p className="text-gray-700 dark:text-gray-300">
-                            <span className="font-medium">Categories:</span> {exercise.content.categories.length}
-                        </p>
-                    </div>
-                    <div>
-                        <p className="text-gray-700 dark:text-gray-300">
-                            <span className="font-medium">Total Words:</span> {Object.values(answers).flat().length}
-                        </p>
+        const wordBank = getWordBank(difficulty, exercise.content.categories[0], exercise.content.letter);
+        const userWords = answers[exercise.content.categories[0]] || [];
+        const validWords = userWords.filter(w => wordBank.has(w.toLowerCase()));
+        const invalidWords = userWords.filter(w => !wordBank.has(w.toLowerCase()));
+
+        return (
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 max-w-4xl mx-auto">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                        Game Results
+                    </h2>
+                    <div className="text-right">
+                        <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                            {Math.round(results.score)}%
+                        </div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                            Overall Score
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                    Performance by Category:
-                </h3>
+                <div className="bg-gray-50 dark:bg-gray-750 rounded-lg p-4 mb-4">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <p className="text-gray-700 dark:text-gray-300">
+                                <span className="font-medium">Difficulty:</span> {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
+                            </p>
+                        </div>
+                        <div>
+                            <p className="text-gray-700 dark:text-gray-300">
+                                <span className="font-medium">Time Taken:</span> {totalDuration ? `${Math.floor(totalDuration / 60)}m ${totalDuration % 60}s` : 'N/A'}
+                            </p>
+                        </div>
+                        <div>
+                            <p className="text-gray-700 dark:text-gray-300">
+                                <span className="font-medium">Categories:</span> {exercise.content.categories.length}
+                            </p>
+                        </div>
+                        <div>
+                            <p className="text-gray-700 dark:text-gray-300">
+                                <span className="font-medium">Total Words:</span> {Object.values(answers).flat().length}
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-                <div className="space-y-4">
-                    {exercise.content.categories.map((category, index) => {
-                        const categoryResults = results.details.category_results || {};
-                        const categoryResult = categoryResults[category] || {
-                            words: [],
-                            valid_count: 0,
-                            achieved_minimum: false,
-                            score: 0
-                        };
-                        const metMinimum = categoryResult.achieved_minimum;
+                <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">
+                        Performance by Category:
+                    </h3>
 
-                        return (
-                            <div
-                                key={index}
-                                className={`
-                                    border-l-4 rounded-r-md p-4
-                                    ${metMinimum
-                                        ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                                        : 'border-red-500 bg-red-50 dark:bg-red-900/20'}
-                                `}
-                            >
-                                <div className="flex justify-between items-center mb-2">
-                                    <h4 className={`
-                                        font-semibold text-lg capitalize
+                    <div className="space-y-4">
+                        {exercise.content.categories.map((category, index) => {
+                            const categoryResults = results.details.category_results || {};
+                            const categoryResult = categoryResults[category] || {
+                                words: [],
+                                valid_count: 0,
+                                achieved_minimum: false,
+                                score: 0
+                            };
+                            const metMinimum = categoryResult.achieved_minimum;
+                            return (
+                                <div
+                                    key={index}
+                                    className={
+                                        `border-l-4 rounded-r-md p-4
                                         ${metMinimum
-                                            ? 'text-green-800 dark:text-green-300'
-                                            : 'text-red-800 dark:text-red-300'}
-                                    `}>
-                                        {category}
-                                    </h4>
-                                    <span className={`
-                                        px-3 py-1 rounded-full text-sm font-medium
-                                        ${metMinimum
-                                            ? 'bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200'
-                                            : 'bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200'}
-                                    `}>
-                                        {Math.round(categoryResult.score)}%
-                                    </span>
-                                </div>
-
-                                <p className={`
-                                    mb-2 text-sm
-                                    ${metMinimum
-                                        ? 'text-green-700 dark:text-green-400'
-                                        : 'text-red-700 dark:text-red-400'}
-                                `}>
-                                    {metMinimum
-                                        ? `Great job! You provided ${categoryResult.valid_count} valid words.`
-                                        : `You provided ${categoryResult.valid_count} valid words out of the required ${exercise.content.min_words_per_category}.`}
-                                </p>
-
-                                <div className="flex flex-wrap gap-2 mt-2">
-                                    {categoryResult.words && categoryResult.words.map((word, wordIndex) => (
-                                        <span
-                                            key={wordIndex}
-                                            className={`
-                                                px-2 py-1 rounded-full text-sm
-                                                ${metMinimum
-                                                    ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
-                                                    : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white'}
-                                            `}
-                                        >
-                                            {word}
+                                            ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                                            : 'border-red-500 bg-red-50 dark:bg-red-900/20'}
+                                        `
+                                    }
+                                >
+                                    <div className="flex justify-between items-center mb-2">
+                                        <h4 className={
+                                            `font-semibold text-lg capitalize
+                                            ${metMinimum
+                                                ? 'text-green-800 dark:text-green-300'
+                                                : 'text-red-800 dark:text-red-300'}
+                                            `
+                                        }>
+                                            {category}
+                                        </h4>
+                                        <span className={
+                                            `px-3 py-1 rounded-full text-sm font-medium
+                                            ${metMinimum
+                                                ? 'bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200'
+                                                : 'bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200'}
+                                            `
+                                        }>
+                                            {Math.round(categoryResult.score)}%
                                         </span>
-                                    ))}
+                                    </div>
+                                    <div className="mb-2">
+                                        <span className="font-medium">Valid Words:</span>
+                                        <span className="ml-2">
+                                            {validWords.length > 0 ? validWords.join(', ') : <span className="italic text-gray-400">None</span>}
+                                        </span>
+                                    </div>
+                                    <div className="mb-2">
+                                        <span className="font-medium">Invalid Words:</span>
+                                        <span className="ml-2">
+                                            {invalidWords.length > 0 ? invalidWords.join(', ') : <span className="italic text-gray-400">None</span>}
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })}
+                    </div>
+                </div>
+
+                <div className="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 p-4 mb-6 rounded-r-md">
+                    <p className="text-blue-800 dark:text-blue-300">
+                        <span className="font-medium">Feedback:</span> {results.feedback}
+                    </p>
+                    {adaptiveMessage && (
+                        <p className="mt-2 text-green-700 dark:text-green-300 font-semibold">{adaptiveMessage}</p>
+                    )}
+                </div>
+
+                <div className="flex flex-col md:flex-row gap-4">
+                    <button
+                        onClick={resetGame}
+                        className="md:flex-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-semibold py-3 px-4 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-gray-500"
+                    >
+                        ↺ Play Again
+                    </button>
+                    <button
+                        onClick={() => navigate('/cognitive-training')}
+                        className="md:flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        Return to Cognitive Training
+                    </button>
                 </div>
             </div>
-
-            <div className="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 p-4 mb-6 rounded-r-md">
-                <p className="text-blue-800 dark:text-blue-300">
-                    <span className="font-medium">Feedback:</span> {results.feedback}
-                </p>
-            </div>
-
-            <div className="flex flex-col md:flex-row gap-4">
-                <button
-                    onClick={resetGame}
-                    className="md:flex-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-semibold py-3 px-4 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-gray-500"
-                >
-                    ↺ Play Again
-                </button>
-                <button
-                    onClick={() => navigate('/cognitive-training')}
-                    className="md:flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                    Return to Cognitive Training
-                </button>
-            </div>
-        </div>
-    );
+        );
+    };
 
     // Render the appropriate view based on game state
     const renderGameState = () => {

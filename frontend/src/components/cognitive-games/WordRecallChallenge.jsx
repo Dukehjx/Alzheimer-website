@@ -136,9 +136,11 @@ const WordRecallChallenge = () => {
                     minScore = 0.6;
                     wordCount = 10;
                     wordPool = [
-                        "house", "tree", "dog", "car", "book", "chair", "water",
-                        "food", "sun", "ball", "cup", "door", "bird", "shoe", "fish",
-                        "table", "hat", "cat", "ring", "baby"
+                        "house", "tree", "dog", "car", "book", "chair", "water", "food", "sun", "ball", "cup", "door", "bird", "shoe", "fish", "table", "hat", "cat", "ring", "baby",
+                        "apple", "pen", "star", "milk", "bed", "phone", "road", "leaf", "cake", "clock", "glass", "fork", "spoon", "plate", "bag", "key", "lamp", "shirt", "sock", "pants",
+                        "mouse", "desk", "box", "egg", "frog", "duck", "goat", "cow", "pig", "sheep", "horse", "train", "bus", "boat", "ship", "plane", "kite", "drum", "bell", "coin",
+                        "map", "flag", "rock", "sand", "hill", "lake", "river", "cloud", "rain", "snow", "wind", "fire", "ice", "soap", "brush", "comb", "tooth", "nail", "ring", "belt",
+                        "pencil", "eraser", "ruler", "book", "note", "card", "game", "toy", "doll", "block", "rope", "balloon", "gift", "cake", "pie", "jam", "rice", "bean", "corn", "pea"
                     ];
                     break;
                 case 'intermediate':
@@ -147,10 +149,10 @@ const WordRecallChallenge = () => {
                     minScore = 0.65;
                     wordCount = 15;
                     wordPool = [
-                        "freedom", "science", "journey", "knowledge", "universe",
-                        "beautiful", "dangerous", "important", "happiness", "education",
-                        "adventure", "mountain", "terrible", "wonderful", "discovery",
-                        "excitement", "community", "challenging", "brilliant", "peaceful"
+                        "freedom", "science", "journey", "knowledge", "universe", "beautiful", "dangerous", "important", "happiness", "education", "adventure", "mountain", "terrible", "wonderful", "discovery", "excitement", "community", "challenging", "brilliant", "peaceful",
+                        "history", "culture", "language", "nature", "forest", "desert", "island", "ocean", "valley", "canyon", "planet", "galaxy", "energy", "matter", "gravity", "magnet", "crystal", "diamond", "silver", "gold",
+                        "artist", "musician", "athlete", "teacher", "doctor", "engineer", "pilot", "farmer", "lawyer", "author", "poet", "actor", "director", "dancer", "singer", "painter", "sculptor", "inventor", "explorer", "leader",
+                        "festival", "holiday", "ceremony", "tradition", "custom", "ritual", "parade", "concert", "exhibit", "museum", "library", "stadium", "theater", "market", "restaurant", "bakery", "cafe", "hotel", "airport", "station"
                     ];
                     break;
                 case 'advanced':
@@ -159,10 +161,10 @@ const WordRecallChallenge = () => {
                     minScore = 0.7;
                     wordCount = 20;
                     wordPool = [
-                        "algorithm", "philosophy", "correlation", "phenomenon", "microscopic",
-                        "innovation", "sustainability", "renaissance", "psychology", "civilization",
-                        "perspective", "magnificent", "substantial", "controversy", "extraordinary",
-                        "theoretical", "spectacular", "celebration", "imagination", "fundamental"
+                        "algorithm", "philosophy", "correlation", "phenomenon", "microscopic", "innovation", "sustainability", "renaissance", "psychology", "civilization", "perspective", "magnificent", "substantial", "controversy", "extraordinary", "theoretical", "spectacular", "celebration", "imagination", "fundamental",
+                        "hypothesis", "paradigm", "spectrum", "dimension", "equation", "variable", "function", "derivative", "integral", "matrix", "vector", "quantum", "relativity", "entropy", "fractal", "chaos", "symmetry", "asymmetry", "probability", "statistic", "analysis",
+                        "metaphor", "analogy", "paradox", "oxymoron", "allusion", "hyperbole", "irony", "satire", "allegory", "symbolism", "motif", "theme", "genre", "narrative", "protagonist", "antagonist", "dialogue", "monologue", "soliloquy", "epiphany", "climax",
+                        "synthesis", "catalyst", "enzyme", "molecule", "compound", "reaction", "solution", "solvent", "solute", "acid", "base", "ion", "electron", "proton", "neutron", "isotope", "polymer", "crystal", "alloy", "mineral"
                     ];
                     break;
                 case 'expert':
@@ -171,10 +173,10 @@ const WordRecallChallenge = () => {
                     minScore = 0.75;
                     wordCount = 25;
                     wordPool = [
-                        "verisimilitude", "juxtaposition", "serendipity", "magnanimous", "idiosyncrasy",
-                        "sycophantic", "ephemeral", "perspicacious", "obfuscation", "sesquipedalian",
-                        "pusillanimous", "mellifluous", "parsimonious", "quintessential", "fastidious",
-                        "antediluvian", "cacophonous", "prevarication", "grandiloquent", "perfunctory"
+                        "verisimilitude", "juxtaposition", "serendipity", "magnanimous", "idiosyncrasy", "sycophantic", "ephemeral", "perspicacious", "obfuscation", "sesquipedalian", "pusillanimous", "mellifluous", "parsimonious", "quintessential", "fastidious", "antediluvian", "cacophonous", "prevarication", "grandiloquent", "perfunctory", "ineffable",
+                        "obstreperous", "recalcitrant", "intransigent", "obsequious", "lachrymose", "pulchritude", "apocryphal", "recondite", "abstruse", "pellucid", "insouciant", "redolent", "sagacious", "taciturn", "ubiquitous", "vicissitude", "zephyr", "quixotic", "solipsism", "panacea",
+                        "legerdemain", "malfeasance", "nefarious", "obdurate", "parsimony", "quandary", "raconteur", "sagacity", "taciturnity", "umbrage", "vacuous", "wanton", "xenophobia", "yokel", "zealot", "abnegation", "belligerent", "capitulate", "deleterious", "enervate", "fatuous",
+                        "garrulous", "harangue", "impecunious", "jocular", "kaleidoscopic", "languid", "munificent", "nonplussed", "obstreperous", "paragon", "quagmire", "reticent", "sanguine", "tenacious", "unctuous", "vociferous", "winsome", "xenophile", "yammer", "zephyr"
                     ];
                     break;
                 default:
@@ -459,101 +461,114 @@ const WordRecallChallenge = () => {
     );
 
     // Render results phase
-    const renderResults = () => (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 max-w-xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                    Challenge Results
-                </h2>
-                <div className="text-right">
-                    <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                        {Math.round(results.score)}%
-                    </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                        Score
-                    </div>
-                </div>
-            </div>
-
-            <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Performance:
-                </h3>
-                <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
-                    <div className="mb-4">
-                        <p className="text-gray-700 dark:text-gray-300">
-                            <span className="font-medium">Words Correctly Recalled:</span> {results.details.correctly_recalled.length}
-                        </p>
-                        <p className="text-gray-700 dark:text-gray-300">
-                            <span className="font-medium">Words Missed:</span> {results.details.missed_words.length}
-                        </p>
-                        <p className="text-gray-700 dark:text-gray-300">
-                            <span className="font-medium">Accuracy:</span> {Math.round(results.accuracy * 100)}%
-                        </p>
-                        <p className="text-gray-700 dark:text-gray-300">
-                            <span className="font-medium">Time Taken:</span> {totalDuration ? `${Math.floor(totalDuration / 60)}m ${totalDuration % 60}s` : 'N/A'}
-                        </p>
-                        <p className="text-gray-700 dark:text-gray-300">
-                            <span className="font-medium">Difficulty:</span> {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
-                        </p>
-                    </div>
-
-                    <div className="mb-4">
-                        <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Correctly Recalled Words:
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                            {results.details.correctly_recalled.map((word, index) => (
-                                <span
-                                    key={index}
-                                    className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-full text-sm"
-                                >
-                                    {word}
-                                </span>
-                            ))}
+    const renderResults = () => {
+        // Adaptive feedback
+        let adaptiveMessage = '';
+        if (results && results.score >= 90 && difficulty !== 'expert') {
+            const nextLevel = DIFFICULTY_LEVELS[DIFFICULTY_LEVELS.findIndex(l => l.value === difficulty) + 1];
+            adaptiveMessage = `Great job! Try the ${nextLevel.label} level next for a bigger challenge.`;
+        } else if (results && results.score === 100) {
+            adaptiveMessage = 'Perfect recall! You are on a streak!';
+        }
+        return (
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 max-w-xl mx-auto">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                        Challenge Results
+                    </h2>
+                    <div className="text-right">
+                        <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                            {Math.round(results.score)}%
                         </div>
-                    </div>
-
-                    <div>
-                        <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Missed Words:
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                            {results.details.missed_words.map((word, index) => (
-                                <span
-                                    key={index}
-                                    className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-2 py-1 rounded-full text-sm"
-                                >
-                                    {word}
-                                </span>
-                            ))}
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                            Score
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 p-4 mb-6 rounded-r-md">
-                <p className="text-blue-800 dark:text-blue-300">
-                    <span className="font-medium">Feedback:</span> {results.feedback}
-                </p>
-            </div>
+                <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        Performance:
+                    </h3>
+                    <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+                        <div className="mb-4">
+                            <p className="text-gray-700 dark:text-gray-300">
+                                <span className="font-medium">Words Correctly Recalled:</span> {results.details.correctly_recalled.length}
+                            </p>
+                            <p className="text-gray-700 dark:text-gray-300">
+                                <span className="font-medium">Words Missed:</span> {results.details.missed_words.length}
+                            </p>
+                            <p className="text-gray-700 dark:text-gray-300">
+                                <span className="font-medium">Accuracy:</span> {Math.round(results.accuracy * 100)}%
+                            </p>
+                            <p className="text-gray-700 dark:text-gray-300">
+                                <span className="font-medium">Time Taken:</span> {totalDuration ? `${Math.floor(totalDuration / 60)}m ${totalDuration % 60}s` : 'N/A'}
+                            </p>
+                            <p className="text-gray-700 dark:text-gray-300">
+                                <span className="font-medium">Difficulty:</span> {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
+                            </p>
+                        </div>
 
-            <div className="flex flex-col md:flex-row gap-4">
-                <button
-                    onClick={resetGame}
-                    className="md:flex-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-semibold py-3 px-4 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-gray-500"
-                >
-                    ↺ Play Again
-                </button>
-                <button
-                    onClick={() => navigate('/cognitive-training')}
-                    className="md:flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                    Return to Cognitive Training
-                </button>
+                        <div className="mb-4">
+                            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Correctly Recalled Words:
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                                {results.details.correctly_recalled.map((word, index) => (
+                                    <span
+                                        key={index}
+                                        className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded-full text-sm"
+                                    >
+                                        {word}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Missed Words:
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                                {results.details.missed_words.map((word, index) => (
+                                    <span
+                                        key={index}
+                                        className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-2 py-1 rounded-full text-sm"
+                                    >
+                                        {word}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-500 p-4 mb-6 rounded-r-md">
+                    <p className="text-blue-800 dark:text-blue-300">
+                        <span className="font-medium">Feedback:</span> {results.feedback}
+                    </p>
+                    {adaptiveMessage && (
+                        <p className="mt-2 text-green-700 dark:text-green-300 font-semibold">{adaptiveMessage}</p>
+                    )}
+                </div>
+
+                <div className="flex flex-col md:flex-row gap-4">
+                    <button
+                        onClick={resetGame}
+                        className="md:flex-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-semibold py-3 px-4 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-gray-500"
+                    >
+                        ↺ Play Again
+                    </button>
+                    <button
+                        onClick={() => navigate('/cognitive-training')}
+                        className="md:flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md shadow focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        Return to Cognitive Training
+                    </button>
+                </div>
             </div>
-        </div>
-    );
+        );
+    };
 
     // Render the appropriate view based on game state
     const renderGameState = () => {
