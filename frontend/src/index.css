@@ -241,22 +241,42 @@ code {
     padding-right: env(safe-area-inset-right);
     padding-top: env(safe-area-inset-top);
   }
-}
+} 
 
 /* Font size accessibility (global) */
-[data-font-size="small"] {
-  font-size: 15px;
+html[data-font-size="small"] {
+  font-size: 15px !important;
 }
-[data-font-size="medium"] {
-  font-size: 17px;
+html[data-font-size="medium"] {
+  font-size: 17px !important;
 }
-[data-font-size="large"] {
-  font-size: 20px;
+html[data-font-size="large"] {
+  font-size: 20px !important;
 }
 
 /* Ensure text scales with font size setting */
-body, input, textarea, select, button {
-  font-size: inherit;
+html[data-font-size="small"] body,
+html[data-font-size="small"] input,
+html[data-font-size="small"] textarea,
+html[data-font-size="small"] select,
+html[data-font-size="small"] button {
+  font-size: 15px !important;
+}
+
+html[data-font-size="medium"] body,
+html[data-font-size="medium"] input,
+html[data-font-size="medium"] textarea,
+html[data-font-size="medium"] select,
+html[data-font-size="medium"] button {
+  font-size: 17px !important;
+}
+
+html[data-font-size="large"] body,
+html[data-font-size="large"] input,
+html[data-font-size="large"] textarea,
+html[data-font-size="large"] select,
+html[data-font-size="large"] button {
+  font-size: 20px !important;
 }
 
 /* Accessibility: font size classes for utility use if needed */

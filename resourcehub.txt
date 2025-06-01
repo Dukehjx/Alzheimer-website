@@ -1,96 +1,221 @@
-Here are the articles organized into categories with slight modifications to fit each category:
-Lifestyle Changes to Prevent or Slow Alzheimer's
+Lifestyle Changes to Prevent or Slow Alzheimer's and Dementia
+
 Time: How to Slow Alzheimer's with Lifestyle Changes
- An intensive lifestyle program involving a vegan diet, exercise, stress management, and support groups can significantly slow cognitive decline in individuals with mild cognitive impairment or early Alzheimer's.
+ An intensive vegan diet, exercise, stress management, and support groups significantly slow cognitive decline.
  https://time.com/6986373/how-to-slow-alzheimers-lifestyle/
-
-
 Fortune: Alzheimer's: Lifestyle Habit Changes Improved Brain Function
- A study found that a vegan diet, regular walking, social connection, supplements, and stress reduction improved cognitive function in older adults with early Alzheimer's.
+ A vegan diet, walking, social connection, supplements, and stress reduction boost cognitive function.
  https://fortune.com/well/2024/06/07/alzheimers-lifestyle-habit-changes-improved-brain-function/
-
-
-US News: Lifestyle Changes May Slow or Prevent Alzheimer's in People at High Risk
- Adopting a whole-foods plant-based diet, regular exercise, stress management, and support groups can help maintain cognitive function in those with mild cognitive impairment or early dementia.
+US News: Lifestyle Changes May Slow or Prevent Alzheimer's
+ A whole-foods plant-based diet, exercise, stress management, and social engagement help maintain cognition.
  https://www.usnews.com/news/health-news/articles/2024-06-07/lifestyle-changes-may-slow-or-prevent-alzheimers-in-people-at-high-risk
-
-
 UCSF News: Can Health & Lifestyle Changes Protect Elders From Alzheimer's?
- This article discusses how lifestyle changes such as diet, exercise, and cognitive stimulation may help protect elders from Alzheimer's disease.
+ Lifestyle modifications including diet and exercise help protect older adults from Alzheimer's disease.
  https://www.ucsf.edu/news/2023/11/426636/can-health-lifestyle-changes-protect-elders-alzheimers
-
-
 CDC: Reducing Risk for Dementia
- Staying physically active, managing diabetes and blood pressure, and preventing hearing loss can help reduce dementia risk.
+ Physical activity, managing diabetes, blood pressure, and hearing loss reduce dementia risk.
  https://www.cdc.gov/alzheimers-dementia/prevention/index.html
-
-
 PMC: Association of Healthy Lifestyles With Risk of Alzheimer Disease
- Engaging in nonsmoking, regular exercise, healthy diets, and moderate alcohol intake can reduce Alzheimer's risk.
+ Nonsmoking, regular exercise, healthy diets, and moderate alcohol intake reduce Alzheimer’s risk.
  https://pmc.ncbi.nlm.nih.gov/articles/PMC9502739/
-
-
-ScienceDirect: Dietary and Lifestyle Guidelines for the Prevention of Alzheimer's
- Minimizing saturated and trans fats, found in dairy products and processed foods, is recommended to prevent Alzheimer's.
+ScienceDirect: Dietary and Lifestyle Guidelines for Alzheimer's Prevention
+ Minimizing saturated and trans fats from dairy and processed foods recommended for Alzheimer’s prevention.
  https://www.sciencedirect.com/science/article/pii/S0197458014003480
-
-
 Harvard Gazette: Alzheimer’s Study Finds Diet, Lifestyle Changes Yield Improvements
- Intensive diet and lifestyle changes, including aerobic exercise and stress reduction, can improve cognitive outcomes related to Alzheimer’s.
+ Intensive diet, exercise, and lifestyle interventions slow or improve early Alzheimer’s symptoms.
  https://news.harvard.edu/gazette/story/2024/07/alzheimers-study-finds-diet-lifestyle-changes-yield-improvements/
+NPR: Large Portion of Dementia Cases May Be Preventable
+ Managing modifiable lifestyle factors could prevent about 40–45% of dementia cases.
+ https://www.npr.org/2024/11/25/1208050956/brain-dementia-sleep-diet-alzheimers-reduce-your-risk
+The Lancet: 2024 Lancet Commission on Dementia Prevention
+ Reducing key risk factors throughout life could prevent nearly half of dementia cases.
+ https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24)01296-0
+The Guardian: Mediterranean Diet Tied to Lower Dementia Risk
+ A Mediterranean diet could lower dementia risk by about 23%.
+ https://www.theguardian.com/society/2023/mar/14/mediterranean-diet-may-lower-dementia-risk-by-a-quarter-study-suggests
+The Washington Post: Hearing Aids Linked to Reduced Cognitive Decline
+ Regular use of hearing aids significantly reduces cognitive decline among seniors.
+ https://www.washingtonpost.com/wellness/2023/07/19/hearing-loss-hearing-aids-dementia-study/
+Alzheimer’s Drug Discovery Foundation: Modifiable Lifestyle Factors Could Prevent up to 45% of Dementia Cases
+ Targeting 14 lifestyle factors (education, exercise, diet, hearing loss treatment, and more) could prevent or delay up to 45% of dementia cases.
+ https://www.alzdiscovery.org/cognitive-vitality/blog/targeting-14-lifestyle-factors-may-prevent-up-to-45-of-dementia-cases
+Alzheimer’s Disease International: World Alzheimer Report 2023
+ Risk reduction is the most proactive way to combat dementia—adopt healthy habits before and after diagnosis to slow progression.
+ https://www.alzint.org/resource/world-alzheimer-report-2023/
+Being Patient: Six Science-Backed Habits to Lower Dementia Risk
+ Six actionable strategies (diet, exercise, social engagement, hearing aids, sleep, no smoking) may prevent up to 40% of dementia cases.
+ https://www.beingpatient.com/6-tips-dementia-prevention/
+CNN: Flavonol-Rich Foods Linked to Slower Cognitive Decline
+ Diets high in fruits, veggies, and teas rich in flavonols are linked to slower memory loss in older adults.
+ https://www.cnn.com/2022/11/28/health/flavonols-memory-boost-wellness/index.html
+The New York Times: Five Healthy Habits Linked to Lower Alzheimer’s Risk
+ Practicing at least four healthy lifestyle habits cuts Alzheimer’s risk by 60%.
+ https://www.nytimes.com/2020/06/23/well/mind/5-measures-that-may-lower-your-alzheimers-risk.html
+The Washington Post: Heart-Healthy Diets Also Protect the Brain
+ A heart-healthy diet like Mediterranean or MIND also lowers dementia risk, even if started late in life.
+ https://www.washingtonpost.com/wellness/2023/09/18/diet-brain-health-preventing-alzheimers/
+CNN: Better Diet and Activity Choices Can Lower Dementia Risk
+ Avoiding ultraprocessed foods and staying socially and physically active reduces dementia risk.
+ https://www.cnn.com/2022/07/27/health/lifestyle-choices-dementia-wellness/index.html
+CNN: Poor Sleep in Later Life Tied to Higher Dementia Risk
+ Chronic sleep problems in older adults are linked to higher dementia risk and earlier death.
+ https://www.cnn.com/2021/06/18/health/sleep-problems-dementia-early-death-wellness/index.html
+Medical News Today: Hearing Aids May Cut Dementia Risk by Nearly Half
+ Hearing aids in at-risk older adults cut cognitive decline by 48% over three years.
+ https://www.medicalnewstoday.com/articles/hearing-aids-reduce-dementia-risk-achieve-study
+The Guardian: Nearly Half of Dementia Cases Could Be Prevented
+ Addressing 14 risk factors across life could prevent/delay up to 45% of dementia cases.
+ https://www.theguardian.com/society/2024/jul/31/almost-half-of-dementia-cases-could-be-prevented-or-delayed-study-finds
+The New York Times: Controlling Blood Pressure Helps Protect the Brain
+ Treating high blood pressure in midlife significantly lowers Alzheimer’s and dementia risk.
+ https://www.nytimes.com/2019/11/12/well/mind/blood-pressure-dementia-risk.html
+World Health Organization: WHO Issues Guidelines to Reduce Dementia Risk
+ WHO recommends physical activity, healthy diet, and managing health conditions to lower dementia risk.
+ https://www.who.int/publications-detail-redirect/risk-reduction-of-cognitive-decline-and-dementia
+AARP: Hobbies and Social Activities Linked to Lower Dementia Risk
+ Leisure activities like reading, volunteering, or crafts reduce dementia risk and build cognitive reserve.
+ https://www.aarp.org/health/brain-health/info-2022/leisure-activities-lower-dementia-risk.html
+Reuters: Heavy Smoking in Midlife Dramatically Raises Dementia Risk
+ Smoking over two packs a day in midlife more than doubles dementia risk in late life.
+ https://www.reuters.com/article/business/healthcare-pharmaceuticals/smoking-doubles-dementia-risk-in-late-life-study-idUSTRE69O4XA
 
 
-Activities and Therapies for Alzheimer's
+Activities and Therapies for Alzheimer's and Dementia
+
 Healthline: Activities for Alzheimer's: What to Do
- Engaging in stimulating activities can help people with Alzheimer's maintain cognitive function and improve their quality of life.
+ Stimulating activities help Alzheimer's patients maintain cognitive function.
  https://www.healthline.com/health/alzheimers/activities-for-alzheimers
-
-
 WebMD: Therapeutic Activities for Alzheimer's Disease
- This article explores various therapeutic activities that can benefit individuals with Alzheimer's disease by promoting cognitive and emotional well-being.
+ Therapeutic activities enhance cognitive and emotional well-being in Alzheimer’s patients.
  https://www.webmd.com/alzheimers/therapeutic-activities-alzheimers-disease
-
-
 Alzheimer's Society (UK): Activity Ideas for Dementia
- This resource provides a list of activity ideas to help people with dementia stay engaged and independent.
+ Comprehensive activity suggestions to maintain engagement and independence for dementia patients.
  https://www.alzheimers.org.uk/get-support/staying-independent/activity-ideas-dementia
+The Washington Post: Crossword Puzzles and Cognitive Training
+ Crossword puzzles notably slow cognitive decline compared to other brain games.
+ https://www.washingtonpost.com/wellness/2022/11/10/crossword-memory-loss-brain-games/
+The Guardian: Music Therapy Benefits for Dementia Patients
+ Music therapy effectively reduces agitation and improves mood among dementia patients.
+ https://www.theguardian.com/society/2023/nov/26/dementia-uk-music-projects
+Atrium Health Wake Forest Baptist: Regular Exercise Slows Memory Decline
+ Regular physical exercise stabilizes cognitive function and slows brain shrinkage.
+ https://newsroom.wakehealth.edu/2025/04/24/even-light-exercise-could-help-slow-cognitive-decline-in-people-at-risk-of-alzheimers-disease
+NPR: Music Therapy Shows Promise for Dementia Patients
+ Familiar music rapidly sparks memories and improves mood in dementia patients.
+ https://www.npr.org/2019/12/22/790553867/how-music-therapy-could-help-people-with-dementia
+Alzheimer's Society (UK): Art and Poetry Workshops Stimulate People with Dementia
+ Creative arts and poetry programs reduce anxiety and offer new ways to communicate.
+ https://www.alzheimers.org.uk/blog/arts-therapy-people-dementia-poetry-creativity
+The Guardian: Multi-Sensory 'Reminiscence Arts' Improve Quality of Life
+ Reminiscence sessions using music, movement, and storytelling improve mood and engagement.
+ https://www.theguardian.com/social-care-network/2015/oct/22/dementia-multi-sensory-therapy-reminiscence-arts
+PhillyVoice: Dancing Improves Physical and Emotional Well-Being
+ Dance classes boost mood, balance, and social connection in dementia patients.
+ https://www.phillyvoice.com/alzheimers-dementia-dancing-benefits-cognition-well-being/
+The Washington Post: Robotic Pets Provide Comfort in Dementia Care
+ Robotic companion pets soothe and engage people with dementia, reducing anxiety and loneliness.
+ https://www.washingtonpost.com/wellness/2024/12/09/animatronic-pets-aging-alzheimers-loneliness/
+Wake Forest School of Medicine News: Even Light Exercise Can Help Slow Cognitive Decline
+ Light daily exercise can stabilize cognition in people with mild cognitive impairment.
+ https://newsroom.wakehealth.edu/news-releases/2025/04/even-light-exercise-could-help-slow-cognitive-decline-in-people-at-risk-of-alzheimers-disease
+AARP: Keeping People with Dementia Engaged in Daily Activities
+ Simple household tasks and routines give people with dementia purpose and can reduce challenging behaviors.
+ https://www.aarp.org/caregiving/basics/info-2021/dementia-tasks-activities.html
+Alzheimers.gov (NIA): Tai Chi Exercise Benefits Body and Mind in Dementia
+ Tai chi improves cognition and balance in people with mild cognitive impairment.
+ https://www.alzheimers.gov/news/tai-chi-improves-cognition-mci-study
+The Guardian: Interactive Orchestra Sessions Soothe Nursing Home Residents
+ Live music sessions in care homes reduce agitation and need for antipsychotic drugs.
+ https://www.theguardian.com/society/2014/jun/29/musical-therapy-helps-dementia-patients-harmony
+Fisher Center: Therapy Dogs Bring Joy and Connection to Alzheimer’s Patients
+ Therapy dogs lower anxiety and spark happy memories in Alzheimer's care.
+ https://www.alzinfo.org/articles/therapy-animals-alzheimers-patients/
+Aging & Mental Health: Laughter as Medicine: Clown Therapy Reduces Agitation
+ Elder-clown visits lower agitation and aggression in nursing home residents with dementia.
+ https://doi.org/10.1080/13607863.2018.1428947
+Alzheimer’s Society (UK): Bright Light Therapy Eases Sundowning and Improves Sleep
+ Bright light therapy improves sleep and reduces restlessness in dementia.
+https://www.alzheimers.org.uk/about-dementia/symptoms-and-diagnosis/sleep-and-night-time/bright-light-therapy
 
 
-Detection and Symptoms of Alzheimer's
+
+Detection, Symptoms, and Diagnosis of Alzheimer's and Dementia
+
 Alzheimer's Association: 10 Early Signs and Symptoms of Alzheimer's
- This page lists ten common warning signs of Alzheimer's disease.
+ Clear overview of common Alzheimer’s symptoms for early detection.
  https://www.alz.org/alzheimers-dementia/10_signs
-
-
 Everyday Health: All About the SAGE Test for Alzheimer's and Dementia Detection
- The Self-Administered Gerocognitive Exam (SAGE) is a test that can help detect early signs of Alzheimer's and dementia.
+ Self-administered Gerocognitive Exam (SAGE) helps detect early signs of cognitive decline.
  https://www.everydayhealth.com/alzheimers-disease/all-about-the-sage-test-for-alzheimers-and-dementia-detection/
-
-
 NHS (UK): Alzheimer's Disease Symptoms
- This page describes the symptoms of Alzheimer's disease, including memory problems, confusion, and changes in behavior.
+ Describes Alzheimer's symptoms including memory issues and behavioral changes.
  https://www.nhs.uk/conditions/alzheimers-disease/symptoms/
-
-
 Ohio State University Wexner Medical Center: SAGE Test
- The SAGE test is a self-administered test used to evaluate cognitive function and detect early signs of memory disorders like Alzheimer's.
+ Explains the SAGE test used for early detection of memory disorders including Alzheimer's.
  https://wexnermedical.osu.edu/brain-spine-neuro/memory-disorders/sage
-
-
-German Center for Neurodegenerative Diseases (DZNE): Memory Self-Test via Smartphone
- A smartphone-based memory self-test can help identify early signs of Alzheimer's disease.
+German Center for Neurodegenerative Diseases: Memory Self-Test via Smartphone
+ Smartphone-based memory tests effectively identify early Alzheimer’s signs.
  https://www.dzne.de/en/news/press-releases/press/memory-self-test-via-smartphone-can-identify-early-signs-of-alzheimers-disease/
-
-
 Alzheimer's Society (UK): Checklist for Dementia Symptoms
- This checklist helps identify potential dementia symptoms and suggests seeking professional evaluation.
+ Checklist to identify dementia symptoms and guide professional evaluation.
  https://www.alzheimers.org.uk/form/checklist-for-dementia-symptoms
-
-
 National Institute on Aging (NIH): What Are the Signs of Alzheimer's Disease?
- This resource outlines the signs and symptoms of Alzheimer's disease, as well as how the disease is diagnosed.
+ Detailed explanation of Alzheimer’s symptoms and diagnostic process.
  https://www.nia.nih.gov/health/alzheimers-symptoms-and-diagnosis/what-are-signs-alzheimers-disease
-
-
-
-
+The Guardian: AI Eye Scan for Early Dementia Signs
+ AI technology identifies early dementia through routine retinal scans.
+ https://www.theguardian.com/society/2025/mar/09/high-street-opticians-could-use-ai-to-spot-dementia-risk-with-eye-scan
+U.S. FDA: First Blood Test for Alzheimer’s Diagnosis
+ FDA-approved blood test detects Alzheimer’s biomarkers for early diagnosis.
+ https://www.fda.gov/news-events/press-announcements/fda-clears-first-blood-test-used-diagnosing-alzheimers-disease
+UT Southwestern Medical Center: AI Analysis of Speech for Early Alzheimer’s
+ AI identifies early Alzheimer’s through subtle speech pattern changes.
+ https://www.utsouthwestern.edu/newsroom/articles/year-2023/alzheimers-in-speech-patterns.html
+NPR: New Blood Test Approved to Diagnose Alzheimer’s
+ FDA-approved blood test simplifies Alzheimer's diagnosis by detecting amyloid proteins.
+ https://www.npr.org/sections/shots-health-news/2025/05/21/nx-s1-5403736/first-fda-alzheimers-blood-test-cleared-diagnosis
+Prevention Magazine: Eye Exams Show Potential to Detect Alzheimer’s Early
+ Routine retinal exams may identify Alzheimer's pathology early.
+ https://www.prevention.com/health/memory/a43429244/alzheimers-first-signs-may-appear-in-eyes-study/
+Fisher Center: Diminished Sense of Smell as an Early Indicator
+ Reduced sense of smell often precedes memory loss in Alzheimer's.
+ https://www.alzinfo.org/articles/prevention/losing-sense-of-smell-may-signal-alzheimers-risk/
+Smithsonian Magazine: Blood Test Matches Accuracy of Specialist Dementia Workups
+ New blood test accurately identifies Alzheimer's, outperforming standard clinical diagnosis.
+ https://www.smithsonianmag.com/smart-news/alzheimers-blood-test-outperforms-standard-diagnostics-in-new-study-180984791/
+CDC: Know the 10 Warning Signs of Alzheimer’s
+ Overview of early signs including memory loss, confusion, and mood changes.
+ https://www.cdc.gov/aging/aginginfo/alzheimers.htm
+Fisher Center: To Test or Not to Test for the Alzheimer’s Gene
+ Discusses benefits and drawbacks of genetic testing for Alzheimer's risk.
+ https://www.alzinfo.org/articles/diagnosis/should-you-get-tested-for-the-alzheimers-gene/
+Medical News Today: Lewy Body Dementia Often Unrecognized by Doctors
+ Lewy Body Dementia symptoms overlap with Alzheimer's, causing frequent misdiagnosis.
+ https://www.medicalnewstoday.com/articles/318189
+CBS News: Understanding Frontotemporal Dementia (FTD)
+ Overview of FTD symptoms including personality and language changes.
+ https://www.cbsnews.com/news/frontotemporal-dementia-bruce-willis-diagnosis-explained/
+Harvard Health: At-Home Memory Screening: Pros and Cons
+ Evaluates benefits of the SAGE test for early dementia detection at home.
+ https://www.health.harvard.edu/mind-and-mood/screening-at-home-for-memory-loss-should-you-try-it
+News-Medical: Dilated Pupils During Tests May Signal Alzheimer’s Risk
+ Pupil dilation during cognitive tests could predict Alzheimer's risk.
+ https://www.news-medical.net/news/20190910/Pupil-dilation-provides-clues-to-future-Alzheimers-risk.aspx
+Medical News Today: Sleep-Tracking Headband Detects Alzheimer’s Brainwaves
+ Wearable EEG headbands during sleep may identify Alzheimer's brainwave patterns.
+ https://www.medicalnewstoday.com/articles/wearable-eeg-alzheimers-detection
+Live Science: Many Early-Onset Alzheimer’s Cases Are Misdiagnosed
+ Early-onset Alzheimer's frequently misdiagnosed due to atypical symptoms.
+ https://www.livescience.com/35692-early-onset-alzheimers-misdiagnosed.html
+National Institute on Aging: Dementia Diagnosis Disparities in Minority Communities
+ Racial disparities persist in timely diagnosis and management of Alzheimer's.
+ https://www.nia.nih.gov/news/data-shows-racial-disparities-alzheimers-disease-diagnosis
+News-Medical: COVID-19 Infections Linked to Higher Dementia Risk
+ COVID-19 infections may increase dementia and Alzheimer's risk in older adults.
+ https://www.news-medical.net/news/20220802/COVID-19-linked-to-higher-dementia-risk-in-older-adults-study-finds.aspx
+Verywell Health: The Clock-Drawing Test: A Simple Dementia Screening
+ Clock-drawing is a quick, simple dementia screening tool assessing cognitive impairment.
+ https://www.verywellhealth.com/the-clock-drawing-test-98623
+The Guardian: Frequent Long Naps Might Signal Early Alzheimer’s
+ Excessive daytime napping in older adults may indicate early Alzheimer’s.
+ https://www.theguardian.com/society/2022/mar/17/naps-early-sign-alzheimers-disease-study

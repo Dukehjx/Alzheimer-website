@@ -288,7 +288,8 @@ Alzheimer-website/
 1. Create and activate a virtual environment: `python -m venv venv && source venv/bin/activate` (or `venv\Scripts\activate` on Windows)
 2. Install dependencies: `pip install -r requirements.txt`
 3. Set up environment variables in `.env` (see `.env.example` for reference)
-4. Run the development server: `python main.py`
+4. **Populate the resource database**: `python scripts/update_resources_from_txt.py` (loads resources from `resourcehub.txt`)
+5. Run the development server: `python main.py`
 
 ### Frontend Setup
 1. Navigate to the frontend directory: `cd frontend`
@@ -309,4 +310,10 @@ Alzheimer-website/
 - **Significant Social Impact**: Assists aging populations and caregivers in tracking cognitive health.
 - **Commercial Potential**: Potential to evolve into a subscription-based cognitive health monitoring service.
 - **Cutting-edge AI**: Leverages the latest advancements in natural language processing and AI models.
-- **Data-driven Insights**: Provides valuable metrics and visualization for cognitive health tracking. 
+- **Data-driven Insights**: Provides valuable metrics and visualization for cognitive health tracking.
+
+### Database Management Scripts
+- **`scripts/update_resources_from_txt.py`**: Parses `resourcehub.txt` and populates MongoDB with all resources (70 resources across 3 categories)
+- **`scripts/cleanup_resources.py`**: Removes any malformed resources with URLs as titles
+- **`scripts/populate_resources.py`**: Legacy script with hardcoded resources (replaced by the txt parser)
+- **`scripts/add_user.py`**: Utility to add test users to the database 

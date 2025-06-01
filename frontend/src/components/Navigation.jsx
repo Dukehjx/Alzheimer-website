@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import ThemeSwitcher from './ThemeSwitcher';
+import FontSizeSelector from './FontSizeSelector';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { BoltIcon } from '@heroicons/react/24/solid';
 
@@ -50,6 +51,7 @@ export default function Navigation() {
         </div>
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end items-center gap-4">
+          <FontSizeSelector />
           <ThemeSwitcher />
 
           {isAuthenticated ? (
@@ -114,7 +116,8 @@ export default function Navigation() {
                     {item.name}
                   </Link>
                 ))}
-                <div className="py-2">
+                <div className="py-2 flex flex-col gap-2">
+                  <FontSizeSelector className="mx-3" />
                   <ThemeSwitcher className="mx-3" />
                 </div>
               </div>

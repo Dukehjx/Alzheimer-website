@@ -49,11 +49,15 @@ export function ThemeProvider({ children }) {
     // Font size state
     const [fontSize, setFontSize] = useState(() => {
         const saved = localStorage.getItem('fontSize');
+        console.log('Initial font size from localStorage:', saved);
         return saved || 'medium';
     });
+
     useEffect(() => {
+        console.log('Font size changed to:', fontSize);
         localStorage.setItem('fontSize', fontSize);
         document.documentElement.setAttribute('data-font-size', fontSize);
+        console.log('Document data-font-size attribute set to:', document.documentElement.getAttribute('data-font-size'));
     }, [fontSize]);
 
     const value = {
