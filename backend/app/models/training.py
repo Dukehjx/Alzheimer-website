@@ -12,6 +12,7 @@ class ExerciseType(str, Enum):
     WORD_RECALL = "word_recall"
     LANGUAGE_FLUENCY = "language_fluency"
     MEMORY_MATCH = "memory_match"
+    CATEGORY_NAMING = "category_naming"
     READING_COMPREHENSION = "reading_comprehension"
     VERBAL_MEMORY = "verbal_memory"
     SEMANTIC_ASSOCIATION = "semantic_association"

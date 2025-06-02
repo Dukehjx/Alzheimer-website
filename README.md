@@ -341,7 +341,7 @@ Alzheimer-website/
 - **`scripts/update_resources_from_txt.py`**: Parses `resourcehub.txt` and populates MongoDB with all resources (70 resources across 3 categories)
 - **`scripts/cleanup_resources.py`**: Removes any malformed resources with URLs as titles
 - **`scripts/populate_resources.py`**: Legacy script with hardcoded resources (replaced by the txt parser)
-- **`scripts/add_user.py`**: Utility to add test users to the database
+- **`scripts/add_user.py`**: Utility to add test users to the database 
 
 ## 🧪 New Features
 

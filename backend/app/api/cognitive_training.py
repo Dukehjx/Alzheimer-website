@@ -55,6 +55,20 @@ class MemoryMatchAnswerRequest(BaseModel):
     final_score: int
     accuracy: float  # Percentage of pairs matched
 
+class CategoryNamingRequest(BaseModel):
+    """Request model for submitting Category Naming game results."""
+    exercise_id: str
+    category_id: str
+    difficulty: str
+    time_limit: int
+    time_elapsed: int
+    correct_entries: List[str]
+    rare_entries_count: int
+    base_score: int
+    rare_bonus: int
+    milestone_bonus: int
+    final_score: int
+
 class ExerciseResultResponse(BaseModel):
     """Response model for exercise evaluation results."""
     score: float
@@ -503,6 +517,127 @@ async def submit_memory_match(
             "efficiency": evaluation_result.get("efficiency", 0),
             "speed_rating": evaluation_result.get("speed_rating", "average")
         },
+        session_id=session_id
+    )
+
+@router.post("/category-naming/submit", response_model=ExerciseResultResponse, summary="Submit Category Naming Game results")
+async def submit_category_naming(
+    request: CategoryNamingRequest,
+    current_user: UserInDB = Depends(get_current_user)
+):
+    """
+    Submit results for a Category Naming Game and get evaluation results.
+    
+    - **exercise_id**: ID of the Category Naming exercise
+    - **category_id**: Category ID used in the game
+    - **difficulty**: Difficulty level (EASY, MEDIUM, HARD)
+    - **time_limit**: Time limit in seconds
+    - **time_elapsed**: Time taken to complete the game
+    - **correct_entries**: List of correct entries
+    - **rare_entries_count**: Number of rare entries
+    - **base_score**: Base score from correct entries
+    - **rare_bonus**: Bonus points from rare entries
+    - **milestone_bonus**: Milestone bonus points
+    - **final_score**: Final score calculated
+    """
+    # Convert difficulty format
+    difficulty_map = {
+        'EASY': DifficultyLevel.BEGINNER,
+        'MEDIUM': DifficultyLevel.INTERMEDIATE,
+        'HARD': DifficultyLevel.ADVANCED
+    }
+    difficulty = difficulty_map.get(request.difficulty, DifficultyLevel.INTERMEDIATE)
+    
+    # Calculate accuracy based on correct entries and time limit
+    # A higher number of entries in less time means higher accuracy
+    time_percentage = min(1.0, request.time_limit / max(1, request.time_elapsed))
+    expected_entries = 10 if difficulty == DifficultyLevel.BEGINNER else 15 if difficulty == DifficultyLevel.INTERMEDIATE else 20
+    entry_percentage = min(1.0, len(request.correct_entries) / expected_entries)
+    
+    # Weighted accuracy calculation (60% entries, 40% time efficiency)
+    accuracy = (entry_percentage * 0.6 + time_percentage * 0.4) * 100
+    
+    # Generate feedback based on the number of correct entries
+    if len(request.correct_entries) >= expected_entries * 1.25:
+        feedback = "Outstanding! Your semantic fluency is excellent."
+    elif len(request.correct_entries) >= expected_entries:
+        feedback = "Great job! You have strong semantic memory skills."
+    elif len(request.correct_entries) >= expected_entries * 0.75:
+        feedback = "Good effort! Keep practicing to improve your word retrieval speed."
+    else:
+        feedback = "Nice start! Regular practice will help improve your semantic fluency."
+    
+    # Calculate start time from end time and time elapsed
+    end_time = datetime.utcnow()
+    start_time = end_time - timedelta(seconds=request.time_elapsed)
+    
+    # Prepare result details
+    details = {
+        "total_entries": len(request.correct_entries),
+        "rare_entries": request.rare_entries_count,
+        "base_score": request.base_score,
+        "rare_bonus": request.rare_bonus,
+        "milestone_bonus": request.milestone_bonus,
+        "category_id": request.category_id
+    }
+    
+    # Create session record
+    session = ExerciseSession(
+        user_id=current_user.id,
+        exercise_id=request.exercise_id,
+        start_time=start_time,
+        end_time=end_time,
+        completed=True,
+        score=request.final_score,
+        accuracy=accuracy,
+        answers={"correct_entries": request.correct_entries}
+    )
+    
+    # Save session to database
+    db = get_database()
+    session_data = {
+        "user_id": current_user.id,
+        "exercise_id": request.exercise_id,
+        "exercise_type": ExerciseType.CATEGORY_NAMING,
+        "difficulty": difficulty,
+        "start_time": session.start_time,
+        "end_time": session.end_time,
+        "duration": request.time_elapsed,
+        "completed": True,
+        "score": request.final_score,
+        "accuracy": accuracy,
+        "answers": {"correct_entries": request.correct_entries},
+        "details": details,
+        "feedback": feedback,
+        "created_at": datetime.utcnow()
+    }
+    
+    result = await db[COLLECTION_TRAINING_SESSIONS].insert_one(session_data)
+    session_id = str(result.inserted_id)
+    
+    # Create evaluation result structure
+    evaluation_result = {
+        "score": request.final_score,
+        "accuracy": accuracy,
+        "feedback": feedback,
+        "correctly_named": len(request.correct_entries),
+        "rare_entries": request.rare_entries_count
+    }
+    
+    # Update user's progress metrics
+    await CognitiveTrainingService.update_progress_metrics(
+        user_id=current_user.id,
+        exercise_session=session,
+        evaluation_result=evaluation_result,
+        exercise_type=ExerciseType.CATEGORY_NAMING
+    )
+    
+    # Return the results
+    return ExerciseResultResponse(
+        score=request.final_score,
+        accuracy=accuracy,
+        feedback=feedback,
+        details=details,
         session_id=session_id
     )
 

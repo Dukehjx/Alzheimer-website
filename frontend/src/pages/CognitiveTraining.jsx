@@ -96,6 +96,16 @@ const CognitiveTraining = () => {
             benefits: ['Strengthens working memory', 'Improves visual processing', 'Enhances executive function'],
             difficulty: 'Beginner to Expert',
             duration: '2-10 minutes'
+        },
+        {
+            id: 'category-naming',
+            title: 'Category Naming Game',
+            description: 'Name as many items as possible within a specific category to boost semantic fluency.',
+            icon: <span className="text-blue-500 text-3xl">📊</span>,
+            path: '/cognitive-training/category-naming',
+            benefits: ['Enhances semantic memory', 'Improves word retrieval', 'Boosts cognitive processing speed'],
+            difficulty: 'Beginner to Expert',
+            duration: '1-3 minutes'
         }
     ];
 
@@ -144,6 +154,10 @@ const CognitiveTraining = () => {
             memory_match: {
                 backgroundColor: 'rgba(147, 51, 234, 0.2)',
                 borderColor: 'rgba(147, 51, 234, 1)',
+            },
+            category_naming: {
+                backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                borderColor: 'rgba(79, 70, 229, 1)',
             }
         };
 
@@ -151,7 +165,8 @@ const CognitiveTraining = () => {
         const exerciseNames = {
             word_recall: 'Word Recall',
             language_fluency: 'Language Fluency',
-            memory_match: 'Memory Match'
+            memory_match: 'Memory Match',
+            category_naming: 'Category Naming'
         };
 
         // Generate datasets from user data

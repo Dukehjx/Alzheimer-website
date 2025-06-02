@@ -44,6 +44,45 @@ export const submitMemoryMatchResults = async (gameResults) => {
 };
 
 /**
+ * Submit Category Naming game results
+ * @param {Object} gameResults - The game results data
+ * @param {string} gameResults.exercise_id - Unique exercise ID
+ * @param {string} gameResults.category_id - Category ID played
+ * @param {string} gameResults.difficulty - Difficulty level (EASY, MEDIUM, HARD)
+ * @param {number} gameResults.time_limit - Time limit in seconds
+ * @param {number} gameResults.time_elapsed - Time taken in seconds
+ * @param {string[]} gameResults.correct_entries - List of correct entries
+ * @param {number} gameResults.rare_entries_count - Number of rare entries
+ * @param {number} gameResults.base_score - Base score from correct entries
+ * @param {number} gameResults.rare_bonus - Bonus points from rare entries
+ * @param {number} gameResults.milestone_bonus - Milestone bonus points
+ * @param {number} gameResults.final_score - Final score calculated by the frontend
+ * @returns {Promise<Object>} API response with evaluation results
+ */
+export const submitCategoryNamingResults = async (gameResults) => {
+    try {
+        console.log('Submitting Category Naming results:', gameResults);
+
+        const response = await apiClient.post('/cognitive-training/category-naming/submit', gameResults);
+
+        console.log('Category Naming submission successful:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error submitting Category Naming results:', error);
+
+        if (error.response?.status === 400) {
+            throw new Error('Invalid game data. Please try playing the game again.');
+        } else if (error.response?.status === 401) {
+            throw new Error('Please log in to save your progress.');
+        } else if (error.response?.status >= 500) {
+            throw new Error('Server error. Your progress could not be saved. Please try again later.');
+        } else {
+            throw new Error('Failed to save your progress. Please check your connection and try again.');
+        }
+    }
+};
+
+/**
  * Submit Word Recall exercise results
  * @param {Object} exerciseResults - The exercise results data
  * @param {string} exerciseResults.exercise_id - Unique exercise ID

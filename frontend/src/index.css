@@ -282,7 +282,7 @@ html[data-font-size="large"] button {
 /* Accessibility: font size classes for utility use if needed */
 .font-size-small { font-size: 15px !important; }
 .font-size-medium { font-size: 17px !important; }
-.font-size-large { font-size: 20px !important; }
+.font-size-large { font-size: 20px !important; } 
 
 /* Memory Match Game Styles */
 .memory-card {

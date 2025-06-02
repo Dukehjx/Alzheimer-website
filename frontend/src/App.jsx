@@ -10,7 +10,7 @@ import Footer from './components/Footer.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 
 // Import cognitive games components
-import { WordRecallChallenge, LanguageFluencyGame } from './components/cognitive-games'
+import { WordRecallChallenge, LanguageFluencyGame, CategoryNamingGame } from './components/cognitive-games'
 
 // Import pages
 import HomePage from './pages/HomePage.jsx'
@@ -65,6 +65,18 @@ function App() {
                     <MemoryMatchPage />
                   </ProtectedRoute>
                 } />
+                <Route path="/cognitive-training/category-naming" element={
+                  <ProtectedRoute>
+                    <CategoryNamingGame />
+                  </ProtectedRoute>
+                } />
+                {/* TODO: Implement ReadingComprehension component
+                <Route path="/cognitive-training/reading-comprehension" element={
+                  <ProtectedRoute>
+                    <ReadingComprehension />
+                  </ProtectedRoute>
+                } /> 
+                */}
                 <Route path="/resources" element={<ResourceHubPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
