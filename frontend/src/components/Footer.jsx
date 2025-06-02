@@ -9,6 +9,7 @@ export default function Footer() {
     {
       title: 'Platform',
       links: [
+        { name: 'Early Detection Quiz', path: '/quiz' },
         { name: 'AI Screening', path: '/screening' },
         { name: 'Cognitive Training', path: '/training' },
         { name: 'Resource Hub', path: '/resources' },

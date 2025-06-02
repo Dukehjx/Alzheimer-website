@@ -17,6 +17,7 @@ import HomePage from './pages/HomePage.jsx'
 import AIScreeningPage from './pages/AIScreeningPage.jsx'
 import CognitiveTraining from './pages/CognitiveTraining.jsx'
 import ResourceHubPage from './pages/ResourceHubPage.jsx'
+import EarlyDetectionQuizPage from './pages/EarlyDetectionQuizPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
@@ -41,6 +42,7 @@ function App() {
                     <AIScreeningPage />
                   </ProtectedRoute>
                 } />
+                <Route path="/quiz" element={<EarlyDetectionQuizPage />} />
                 <Route path="/cognitive-training" element={
                   <ProtectedRoute>
                     <CognitiveTraining />
