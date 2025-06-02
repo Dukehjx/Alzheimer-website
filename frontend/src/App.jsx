@@ -18,6 +18,7 @@ import AIScreeningPage from './pages/AIScreeningPage.jsx'
 import CognitiveTraining from './pages/CognitiveTraining.jsx'
 import ResourceHubPage from './pages/ResourceHubPage.jsx'
 import EarlyDetectionQuizPage from './pages/EarlyDetectionQuizPage.jsx'
+import MemoryMatchPage from './pages/MemoryMatchPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
@@ -57,6 +58,11 @@ function App() {
                 <Route path="/cognitive-training/language-fluency" element={
                   <ProtectedRoute>
                     <LanguageFluencyGame />
+                  </ProtectedRoute>
+                } />
+                <Route path="/cognitive-training/memory-match" element={
+                  <ProtectedRoute>
+                    <MemoryMatchPage />
                   </ProtectedRoute>
                 } />
                 <Route path="/resources" element={<ResourceHubPage />} />

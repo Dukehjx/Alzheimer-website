@@ -282,4 +282,310 @@ html[data-font-size="large"] button {
 /* Accessibility: font size classes for utility use if needed */
 .font-size-small { font-size: 15px !important; }
 .font-size-medium { font-size: 17px !important; }
-.font-size-large { font-size: 20px !important; } 
+.font-size-large { font-size: 20px !important; }
+
+/* Memory Match Game Styles */
+.memory-card {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  perspective: 1000px;
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+.memory-card:hover:not(:disabled) {
+  transform: scale(1.02);
+}
+
+.memory-card:disabled {
+  cursor: not-allowed;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+  transform-style: preserve-3d;
+  border-radius: 12px;
+}
+
+.memory-card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  box-sizing: border-box;
+  border: 2px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.dark .card-front,
+.dark .card-back {
+  border-color: #374151;
+}
+
+.card-back {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  color: #9ca3af;
+}
+
+.dark .card-back {
+  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+  color: #6b7280;
+}
+
+.card-front {
+  background: #ffffff;
+  color: #1f2937;
+  transform: rotateY(180deg);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark .card-front {
+  background: #1f2937;
+  color: #f9fafb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+.card-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.question-icon {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.dark .question-icon {
+  background: #1e3a8a;
+  color: #93c5fd;
+}
+
+.answer-icon {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.dark .answer-icon {
+  background: #14532d;
+  color: #86efac;
+}
+
+.card-text {
+  font-size: 11px;
+  line-height: 1.3;
+  font-weight: 500;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  hyphens: auto;
+  word-break: break-word;
+}
+
+/* Matched cards styling */
+.memory-card.matched .card-front,
+.memory-card.matched .card-back {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px #10b981, 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+}
+
+.dark .memory-card.matched .card-front,
+.dark .memory-card.matched .card-back {
+  border-color: #34d399;
+  box-shadow: 0 0 0 2px #34d399, 0 4px 6px -1px rgba(52, 211, 153, 0.3);
+}
+
+/* Match animation */
+@keyframes matchGlow {
+  0% {
+    box-shadow: 0 0 0 2px #10b981, 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 4px #10b981, 0 8px 12px -2px rgba(16, 185, 129, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 2px #10b981, 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+  }
+}
+
+.matched-animation .card-front,
+.matched-animation .card-back {
+  animation: matchGlow 0.5s ease-in-out;
+}
+
+/* Shake animation for mismatched cards */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.shake-animation {
+  animation: shake 0.4s ease-in-out;
+}
+
+.shake-animation .card-front,
+.shake-animation .card-back {
+  border-color: #ef4444;
+}
+
+.dark .shake-animation .card-front,
+.dark .shake-animation .card-back {
+  border-color: #f87171;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .memory-card {
+    height: 100px;
+  }
+  
+  .card-text {
+    font-size: 10px;
+    -webkit-line-clamp: 3;
+  }
+  
+  .card-icon {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    margin-bottom: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .memory-card {
+    height: 90px;
+  }
+  
+  .card-text {
+    font-size: 9px;
+    -webkit-line-clamp: 3;
+  }
+  
+  .card-icon {
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+    margin-bottom: 3px;
+  }
+  
+  .card-front,
+  .card-back {
+    padding: 6px;
+  }
+}
+
+/* Game grid responsive adjustments */
+.game-grid {
+  gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .game-grid {
+    gap: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .game-grid {
+    gap: 16px;
+  }
+}
+
+/* Accessibility improvements */
+.memory-card:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.memory-card:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.memory-card:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card-front,
+  .card-back {
+    border-width: 3px;
+  }
+  
+  .card-text {
+    font-weight: 600;
+  }
+  
+  .question-icon {
+    background: #000;
+    color: #fff;
+  }
+  
+  .answer-icon {
+    background: #000;
+    color: #fff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .memory-card,
+  .card-inner,
+  .card-front,
+  .card-back {
+    transition: none;
+  }
+  
+  .memory-card:hover:not(:disabled) {
+    transform: none;
+  }
+  
+  .matched-animation .card-front,
+  .matched-animation .card-back {
+    animation: none;
+  }
+  
+  .shake-animation {
+    animation: none;
+  }
+} 

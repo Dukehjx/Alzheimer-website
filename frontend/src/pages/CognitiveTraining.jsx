@@ -94,6 +94,16 @@ const CognitiveTraining = () => {
             benefits: ['Boosts verbal fluency', 'Improves cognitive flexibility', 'Enhances vocabulary'],
             difficulty: 'Beginner to Expert',
             duration: '2-4 minutes'
+        },
+        {
+            id: 'memory-match',
+            title: 'Memory Match Game',
+            description: 'Match question cards with their corresponding answers to improve memory and attention.',
+            icon: <span className="text-purple-500 text-3xl">🃏</span>,
+            path: '/cognitive-training/memory-match',
+            benefits: ['Strengthens working memory', 'Improves visual processing', 'Enhances executive function'],
+            difficulty: 'Beginner to Expert',
+            duration: '2-10 minutes'
         }
     ];
 
@@ -138,13 +148,18 @@ const CognitiveTraining = () => {
             language_fluency: {
                 backgroundColor: 'rgba(16, 185, 129, 0.2)',
                 borderColor: 'rgba(16, 185, 129, 1)',
+            },
+            memory_match: {
+                backgroundColor: 'rgba(147, 51, 234, 0.2)',
+                borderColor: 'rgba(147, 51, 234, 1)',
             }
         };
 
         // Exercise type display names
         const exerciseNames = {
             word_recall: 'Word Recall',
-            language_fluency: 'Language Fluency'
+            language_fluency: 'Language Fluency',
+            memory_match: 'Memory Match'
         };
 
         // Generate datasets from user data

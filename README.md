@@ -1,31 +1,40 @@
 # 🌍 NeuroAegis: AI-Powered Platform for Early Detection of MCI & Alzheimer's Prevention
 
-Welcome to NeuroAegis - our innovative platform designed to facilitate early detection of Mild Cognitive Impairment (MCI) and support Alzheimer's prevention through AI-driven tools and resources. This project combines advanced language analysis, cognitive training, and comprehensive resources to promote cognitive health.
+Welcome to NeuroAegis - our innovative platform designed to facilitate early detection of Mild Cognitive Impairment (MCI) and support Alzheimer's prevention through AI-driven tools and resources. This project combines advanced language analysis, cognitive training, comprehensive resources, and scientifically-designed assessments to promote cognitive health.
 
 ## 🧠 Core Features
 
-### 1. AI-Powered MCI & Alzheimer's Early Screening
+### 1. Early Detection Quiz
+
+- **Quick Test (6 questions)**: Rapid 2-3 minute screening with Yes/No questions for immediate cognitive insights
+- **Comprehensive Test (20 questions)**: Detailed 10-15 minute assessment with multiple choice and input questions
+- **Domain Analysis**: Evaluates Memory, Orientation, Language, Executive Function, and Attention with weighted scoring
+- **Scientifically-Based Scoring**: Uses established cognitive assessment principles with clear interpretation thresholds
+- **Immediate Results**: Real-time scoring with color-coded results and actionable recommendations
+- **Medical Compliance**: Comprehensive disclaimers and guidance for professional consultation
+
+### 2. AI-Powered MCI & Alzheimer's Early Screening
 
 - **AI Language Analysis**: Users can submit speech or text samples, which our AI analyzes to assess potential cognitive decline by examining linguistic patterns.
 - **Real-time Feedback**: Receive immediate risk scores based on factors like vocabulary richness, sentence complexity, and fluency.
 - **Data Tracking**: Monitor language trends over time to identify early signs of cognitive decline.
 - **Speech-to-Text Integration**: Uses OpenAI's Whisper API for accurate transcription of user speech recordings.
 
-### 2. Alzheimer's Prevention & Cognitive Training
+### 3. Alzheimer's Prevention & Cognitive Training
 
 - **Daily Cognitive Training Games**: Engage in AI-generated language-based challenges, such as word recall and reading comprehension, to strengthen cognitive abilities.
 - **Personalized Recommendations**: Obtain AI-driven, customized prevention plans tailored to individual cognitive profiles.
 - **Lifestyle & Health Guidelines**: Access evidence-based strategies for diet, exercise, sleep, and social interaction to slow cognitive decline.
 - **Progress Tracking**: Comprehensive metrics to monitor cognitive performance over time.
 
-### 3. Resource Hub
+### 4. Resource Hub
 
 - **Alzheimer's Knowledge Base**: Explore comprehensive information on early symptoms, prevention strategies, and caregiving tips.
 - **Latest Research Updates**: Stay informed with AI-curated articles on new findings in Alzheimer's treatment and prevention.
 - **Community Support Forum**: Connect with patients, caregivers, and researchers to exchange insights and experiences.
 - **Personalized Resource Recommendations**: AI-driven content suggestions based on user profile and needs.
 
-### 4. Health Monitoring & User Profiles
+### 5. Health Monitoring & User Profiles
 
 - **Speech Recordings & Progress Tracking**: Periodically record speech to monitor cognitive changes over time.
 - **Doctor/Researcher Collaboration (Optional)**: Share data with medical professionals or researchers to support studies on cognitive health.
@@ -49,6 +58,7 @@ Welcome to NeuroAegis - our innovative platform designed to facilitate early det
   - Responsive layout with collapsible sidebar navigation
   - Dark/light mode theming with persistent user preferences
   - Interactive dashboard with cognitive health metrics visualization
+  - Early Detection Quiz with scientifically-designed assessments
   - AI Screening interface with speech recording and text input options
   - Result visualization with cognitive scores, category breakdowns, and recommendations
   - Resource Hub with categorized content
@@ -112,6 +122,7 @@ Welcome to NeuroAegis - our innovative platform designed to facilitate early det
   - Resources: Educational content and reference materials
   - User Metrics: Aggregated cognitive health indicators
   - Journal Entries: User-generated content for cognitive tracking
+  - Quiz Results: Early detection quiz scores and historical data
 
 ---
 
@@ -131,6 +142,7 @@ Alzheimer-website/
 │   │   │   ├── SiteMetadata.jsx
 │   │   │   ├── ScoreExplanation.jsx
 │   │   │   ├── ThemeSwitcher.jsx
+│   │   │   ├── FontSizeSelector.jsx
 │   │   │   ├── auth/
 │   │   │   ├── layout/
 │   │   │   └── cognitive-games/
@@ -141,12 +153,19 @@ Alzheimer-website/
 │   │   │   ├── Dashboard.jsx
 │   │   │   ├── ResourceHubPage.jsx
 │   │   │   ├── AIScreeningPage.jsx
+│   │   │   ├── EarlyDetectionQuizPage.jsx
 │   │   │   ├── CognitiveTraining.jsx
 │   │   │   ├── HomePage.jsx
 │   │   │   ├── CognitiveTrainingPage.jsx
 │   │   │   ├── RegisterPage.jsx
+│   │   │   ├── LoginPage.jsx
 │   │   │   ├── NotFoundPage.jsx
-│   │   │   └── LoginPage.jsx
+│   │   │   ├── PrivacyPolicy.jsx
+│   │   │   ├── TermsOfService.jsx
+│   │   │   ├── CookiePolicy.jsx
+│   │   │   └── DataProtection.jsx
+│   │   ├── data/               # Static data and configurations
+│   │   │   └── quizData.js
 │   │   ├── contexts/           # React context providers
 │   │   │   ├── ThemeContext.jsx
 │   │   │   └── AuthContext.jsx
@@ -172,7 +191,8 @@ Alzheimer-website/
 │   ├── tailwind.config.cjs     # Tailwind CSS configuration
 │   ├── postcss.config.cjs      # PostCSS configuration
 │   ├── eslint.config.js        # ESLint configuration
-│   └── .npmrc                  # NPM configuration
+│   ├── .npmrc                  # NPM configuration
+│   └── QUIZ_IMPLEMENTATION.md  # Quiz feature documentation
 ├── backend/            # Python-based backend server
 │   ├── app/
 │   │   ├── models/             # Database models
@@ -239,7 +259,9 @@ Alzheimer-website/
 │   ├── __pycache__/            # Python bytecode cache
 │   └── .vscode/                # VSCode settings
 │       └── settings.json
-└── docs/               # Project documentation
+├── docs/               # Project documentation
+├── struct.md           # Project structure documentation
+└── README.md           # This file
 ```
 
 ---
@@ -249,6 +271,7 @@ Alzheimer-website/
 ### Frontend
 - **components/**: Reusable UI components (auth, layout, cognitive games, etc.)
 - **pages/**: Page-level components and routing logic
+- **data/**: Static data configurations (quiz questions, thresholds)
 - **contexts/**: React context providers for state management
 - **api/**: API client configuration and endpoints
 - **assets/**: Static resources (images, icons, fonts)
@@ -306,14 +329,28 @@ Alzheimer-website/
 
 ## 🎯 Project Highlights
 
-- **High Innovation**: Combines AI-powered linguistic analysis with cognitive training and Alzheimer's prevention.
-- **Significant Social Impact**: Assists aging populations and caregivers in tracking cognitive health.
+- **High Innovation**: Combines AI-powered linguistic analysis with cognitive training, scientifically-designed assessments, and Alzheimer's prevention.
+- **Significant Social Impact**: Assists aging populations and caregivers in tracking cognitive health with multiple assessment tools.
 - **Commercial Potential**: Potential to evolve into a subscription-based cognitive health monitoring service.
 - **Cutting-edge AI**: Leverages the latest advancements in natural language processing and AI models.
 - **Data-driven Insights**: Provides valuable metrics and visualization for cognitive health tracking.
+- **Medical Compliance**: Comprehensive disclaimers and professional guidance integration.
 
 ### Database Management Scripts
 - **`scripts/update_resources_from_txt.py`**: Parses `resourcehub.txt` and populates MongoDB with all resources (70 resources across 3 categories)
 - **`scripts/cleanup_resources.py`**: Removes any malformed resources with URLs as titles
 - **`scripts/populate_resources.py`**: Legacy script with hardcoded resources (replaced by the txt parser)
-- **`scripts/add_user.py`**: Utility to add test users to the database 
+- **`scripts/add_user.py`**: Utility to add test users to the database
+
+## 🧪 New Features
+
+### Early Detection Quiz
+The platform now includes a comprehensive Early Detection Quiz system:
+- **Quick Test**: 6-question rapid screening (2-3 minutes)
+- **Comprehensive Test**: 20-question detailed assessment (10-15 minutes)
+- **Domain Analysis**: Memory, Orientation, Language, Executive Function, Attention
+- **Weighted Scoring**: Scientifically-based scoring with clear thresholds
+- **Responsive Design**: Works across all devices with dark mode support
+- **Medical Compliance**: Comprehensive disclaimers and professional guidance
+
+For detailed information about the quiz implementation, see `frontend/QUIZ_IMPLEMENTATION.md`. 
