@@ -11,6 +11,7 @@ class ExerciseType(str, Enum):
     """Types of cognitive training exercises."""
     WORD_RECALL = "word_recall"
     LANGUAGE_FLUENCY = "language_fluency"
+    MEMORY_MATCH = "memory_match"
     READING_COMPREHENSION = "reading_comprehension"
     VERBAL_MEMORY = "verbal_memory"
     SEMANTIC_ASSOCIATION = "semantic_association"

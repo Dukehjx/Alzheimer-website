@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import { API_BASE_URL } from '../config';
+import { getProgressMetrics } from '../api/cognitiveTrainingService';
 import { Line } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -48,16 +47,9 @@ const CognitiveTraining = () => {
             setIsLoading(true);
 
             try {
-                const response = await axios.get(
-                    `${API_BASE_URL}/api/v1/cognitive-training/progress`,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('token')}`
-                        }
-                    }
-                );
+                const response = await getProgressMetrics();
 
-                setMetrics(response.data);
+                setMetrics(response);
                 setError(null);
 
             } catch (err) {
@@ -190,6 +182,11 @@ const CognitiveTraining = () => {
 
         const chartOptions = {
             responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
             plugins: {
                 legend: {
                     position: 'top',
@@ -223,10 +220,20 @@ const CognitiveTraining = () => {
                         color: document.documentElement.classList.contains('dark') ? 'white' : 'black'
                     }
                 }
+            },
+            elements: {
+                point: {
+                    radius: 4,
+                    hoverRadius: 6
+                }
             }
         };
 
-        return <Line data={chartData} options={chartOptions} />;
+        return (
+            <div className="relative w-full h-64 sm:h-72 md:h-80 lg:h-96 xl:h-[28rem]">
+                <Line data={chartData} options={chartOptions} />
+            </div>
+        );
     };
 
     // Render loading state
@@ -361,6 +368,14 @@ const CognitiveTraining = () => {
                                 <div className="mb-4 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                                     <p className="text-blue-800 dark:text-blue-300 text-sm">
                                         <span className="font-medium">Your Average Score:</span> {metrics.average_scores.language_fluency.toFixed(1)}%
+                                    </p>
+                                </div>
+                            )}
+
+                            {metrics?.average_scores && exercise.id === 'memory-match' && metrics.average_scores.memory_match && (
+                                <div className="mb-4 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                                    <p className="text-blue-800 dark:text-blue-300 text-sm">
+                                        <span className="font-medium">Your Average Score:</span> {metrics.average_scores.memory_match.toFixed(1)}%
                                     </p>
                                 </div>
                             )}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     ClockIcon,
     TrophyIcon,
@@ -7,7 +8,8 @@ import {
     PlayIcon,
     PauseIcon,
     QuestionMarkCircleIcon,
-    CheckCircleIcon
+    CheckCircleIcon,
+    ArrowLeftIcon
 } from '@heroicons/react/24/outline';
 import {
     DIFFICULTY_LEVELS,
@@ -17,6 +19,7 @@ import {
     calculateScore,
     getFeedbackMessage
 } from '../../data/memoryMatchData';
+import { submitMemoryMatchResults } from '../../api/cognitiveTrainingService';
 
 const GAME_STATES = {
     SETUP: 'setup',
@@ -26,6 +29,9 @@ const GAME_STATES = {
 };
 
 export default function MemoryMatchGame() {
+    // Navigation
+    const navigate = useNavigate();
+
     // Game state
     const [gameState, setGameState] = useState(GAME_STATES.SETUP);
     const [difficulty, setDifficulty] = useState('BEGINNER');
@@ -39,6 +45,11 @@ export default function MemoryMatchGame() {
     const [lockBoard, setLockBoard] = useState(false);
     const [gameStartTime, setGameStartTime] = useState(null);
     const [timerInterval, setTimerInterval] = useState(null);
+
+    // Submission tracking
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submissionError, setSubmissionError] = useState(null);
+    const [submissionSuccess, setSubmissionSuccess] = useState(false);
 
     // Game configuration
     const currentDifficulty = DIFFICULTY_LEVELS[difficulty];
@@ -72,6 +83,12 @@ export default function MemoryMatchGame() {
         setLives(gameMode === GAME_MODES.CHALLENGE ? 3 : Infinity);
         setLockBoard(false);
         setGameStartTime(null);
+
+        // Reset submission state
+        setIsSubmitting(false);
+        setSubmissionError(null);
+        setSubmissionSuccess(false);
+
         if (timerInterval) {
             clearInterval(timerInterval);
             setTimerInterval(null);
@@ -191,8 +208,52 @@ export default function MemoryMatchGame() {
                 clearInterval(timerInterval);
                 setTimerInterval(null);
             }
+            // Submit results when game is completed successfully
+            submitGameResults();
         }
     }, [matchedPairs.length, totalPairs, gameState, timerInterval]);
+
+    // Submit game results to backend
+    const submitGameResults = async () => {
+        try {
+            setIsSubmitting(true);
+            setSubmissionError(null);
+
+            // Generate a unique exercise ID
+            const exerciseId = `memorymatch-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+            // Calculate final score and accuracy
+            const finalScore = calculateScore(totalPairs, moves, timeElapsed, difficulty);
+            const accuracy = (matchedPairs.length / totalPairs) * 100;
+
+            // Prepare submission data
+            const gameResults = {
+                exercise_id: exerciseId,
+                difficulty: difficulty.toLowerCase(),
+                game_mode: gameMode,
+                total_pairs: totalPairs,
+                matched_pairs: matchedPairs.length,
+                moves_used: moves,
+                time_elapsed: timeElapsed,
+                final_score: finalScore,
+                accuracy: accuracy
+            };
+
+            console.log('Submitting Memory Match results:', gameResults);
+
+            // Submit to backend
+            const response = await submitMemoryMatchResults(gameResults);
+
+            console.log('Memory Match submission successful:', response);
+            setSubmissionSuccess(true);
+
+        } catch (error) {
+            console.error('Failed to submit Memory Match results:', error);
+            setSubmissionError(error.message || 'Failed to save your progress');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     // Check for game over (challenge mode)
     useEffect(() => {
@@ -204,6 +265,11 @@ export default function MemoryMatchGame() {
             }
         }
     }, [lives, gameMode, gameState, timerInterval]);
+
+    // Navigate back to cognitive training page
+    const goBackToCognitiveTraining = () => {
+        navigate('/cognitive-training');
+    };
 
     // Calculate final score and feedback
     const getFinalResults = () => {
@@ -255,8 +321,8 @@ export default function MemoryMatchGame() {
                                 key={key}
                                 onClick={() => setDifficulty(key)}
                                 className={`w-full text-left p-4 rounded-lg border-2 transition-all ${difficulty === key
-                                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                                     }`}
                             >
                                 <div className="flex justify-between items-center">
@@ -286,8 +352,8 @@ export default function MemoryMatchGame() {
                         <button
                             onClick={() => setGameMode(GAME_MODES.RELAXED)}
                             className={`w-full text-left p-4 rounded-lg border-2 transition-all ${gameMode === GAME_MODES.RELAXED
-                                    ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                                ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
+                                : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                                 }`}
                         >
                             <div className="flex justify-between items-center">
@@ -306,8 +372,8 @@ export default function MemoryMatchGame() {
                         <button
                             onClick={() => setGameMode(GAME_MODES.TIMED)}
                             className={`w-full text-left p-4 rounded-lg border-2 transition-all ${gameMode === GAME_MODES.TIMED
-                                    ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'
-                                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                                ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'
+                                : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                                 }`}
                         >
                             <div className="flex justify-between items-center">
@@ -326,8 +392,8 @@ export default function MemoryMatchGame() {
                         <button
                             onClick={() => setGameMode(GAME_MODES.CHALLENGE)}
                             className={`w-full text-left p-4 rounded-lg border-2 transition-all ${gameMode === GAME_MODES.CHALLENGE
-                                    ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
-                                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                                ? 'border-red-500 bg-red-50 dark:bg-red-900/20'
+                                : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                                 }`}
                         >
                             <div className="flex justify-between items-center">
@@ -431,8 +497,8 @@ export default function MemoryMatchGame() {
             style={{
                 display: 'grid',
                 gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
-                gap: '12px',
-                maxWidth: `${Math.min(gridCols * 120, 800)}px`
+                gap: '20px',
+                maxWidth: `${Math.min(gridCols * 180, 1200)}px`
             }}
         >
             {cards.map((card, index) => (
@@ -444,13 +510,13 @@ export default function MemoryMatchGame() {
                     className={`memory-card ${card.isFlipped ? 'flipped' : ''} ${card.isMatched ? 'matched' : ''}`}
                     aria-label={`Card ${index + 1}: ${card.isFlipped ? card.content : 'Hidden'}`}
                     style={{
-                        height: '120px',
-                        minHeight: '120px'
+                        height: '180px',
+                        minHeight: '180px'
                     }}
                 >
                     <div className="card-inner">
                         <div className="card-back">
-                            <QuestionMarkCircleIcon className="h-8 w-8 text-gray-400" />
+                            <QuestionMarkCircleIcon className="h-12 w-12 text-gray-400" />
                         </div>
                         <div className="card-front">
                             <div className="card-content">
@@ -494,8 +560,8 @@ export default function MemoryMatchGame() {
         return (
             <div className="max-w-2xl mx-auto text-center py-8">
                 <div className={`mx-auto w-20 h-20 rounded-full flex items-center justify-center mb-6 ${isSuccess
-                        ? 'bg-green-100 dark:bg-green-900'
-                        : 'bg-red-100 dark:bg-red-900'
+                    ? 'bg-green-100 dark:bg-green-900'
+                    : 'bg-red-100 dark:bg-red-900'
                     }`}>
                     {isSuccess ? (
                         <TrophyIcon className="h-10 w-10 text-green-600 dark:text-green-400" />
@@ -540,19 +606,62 @@ export default function MemoryMatchGame() {
                     </div>
 
                     <div className={`p-4 rounded-lg ${feedback.type === 'excellent' ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' :
-                            feedback.type === 'good' ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800' :
-                                feedback.type === 'fair' ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800' :
-                                    'bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800'
+                        feedback.type === 'good' ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800' :
+                            feedback.type === 'fair' ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800' :
+                                'bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800'
                         }`}>
                         <p className={`font-medium ${feedback.type === 'excellent' ? 'text-green-800 dark:text-green-200' :
-                                feedback.type === 'good' ? 'text-blue-800 dark:text-blue-200' :
-                                    feedback.type === 'fair' ? 'text-yellow-800 dark:text-yellow-200' :
-                                        'text-orange-800 dark:text-orange-200'
+                            feedback.type === 'good' ? 'text-blue-800 dark:text-blue-200' :
+                                feedback.type === 'fair' ? 'text-yellow-800 dark:text-yellow-200' :
+                                    'text-orange-800 dark:text-orange-200'
                             }`}>
                             {feedback.message}
                         </p>
                     </div>
                 </div>
+
+                {/* Submission Status */}
+                {isSubmitting && (
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+                        <div className="flex items-center">
+                            <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-blue-500 mr-3"></div>
+                            <p className="text-blue-800 dark:text-blue-200 font-medium">
+                                Saving your progress...
+                            </p>
+                        </div>
+                    </div>
+                )}
+
+                {submissionSuccess && !isSubmitting && (
+                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
+                        <div className="flex items-center">
+                            <CheckCircleIcon className="h-5 w-5 text-green-600 dark:text-green-400 mr-3" />
+                            <p className="text-green-800 dark:text-green-200 font-medium">
+                                Progress saved successfully!
+                            </p>
+                        </div>
+                    </div>
+                )}
+
+                {submissionError && !isSubmitting && (
+                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+                        <div className="flex items-start">
+                            <div className="flex-shrink-0">
+                                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-red-800 dark:text-red-200 font-medium">
+                                    Failed to save progress
+                                </p>
+                                <p className="text-red-700 dark:text-red-300 text-sm mt-1">
+                                    {submissionError}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <button
@@ -569,6 +678,14 @@ export default function MemoryMatchGame() {
                     >
                         <HomeIcon className="h-5 w-5 mr-2" />
                         Change Settings
+                    </button>
+
+                    <button
+                        onClick={goBackToCognitiveTraining}
+                        className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors inline-flex items-center justify-center"
+                    >
+                        <ArrowLeftIcon className="h-5 w-5 mr-2" />
+                        Back to Cognitive Games
                     </button>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 """
 API routes for cognitive training exercises.
-Implements endpoints for Word Recall Challenge and Language Fluency Game.
+Implements endpoints for Word Recall Challenge, Language Fluency Game, and Memory Match Game.
 """
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional
@@ -43,6 +43,18 @@ class LanguageFluencyAnswerRequest(BaseModel):
     answers: Dict[str, List[str]]  # Category name -> list of words
     duration: Optional[int] = None  # Time taken in seconds
 
+class MemoryMatchAnswerRequest(BaseModel):
+    """Request model for submitting memory match answers."""
+    exercise_id: str
+    difficulty: str
+    game_mode: str
+    total_pairs: int
+    matched_pairs: int
+    moves_used: int
+    time_elapsed: int  # Time taken in seconds
+    final_score: int
+    accuracy: float  # Percentage of pairs matched
+
 class ExerciseResultResponse(BaseModel):
     """Response model for exercise evaluation results."""
     score: float
@@ -60,12 +72,14 @@ async def generate_exercise(
     Generate a new cognitive training exercise based on type and difficulty.
     
     - **difficulty**: Difficulty level of the exercise (beginner, intermediate, advanced, expert)
-    - **exercise_type**: Type of exercise (word_recall, language_fluency)
+    - **exercise_type**: Type of exercise (word_recall, language_fluency, memory_match)
     """
     if request.exercise_type == ExerciseType.WORD_RECALL:
         exercise = CognitiveTrainingService.generate_word_recall_exercise(request.difficulty)
     elif request.exercise_type == ExerciseType.LANGUAGE_FLUENCY:
         exercise = CognitiveTrainingService.generate_language_fluency_exercise(request.difficulty)
+    elif request.exercise_type == ExerciseType.MEMORY_MATCH:
+        exercise = CognitiveTrainingService.generate_memory_match_exercise(request.difficulty)
     else:
         raise HTTPException(status_code=400, detail="Unsupported exercise type")
     
@@ -364,6 +378,134 @@ async def submit_language_fluency(
         session_id=session_id
     )
 
+@router.post("/memory-match/submit", response_model=ExerciseResultResponse, summary="Submit Memory Match Game results")
+async def submit_memory_match(
+    request: MemoryMatchAnswerRequest,
+    current_user: UserInDB = Depends(get_current_user)
+):
+    """
+    Submit results for a Memory Match Game and get evaluation results.
+    
+    - **exercise_id**: ID of the Memory Match exercise
+    - **difficulty**: Difficulty level played
+    - **game_mode**: Game mode (relaxed, timed, challenge)
+    - **total_pairs**: Total number of pairs in the game
+    - **matched_pairs**: Number of pairs successfully matched
+    - **moves_used**: Total number of moves/flips made
+    - **time_elapsed**: Time taken to complete the game in seconds
+    - **final_score**: Final score calculated by the frontend
+    - **accuracy**: Percentage of pairs matched (0-100)
+    """
+    # Map difficulty string to enum
+    difficulty_map = {
+        'beginner': DifficultyLevel.BEGINNER,
+        'intermediate': DifficultyLevel.INTERMEDIATE,
+        'advanced': DifficultyLevel.ADVANCED,
+        'expert': DifficultyLevel.EXPERT
+    }
+    difficulty = difficulty_map.get(request.difficulty.lower(), DifficultyLevel.BEGINNER)
+    
+    # Create a structured exercise object for evaluation
+    exercise = Exercise(
+        id=request.exercise_id,
+        title=f"{difficulty.capitalize()} Memory Match Game",
+        description="Match question cards with their corresponding answer cards to improve memory and attention.",
+        exercise_type=ExerciseType.MEMORY_MATCH,
+        difficulty=difficulty,
+        estimated_duration=request.time_elapsed + 30,  # Add setup time
+        instructions=f"Match {request.total_pairs} pairs of question and answer cards.",
+        content={
+            "total_pairs": request.total_pairs,
+            "game_mode": request.game_mode,
+            "difficulty": request.difficulty
+        },
+        cognitive_domains=["working memory", "visual processing", "attention", "executive function"]
+    )
+    
+    # Evaluate the session
+    evaluation_result = CognitiveTrainingService.evaluate_memory_match_session(
+        exercise=exercise,
+        matched_pairs=request.matched_pairs,
+        total_pairs=request.total_pairs,
+        moves_used=request.moves_used,
+        time_elapsed=request.time_elapsed,
+        final_score=request.final_score,
+        accuracy=request.accuracy
+    )
+    
+    # Calculate start time from end time and duration
+    end_time = datetime.utcnow()
+    start_time = end_time - timedelta(seconds=request.time_elapsed)
+    
+    # Create session record
+    session = ExerciseSession(
+        user_id=current_user.id,
+        exercise_id=request.exercise_id,
+        start_time=start_time,
+        end_time=end_time,
+        completed=True,
+        score=evaluation_result["score"],
+        accuracy=evaluation_result["accuracy"],
+        answers={
+            "matched_pairs": request.matched_pairs,
+            "total_pairs": request.total_pairs,
+            "moves_used": request.moves_used,
+            "game_mode": request.game_mode
+        }
+    )
+    
+    # Save session to database
+    db = get_database()
+    session_data = {
+        "user_id": current_user.id,
+        "exercise_id": request.exercise_id,
+        "exercise_type": ExerciseType.MEMORY_MATCH,
+        "difficulty": difficulty,
+        "start_time": session.start_time,
+        "end_time": session.end_time,
+        "duration": request.time_elapsed,
+        "completed": True,
+        "score": evaluation_result["score"],
+        "accuracy": evaluation_result["accuracy"],
+        "answers": {
+            "matched_pairs": request.matched_pairs,
+            "total_pairs": request.total_pairs,
+            "moves_used": request.moves_used,
+            "game_mode": request.game_mode
+        },
+        "details": {
+            "final_score": request.final_score,
+            "efficiency": evaluation_result.get("efficiency", 0),
+            "speed_rating": evaluation_result.get("speed_rating", "average")
+        },
+        "feedback": evaluation_result["feedback"],
+        "created_at": datetime.utcnow()
+    }
+    
+    result = await db[COLLECTION_TRAINING_SESSIONS].insert_one(session_data)
+    session_id = str(result.inserted_id)
+    
+    # Update user's progress metrics
+    await CognitiveTrainingService.update_progress_metrics(
+        user_id=current_user.id,
+        exercise_session=session,
+        evaluation_result=evaluation_result,
+        exercise_type=ExerciseType.MEMORY_MATCH
+    )
+    
+    # Return the results
+    return ExerciseResultResponse(
+        score=evaluation_result["score"],
+        accuracy=evaluation_result["accuracy"],
+        feedback=evaluation_result["feedback"],
+        details={
+            "final_score": request.final_score,
+            "efficiency": evaluation_result.get("efficiency", 0),
+            "speed_rating": evaluation_result.get("speed_rating", "average")
+        },
+        session_id=session_id
+    )
+
 @router.get("/progress", response_model=ProgressMetrics, summary="Get user's training progress metrics")
 async def get_progress_metrics(
     current_user: UserInDB = Depends(get_current_user)
@@ -423,11 +565,15 @@ async def get_progress_metrics(
                 strengths.append("word recall")
             elif ex_type == ExerciseType.LANGUAGE_FLUENCY:
                 strengths.append("verbal fluency")
+            elif ex_type == ExerciseType.MEMORY_MATCH:
+                strengths.append("memory match")
         elif avg_score <= 60:
             if ex_type == ExerciseType.WORD_RECALL:
                 areas_for_improvement.append("word recall")
             elif ex_type == ExerciseType.LANGUAGE_FLUENCY:
                 areas_for_improvement.append("verbal fluency")
+            elif ex_type == ExerciseType.MEMORY_MATCH:
+                areas_for_improvement.append("memory match")
     
     # Calculate consistency score (improved implementation)
     consistency_score = 0.0

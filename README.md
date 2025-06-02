@@ -23,9 +23,10 @@ Welcome to NeuroAegis - our innovative platform designed to facilitate early det
 ### 3. Alzheimer's Prevention & Cognitive Training
 
 - **Daily Cognitive Training Games**: Engage in AI-generated language-based challenges, such as word recall and reading comprehension, to strengthen cognitive abilities.
+- **Memory Match Game**: Complete memory training exercises with question-answer card matching across multiple difficulty levels and game modes.
 - **Personalized Recommendations**: Obtain AI-driven, customized prevention plans tailored to individual cognitive profiles.
 - **Lifestyle & Health Guidelines**: Access evidence-based strategies for diet, exercise, sleep, and social interaction to slow cognitive decline.
-- **Progress Tracking**: Comprehensive metrics to monitor cognitive performance over time.
+- **Progress Tracking**: Comprehensive metrics to monitor cognitive performance over time across all training exercises.
 
 ### 4. Resource Hub
 

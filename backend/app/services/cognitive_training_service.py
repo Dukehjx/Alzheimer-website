@@ -176,6 +176,59 @@ class CognitiveTrainingService:
         )
     
     @staticmethod
+    def generate_memory_match_exercise(difficulty: DifficultyLevel) -> Exercise:
+        """
+        Generate a Memory Match exercise.
+        
+        Args:
+            difficulty: Difficulty level of the exercise.
+            
+        Returns:
+            Exercise: The generated exercise.
+        """
+        # Difficulty-based parameters matching frontend implementation
+        if difficulty == DifficultyLevel.BEGINNER:
+            grid_size = {"rows": 2, "cols": 2}
+            pairs = 2
+            time_bonus = 15
+            ideal_moves = 4
+        elif difficulty == DifficultyLevel.INTERMEDIATE:
+            grid_size = {"rows": 4, "cols": 4}
+            pairs = 8
+            time_bonus = 60
+            ideal_moves = 16
+        elif difficulty == DifficultyLevel.ADVANCED:
+            grid_size = {"rows": 6, "cols": 6}
+            pairs = 18
+            time_bonus = 120
+            ideal_moves = 36
+        else:  # Expert
+            grid_size = {"rows": 8, "cols": 8}
+            pairs = 32
+            time_bonus = 240
+            ideal_moves = 64
+        
+        # Generate a unique ID
+        exercise_id = f"memorymatch-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}-{random.randint(1000, 9999)}-{difficulty.value}"
+        
+        return Exercise(
+            id=exercise_id,
+            title=f"{difficulty.capitalize()} Memory Match Game",
+            description="Match question cards with their corresponding answer cards to improve memory and attention.",
+            exercise_type=ExerciseType.MEMORY_MATCH,
+            difficulty=difficulty,
+            estimated_duration=time_bonus + 60,  # Time bonus threshold plus setup time
+            instructions=f"Match {pairs} pairs of question and answer cards in a {grid_size['rows']}×{grid_size['cols']} grid.",
+            content={
+                "grid_size": grid_size,
+                "pairs": pairs,
+                "time_bonus": time_bonus,
+                "ideal_moves": ideal_moves
+            },
+            cognitive_domains=["working memory", "visual processing", "attention", "executive function"]
+        )
+    
+    @staticmethod
     def evaluate_word_recall_session(exercise: Exercise, user_answers: List[str]) -> Dict:
         """
         Evaluate a Word Recall exercise session.
@@ -315,6 +368,80 @@ class CognitiveTrainingService:
         }
     
     @staticmethod
+    def evaluate_memory_match_session(exercise: Exercise, matched_pairs: int, total_pairs: int,
+                                    moves_used: int, time_elapsed: int, final_score: int, accuracy: float) -> Dict:
+        """
+        Evaluate a Memory Match exercise session.
+        
+        Args:
+            exercise: The exercise that was completed.
+            matched_pairs: Number of pairs successfully matched.
+            total_pairs: Total number of pairs in the game.
+            moves_used: Total number of moves/flips made.
+            time_elapsed: Time taken to complete the game in seconds.
+            final_score: Final score calculated by the frontend.
+            accuracy: Percentage of pairs matched (0-100).
+            
+        Returns:
+            Dict: Evaluation results containing score, accuracy, and feedback.
+        """
+        # Get ideal parameters from exercise content
+        ideal_moves = exercise.content.get("ideal_moves", total_pairs * 2)
+        time_bonus_threshold = exercise.content.get("time_bonus", 60)
+        
+        # Calculate efficiency metrics
+        completion_rate = matched_pairs / total_pairs if total_pairs > 0 else 0
+        move_efficiency = ideal_moves / moves_used if moves_used > 0 else 0
+        time_efficiency = time_bonus_threshold / time_elapsed if time_elapsed > 0 else 0
+        
+        # Normalize the final score to 0-100 range for consistency with other exercises
+        normalized_score = min(100, max(0, final_score / 100))
+        
+        # Calculate overall performance score (weighted average)
+        performance_score = (
+            completion_rate * 0.5 +  # 50% weight on completion
+            move_efficiency * 0.3 +  # 30% weight on move efficiency
+            time_efficiency * 0.2    # 20% weight on time efficiency
+        ) * 100
+        
+        # Cap the performance score at 100
+        performance_score = min(100, performance_score)
+        
+        # Use the higher of normalized frontend score or calculated performance score
+        final_evaluation_score = max(normalized_score, performance_score)
+        
+        # Determine speed rating
+        if time_elapsed <= time_bonus_threshold * 0.5:
+            speed_rating = "excellent"
+        elif time_elapsed <= time_bonus_threshold * 0.75:
+            speed_rating = "good"
+        elif time_elapsed <= time_bonus_threshold:
+            speed_rating = "average"
+        else:
+            speed_rating = "needs improvement"
+        
+        # Generate feedback based on performance
+        if completion_rate == 1.0 and move_efficiency >= 0.8:
+            feedback = "Outstanding! Perfect memory performance with excellent efficiency."
+        elif completion_rate >= 0.9 and move_efficiency >= 0.6:
+            feedback = "Excellent memory work! Your visual processing and attention are strong."
+        elif completion_rate >= 0.75:
+            feedback = "Good memory performance. Practice will help improve your efficiency."
+        elif completion_rate >= 0.5:
+            feedback = "Fair performance. Focus on developing memory strategies and visual attention."
+        else:
+            feedback = "Memory training will help. Try to focus on patterns and use systematic approaches."
+        
+        return {
+            "score": final_evaluation_score,
+            "accuracy": accuracy,
+            "feedback": feedback,
+            "efficiency": move_efficiency,
+            "speed_rating": speed_rating,
+            "completion_rate": completion_rate * 100
+        }
+    
+    @staticmethod
     async def update_progress_metrics(user_id: str, exercise_session: ExerciseSession, 
                                     evaluation_result: Dict, exercise_type: ExerciseType) -> None:
         """
@@ -399,11 +526,15 @@ class CognitiveTrainingService:
                     strengths.append("word recall")
                 elif ex_type == ExerciseType.LANGUAGE_FLUENCY or ex_type == "language_fluency":
                     strengths.append("verbal fluency")
+                elif ex_type == ExerciseType.MEMORY_MATCH or ex_type == "memory_match":
+                    strengths.append("memory match")
             elif avg_score <= 60:
                 if ex_type == ExerciseType.WORD_RECALL or ex_type == "word_recall":
                     areas_for_improvement.append("word recall")
                 elif ex_type == ExerciseType.LANGUAGE_FLUENCY or ex_type == "language_fluency":
                     areas_for_improvement.append("verbal fluency")
+                elif ex_type == ExerciseType.MEMORY_MATCH or ex_type == "memory_match":
+                    areas_for_improvement.append("memory match")
         
         user_metrics["strengths"] = list(set(strengths))  # Remove duplicates
         user_metrics["areas_for_improvement"] = list(set(areas_for_improvement))  # Remove duplicates
