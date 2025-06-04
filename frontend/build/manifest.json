@@ -3,19 +3,19 @@
   "name": "NeuroAegis | Alzheimer's Prevention Platform",
   "icons": [
     {
-      "src": "brain-icon.svg",
+      "src": "neuroaegis-logo.png",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/svg+xml"
+      "type": "image/png"
     },
     {
-      "src": "brain-icon.svg",
-      "type": "image/svg+xml",
+      "src": "neuroaegis-logo.png",
+      "type": "image/png",
       "sizes": "192x192",
       "purpose": "any maskable"
     },
     {
-      "src": "brain-icon.svg",
-      "type": "image/svg+xml",
+      "src": "neuroaegis-logo.png",
+      "type": "image/png",
       "sizes": "512x512",
       "purpose": "any maskable"
     }
