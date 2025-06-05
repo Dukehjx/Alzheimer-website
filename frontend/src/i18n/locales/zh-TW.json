@@ -1,0 +1,204 @@
+{
+    "nav": {
+        "home": "首頁",
+        "aiScreening": "AI篩檢",
+        "cognitiveTraining": "認知訓練",
+        "resourceHub": "資源中心",
+        "login": "登入",
+        "register": "註冊",
+        "profile": "個人資料",
+        "logout": "登出",
+        "openMenu": "開啟主選單",
+        "closeMenu": "關閉選單"
+    },
+    "common": {
+        "getStarted": "開始使用！",
+        "learnMore": "瞭解更多",
+        "submit": "提交",
+        "cancel": "取消",
+        "save": "儲存",
+        "edit": "編輯",
+        "delete": "刪除",
+        "back": "返回",
+        "next": "下一步",
+        "previous": "上一步",
+        "loading": "載入中...",
+        "error": "錯誤",
+        "success": "成功",
+        "yes": "是",
+        "no": "否",
+        "continue": "繼續",
+        "finish": "完成",
+        "restart": "重新開始"
+    },
+    "home": {
+        "poweredByAI": "由先進AI技術驅動",
+        "title": "阿茲海默症",
+        "subtitle": "風險因子",
+        "description": "我們的平台使用先進的AI技術分析語音和文字模式，以識別認知衰退的早期徵象，透過綜合評估工具協助早期發現輕度認知障礙(MCI)和預防阿茲海默症。",
+        "trustIndicators": {
+            "aiValidated": "AI驗證",
+            "hipaaCompliant": "符合HIPAA標準",
+            "evidenceBased": "實證醫學"
+        },
+        "imageAlt": "AI驅動的阿茲海默症檢測",
+        "features": {
+            "comprehensiveCare": "全面照護",
+            "title": "您大腦健康所需的一切",
+            "description": "我們的平台結合AI驅動的分析、認知訓練和資源，為您的大腦健康之旅提供支援。",
+            "earlyDetection": {
+                "title": "早期檢測測驗",
+                "description": "透過科學設計的測驗評估MCI或早期阿茲海默症的潛在徵象，提供快速或全面的評估選項。",
+                "cta": "開始測驗"
+            },
+            "aiScreening": {
+                "title": "AI篩檢",
+                "description": "提交語音或文字樣本進行AI分析，透過檢查語言模式來評估潛在的認知衰退。",
+                "cta": "嘗試AI篩檢"
+            },
+            "cognitiveTraining": {
+                "title": "認知訓練",
+                "description": "參與AI生成的基於語言的挑戰，如詞彙回憶和閱讀理解，以增強認知能力。",
+                "cta": "開始訓練"
+            },
+            "resourceHub": {
+                "title": "資源中心",
+                "description": "取得關於早期症狀、預防策略和照護技巧的綜合資訊，以及最新研究成果。",
+                "cta": "瀏覽資源"
+            }
+        }
+    },
+    "quiz": {
+        "title": "早期檢測測驗",
+        "description": "透過基於科學的認知評估來識別輕度認知障礙的潛在早期徵象。",
+        "quickTest": "快速測驗",
+        "comprehensiveTest": "綜合測驗",
+        "quickTestDesc": "6道題，2-3分鐘",
+        "comprehensiveTestDesc": "20道題，10-15分鐘",
+        "disclaimer": "此測驗僅用於教育目的，不能替代專業醫學診斷。",
+        "medicalAdvice": "請諮詢醫療專業人員進行適當的醫學評估。",
+        "startQuiz": "開始測驗",
+        "results": {
+            "score": "您的得分",
+            "lowRisk": "低風險",
+            "moderateRisk": "中等風險",
+            "highRisk": "高風險",
+            "recommendation": "建議",
+            "seeDoctor": "請諮詢醫療專業人員進行進一步評估。"
+        }
+    },
+    "aiScreening": {
+        "title": "AI驅動的認知篩檢",
+        "description": "上傳音訊或輸入文字進行認知模式的AI分析",
+        "uploadAudio": "上傳音訊",
+        "enterText": "輸入文字",
+        "analyze": "分析",
+        "analysisResults": "分析結果",
+        "riskScore": "風險評分",
+        "recommendations": "建議"
+    },
+    "cognitiveTraining": {
+        "title": "認知訓練",
+        "description": "透過AI驅動的練習增強您的認知能力",
+        "wordRecall": "詞彙回憶",
+        "languageFluency": "語言流暢性",
+        "memoryMatch": "記憶配對",
+        "categoryNaming": "分類命名",
+        "readingComprehension": "閱讀理解",
+        "score": "得分",
+        "level": "級別",
+        "timeRemaining": "剩餘時間",
+        "gameComplete": "遊戲完成！",
+        "yourScore": "您的得分",
+        "playAgain": "再玩一次"
+    },
+    "resources": {
+        "title": "資源中心",
+        "description": "關於阿茲海默症預防和認知健康的綜合資訊",
+        "categories": {
+            "prevention": "預防",
+            "earlySymptoms": "早期症狀",
+            "caregiving": "照護"
+        },
+        "latestArticles": "最新文章",
+        "researchUpdates": "研究更新"
+    },
+    "auth": {
+        "login": {
+            "title": "登入您的帳戶",
+            "email": "電子郵件地址",
+            "password": "密碼",
+            "forgotPassword": "忘記密碼？",
+            "noAccount": "還沒有帳戶？",
+            "signUp": "在此註冊"
+        },
+        "register": {
+            "title": "建立您的帳戶",
+            "fullName": "全名",
+            "email": "電子郵件地址",
+            "password": "密碼",
+            "confirmPassword": "確認密碼",
+            "haveAccount": "已有帳戶？",
+            "signIn": "在此登入"
+        }
+    },
+    "profile": {
+        "title": "使用者資料",
+        "personalInfo": "個人資訊",
+        "cognitiveHistory": "認知評估歷史",
+        "settings": "設定",
+        "language": "語言",
+        "theme": "主題",
+        "fontSize": "字型大小"
+    },
+    "footer": {
+        "company": "NeuroAegis",
+        "description": "AI驅動的認知健康監測和阿茲海默症預防平台。",
+        "sections": {
+            "platform": "平台",
+            "company": "公司",
+            "legal": "法律"
+        },
+        "links": {
+            "privacy": "隱私權政策",
+            "terms": "服務條款",
+            "cookies": "Cookie政策",
+            "dataProtection": "資料保護",
+            "aboutUs": "關於我們",
+            "ourTeam": "我們的團隊",
+            "careers": "職涯發展",
+            "contactUs": "聯絡我們",
+            "healthMonitoring": "健康監測"
+        },
+        "allRightsReserved": "版權所有"
+    },
+    "legal": {
+        "privacy": {
+            "title": "隱私權政策",
+            "lastUpdated": "最後更新"
+        },
+        "terms": {
+            "title": "服務條款",
+            "lastUpdated": "最後更新"
+        },
+        "cookies": {
+            "title": "Cookie政策",
+            "lastUpdated": "最後更新"
+        },
+        "dataProtection": {
+            "title": "資料保護",
+            "lastUpdated": "最後更新"
+        }
+    },
+    "theme": {
+        "light": "淺色",
+        "dark": "深色",
+        "system": "系統"
+    },
+    "language": {
+        "english": "English",
+        "thai": "ไทย",
+        "chinese": "中文",
+        "traditionalChinese": "繁體中文"
+    }
+}

@@ -4,27 +4,30 @@ This document describes the internationalization implementation for the NeuroAeg
 
 ## Overview
 
-The platform now supports both English (EN) and Thai (TH) languages using the `react-i18next` library.
+The platform now supports English (EN), Thai (TH), Chinese Simplified (ZH), and Chinese Traditional (ZH-TW) languages using the `react-i18next` library.
 
 ## Features Implemented
 
 ### 1. Core i18n Infrastructure
 - **Library**: react-i18next with i18next-browser-languagedetector
+- **Supported Languages**: English, Thai, Chinese Simplified, Chinese Traditional
 - **Language Detection**: Automatic detection based on localStorage, navigator, and htmlTag
 - **Fallback Language**: English (EN)
 - **Persistence**: Language preference saved to localStorage
 
-### 2. Language Toggle
+### 2. Language Switcher
 - **Location**: Navigation bar (both desktop and mobile)
-- **Icon**: Language icon with current language indicator (EN/TH)
-- **Functionality**: One-click toggle between English and Thai
+- **Type**: Dropdown menu with language options
+- **Languages**: English, ไทย (Thai), 简体中文 (Simplified Chinese), 繁體中文 (Traditional Chinese)
+- **Functionality**: Click to select from available languages
+- **Visual Indicators**: Current language highlighted with checkmark
 
 ### 3. Translated Components
 
 #### Navigation & Layout
 - ✅ Navigation component with all menu items
 - ✅ Footer component with links and company information
-- ✅ Language switcher component
+- ✅ Language switcher component (dropdown with 4 languages)
 
 #### Pages
 - ✅ HomePage with hero section and features
@@ -39,13 +42,14 @@ auth: Authentication pages (login, register)
 footer: Footer content and links
 legal: Legal pages (privacy, terms, etc.)
 theme: Theme options
-language: Language names
+language: Language names (English, ไทย, 简体中文, 繁體中文)
 ```
 
-### 4. Thai Translations Quality
-- **Accuracy**: Professional Thai translations for medical/healthcare context
-- **Terminology**: Appropriate medical terminology for cognitive health
-- **Cultural Sensitivity**: Culturally appropriate phrasing for Thai users
+### 4. Translation Quality
+- **English**: Original content with professional medical terminology
+- **Thai**: Professional Thai translations for medical/healthcare context with appropriate terminology and cultural sensitivity
+- **Chinese Simplified**: Professional Simplified Chinese translations with medical-grade terminology appropriate for cognitive health context in mainland China
+- **Chinese Traditional**: Professional Traditional Chinese translations with medical-grade terminology appropriate for cognitive health context in Taiwan, Hong Kong, and other Traditional Chinese regions
 
 ## Usage Guide
 
@@ -54,7 +58,9 @@ language: Language names
 #### Adding New Translations
 1. Add the English key to `frontend/src/i18n/locales/en.json`
 2. Add the corresponding Thai translation to `frontend/src/i18n/locales/th.json`
-3. Use the translation in your component:
+3. Add the corresponding Simplified Chinese translation to `frontend/src/i18n/locales/zh.json`
+4. Add the corresponding Traditional Chinese translation to `frontend/src/i18n/locales/zh-TW.json`
+5. Use the translation in your component:
 
 ```jsx
 import { useTranslation } from 'react-i18next';
@@ -74,9 +80,10 @@ function MyComponent() {
 ### For Users
 
 #### Switching Languages
-- **Desktop**: Click the language icon (🌐) in the top navigation bar
-- **Mobile**: Open the mobile menu and find the language toggle
-- **Indicator**: Shows current language (EN for English, TH for Thai)
+- **Desktop**: Click the language dropdown (🌐) in the top navigation bar
+- **Mobile**: Open the mobile menu and find the language dropdown in settings
+- **Options**: English, ไทย, 简体中文, 繁體中文
+- **Indicator**: Shows current language name and highlights selected option
 
 ## File Structure
 
@@ -85,7 +92,9 @@ frontend/src/i18n/
 ├── index.js           # i18n configuration
 └── locales/
     ├── en.json        # English translations
-    └── th.json        # Thai translations
+    ├── th.json        # Thai translations
+    ├── zh.json        # Chinese Simplified translations
+    └── zh-TW.json     # Chinese Traditional translations
 ```
 
 ## Components with i18n Support
@@ -95,7 +104,7 @@ frontend/src/i18n/
 - [x] HomePage.jsx
 - [x] LoginForm.jsx
 - [x] Footer.jsx
-- [x] LanguageSwitcher.jsx
+- [x] LanguageSwitcher.jsx (4-language dropdown)
 
 ### Needs Translation (for future development)
 - [ ] RegisterForm.jsx
@@ -122,6 +131,23 @@ frontend/src/i18n/
 - **Interpolation**: HTML escaping disabled (safe for React)
 - **Detection**: Browser language detection with localStorage caching
 - **Namespace**: Using default "translation" namespace
+- **Supported Languages**: en, th, zh, zh-TW
+
+### Language Switcher Component
+- **Type**: Dropdown menu with click-outside-to-close functionality
+- **Features**: 
+  - Visual indicators for current language
+  - Hover states and transitions
+  - Accessible ARIA attributes
+  - Responsive design
+  - Dark mode support
+  - Support for 4 languages
+
+### Language Codes
+- **en**: English
+- **th**: Thai (ไทย)
+- **zh**: Chinese Simplified (简体中文)
+- **zh-TW**: Chinese Traditional (繁體中文)
 
 ## Best Practices
 
@@ -129,17 +155,35 @@ frontend/src/i18n/
 2. **Consistency**: Follow the established key structure
 3. **Context**: Group related translations under common parent keys
 4. **Fallbacks**: Always provide English translations as fallback
-5. **Testing**: Test both languages to ensure proper rendering
+5. **Testing**: Test all four languages to ensure proper rendering
+6. **Medical Terminology**: Use appropriate medical terms for each language and region
+7. **Cultural Sensitivity**: Ensure translations are culturally appropriate for each region
+8. **Character Sets**: Properly handle both Simplified and Traditional Chinese characters
+
+## Regional Considerations
+
+### Chinese Language Variants
+- **Simplified Chinese (zh)**: Used in mainland China, Singapore
+- **Traditional Chinese (zh-TW)**: Used in Taiwan, Hong Kong, Macau
+
+### Medical Terminology Differences
+- **Simplified Chinese**: Uses mainland China medical terminology
+- **Traditional Chinese**: Uses Taiwan/Hong Kong medical terminology
+- **Example**: Alzheimer's Disease
+  - Simplified: 阿尔兹海默病
+  - Traditional: 阿茲海默症
 
 ## Browser Support
 
 The i18n implementation supports all modern browsers and falls back gracefully for:
 - localStorage availability
 - Language detection APIs
-- CSS for RTL languages (if needed in future)
+- CSS for different text directions
+- Font rendering for Chinese characters (both Simplified and Traditional)
 
 ## Performance
 
 - **Bundle Size**: Translation files are loaded only when needed
 - **Caching**: Browser caches translation files and user preferences
-- **Lazy Loading**: Future enhancement could implement lazy loading of translation files 
+- **Lazy Loading**: Future enhancement could implement lazy loading of translation files
+- **Font Loading**: Chinese characters load efficiently with proper font fallbacks for both character sets 

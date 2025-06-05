@@ -5,9 +5,9 @@ export default function FontSizeSelector({ className = '' }) {
     const { fontSize, setFontSize } = useFontSize();
 
     const fontSizes = [
-        { value: 'small', label: 'A', size: 'text-sm' },
-        { value: 'medium', label: 'A', size: 'text-base' },
-        { value: 'large', label: 'A', size: 'text-lg' }
+        { value: 'small', label: 'A', displaySize: 'text-xs' },
+        { value: 'medium', label: 'A', displaySize: 'text-sm' },
+        { value: 'large', label: 'A', displaySize: 'text-base' }
     ];
 
     return (
@@ -23,12 +23,11 @@ export default function FontSizeSelector({ className = '' }) {
                             : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                         }
                         focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500
-                        ${size.size}
                     `}
                     aria-label={`Set font size to ${size.value}`}
                     title={`Font size: ${size.value}`}
                 >
-                    {size.label}
+                    <span className={size.displaySize}>{size.label}</span>
                 </button>
             ))}
         </div>

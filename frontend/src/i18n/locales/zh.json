@@ -1,0 +1,204 @@
+{
+    "nav": {
+        "home": "首页",
+        "aiScreening": "AI筛查",
+        "cognitiveTraining": "认知训练",
+        "resourceHub": "资源中心",
+        "login": "登录",
+        "register": "注册",
+        "profile": "个人资料",
+        "logout": "退出登录",
+        "openMenu": "打开主菜单",
+        "closeMenu": "关闭菜单"
+    },
+    "common": {
+        "getStarted": "开始使用！",
+        "learnMore": "了解更多",
+        "submit": "提交",
+        "cancel": "取消",
+        "save": "保存",
+        "edit": "编辑",
+        "delete": "删除",
+        "back": "返回",
+        "next": "下一步",
+        "previous": "上一步",
+        "loading": "加载中...",
+        "error": "错误",
+        "success": "成功",
+        "yes": "是",
+        "no": "否",
+        "continue": "继续",
+        "finish": "完成",
+        "restart": "重新开始"
+    },
+    "home": {
+        "poweredByAI": "由先进AI技术驱动",
+        "title": "阿尔兹海默病",
+        "subtitle": "风险因素",
+        "description": "我们的平台使用先进的AI技术分析语音和文本模式，以识别认知衰退的早期征象，通过综合评估工具帮助早期发现轻度认知障碍(MCI)和预防阿尔兹海默病。",
+        "trustIndicators": {
+            "aiValidated": "AI验证",
+            "hipaaCompliant": "符合HIPAA标准",
+            "evidenceBased": "循证医学"
+        },
+        "imageAlt": "AI驱动的阿尔兹海默病检测",
+        "features": {
+            "comprehensiveCare": "综合护理",
+            "title": "您大脑健康所需的一切",
+            "description": "我们的平台结合AI驱动的分析、认知训练和资源，为您的大脑健康之旅提供支持。",
+            "earlyDetection": {
+                "title": "早期检测测试",
+                "description": "通过科学设计的测试评估MCI或早期阿尔兹海默病的潜在征象，提供快速或全面的评估选项。",
+                "cta": "开始测试"
+            },
+            "aiScreening": {
+                "title": "AI筛查",
+                "description": "提交语音或文本样本进行AI分析，通过检查语言模式来评估潜在的认知衰退。",
+                "cta": "尝试AI筛查"
+            },
+            "cognitiveTraining": {
+                "title": "认知训练",
+                "description": "参与AI生成的基于语言的挑战，如词汇回忆和阅读理解，以增强认知能力。",
+                "cta": "开始训练"
+            },
+            "resourceHub": {
+                "title": "资源中心",
+                "description": "获取关于早期症状、预防策略和护理技巧的综合信息，以及最新研究成果。",
+                "cta": "浏览资源"
+            }
+        }
+    },
+    "quiz": {
+        "title": "早期检测测试",
+        "description": "通过基于科学的认知评估来识别轻度认知障碍的潜在早期征象。",
+        "quickTest": "快速测试",
+        "comprehensiveTest": "综合测试",
+        "quickTestDesc": "6道题，2-3分钟",
+        "comprehensiveTestDesc": "20道题，10-15分钟",
+        "disclaimer": "此测试仅用于教育目的，不能替代专业医学诊断。",
+        "medicalAdvice": "请咨询医疗专业人员进行适当的医学评估。",
+        "startQuiz": "开始测试",
+        "results": {
+            "score": "您的得分",
+            "lowRisk": "低风险",
+            "moderateRisk": "中等风险",
+            "highRisk": "高风险",
+            "recommendation": "建议",
+            "seeDoctor": "请咨询医疗专业人员进行进一步评估。"
+        }
+    },
+    "aiScreening": {
+        "title": "AI驱动的认知筛查",
+        "description": "上传音频或输入文本进行认知模式的AI分析",
+        "uploadAudio": "上传音频",
+        "enterText": "输入文本",
+        "analyze": "分析",
+        "analysisResults": "分析结果",
+        "riskScore": "风险评分",
+        "recommendations": "建议"
+    },
+    "cognitiveTraining": {
+        "title": "认知训练",
+        "description": "通过AI驱动的练习增强您的认知能力",
+        "wordRecall": "词汇回忆",
+        "languageFluency": "语言流畅性",
+        "memoryMatch": "记忆匹配",
+        "categoryNaming": "分类命名",
+        "readingComprehension": "阅读理解",
+        "score": "得分",
+        "level": "级别",
+        "timeRemaining": "剩余时间",
+        "gameComplete": "游戏完成！",
+        "yourScore": "您的得分",
+        "playAgain": "再玩一次"
+    },
+    "resources": {
+        "title": "资源中心",
+        "description": "关于阿尔兹海默病预防和认知健康的综合信息",
+        "categories": {
+            "prevention": "预防",
+            "earlySymptoms": "早期症状",
+            "caregiving": "护理"
+        },
+        "latestArticles": "最新文章",
+        "researchUpdates": "研究更新"
+    },
+    "auth": {
+        "login": {
+            "title": "登录您的账户",
+            "email": "邮箱地址",
+            "password": "密码",
+            "forgotPassword": "忘记密码？",
+            "noAccount": "还没有账户？",
+            "signUp": "在此注册"
+        },
+        "register": {
+            "title": "创建您的账户",
+            "fullName": "全名",
+            "email": "邮箱地址",
+            "password": "密码",
+            "confirmPassword": "确认密码",
+            "haveAccount": "已有账户？",
+            "signIn": "在此登录"
+        }
+    },
+    "profile": {
+        "title": "用户资料",
+        "personalInfo": "个人信息",
+        "cognitiveHistory": "认知评估历史",
+        "settings": "设置",
+        "language": "语言",
+        "theme": "主题",
+        "fontSize": "字体大小"
+    },
+    "footer": {
+        "company": "NeuroAegis",
+        "description": "AI驱动的认知健康监测和阿尔兹海默病预防平台。",
+        "sections": {
+            "platform": "平台",
+            "company": "公司",
+            "legal": "法律"
+        },
+        "links": {
+            "privacy": "隐私政策",
+            "terms": "服务条款",
+            "cookies": "Cookie政策",
+            "dataProtection": "数据保护",
+            "aboutUs": "关于我们",
+            "ourTeam": "我们的团队",
+            "careers": "职业发展",
+            "contactUs": "联系我们",
+            "healthMonitoring": "健康监测"
+        },
+        "allRightsReserved": "版权所有"
+    },
+    "legal": {
+        "privacy": {
+            "title": "隐私政策",
+            "lastUpdated": "最后更新"
+        },
+        "terms": {
+            "title": "服务条款",
+            "lastUpdated": "最后更新"
+        },
+        "cookies": {
+            "title": "Cookie政策",
+            "lastUpdated": "最后更新"
+        },
+        "dataProtection": {
+            "title": "数据保护",
+            "lastUpdated": "最后更新"
+        }
+    },
+    "theme": {
+        "light": "浅色",
+        "dark": "深色",
+        "system": "系统"
+    },
+    "language": {
+        "english": "English",
+        "thai": "ไทย",
+        "chinese": "中文",
+        "traditionalChinese": "繁體中文"
+    }
+}
