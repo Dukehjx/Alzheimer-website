@@ -56,15 +56,13 @@ export default function Navigation() {
 
           {isAuthenticated ? (
             <div className="flex items-center">
-              <div className="mr-2 text-sm text-gray-700 dark:text-gray-300">
-                {currentUser?.full_name || currentUser?.email || 'User'}
-              </div>
-              <button
-                onClick={logout}
-                className="rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:bg-primary-700 dark:hover:bg-primary-600"
+              <Link
+                to="/home"
+                className="text-sm text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors cursor-pointer font-medium"
+                title="Go to your home page"
               >
-                Logout
-              </button>
+                {currentUser?.full_name || currentUser?.email || 'User'}
+              </Link>
             </div>
           ) : (
             <div className="flex items-center gap-x-4">
@@ -123,20 +121,14 @@ export default function Navigation() {
               </div>
               <div className="py-6">
                 {isAuthenticated ? (
-                  <>
-                    <div className="mb-2 px-3 text-base font-semibold text-gray-700 dark:text-gray-300">
-                      {currentUser?.full_name || currentUser?.email || 'User'}
-                    </div>
-                    <button
-                      onClick={() => {
-                        logout();
-                        setMobileMenuOpen(false);
-                      }}
-                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
-                    >
-                      Logout
-                    </button>
-                  </>
+                  <Link
+                    to="/home"
+                    className="px-3 text-base font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors block"
+                    onClick={() => setMobileMenuOpen(false)}
+                    title="Go to your home page"
+                  >
+                    {currentUser?.full_name || currentUser?.email || 'User'}
+                  </Link>
                 ) : (
                   <>
                     <Link

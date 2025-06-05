@@ -19,6 +19,8 @@ import CognitiveTraining from './pages/CognitiveTraining.jsx'
 import ResourceHubPage from './pages/ResourceHubPage.jsx'
 import EarlyDetectionQuizPage from './pages/EarlyDetectionQuizPage.jsx'
 import MemoryMatchPage from './pages/MemoryMatchPage.jsx'
+import UserHomePage from './pages/UserHomePage.jsx'
+import ProfilePage from './pages/ProfilePage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import RegisterPage from './pages/RegisterPage.jsx'
@@ -41,6 +43,11 @@ function AppContent() {
       <main className={`flex-grow ${isFullWidth ? 'w-full' : 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6'}`}>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={
+            <ProtectedRoute>
+              <UserHomePage />
+            </ProtectedRoute>
+          } />
           <Route path="/screening" element={
             <ProtectedRoute>
               <AIScreeningPage />
@@ -87,6 +94,11 @@ function AppContent() {
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/cookies" element={<CookiePolicy />} />
           <Route path="/data-protection" element={<DataProtection />} />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
