@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BoltIcon } from '@heroicons/react/24/solid';
+import logo from '../assets/neuroaegis-logo.png';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -43,7 +43,7 @@ export default function Footer() {
           {/* Logo and description */}
           <div className="space-y-4">
             <div className="flex items-center">
-              <BoltIcon className="h-8 w-auto text-primary-600 dark:text-primary-400" />
+              <img src={logo} alt="NeuroAegis Logo" className="h-10 w-auto" />
               <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">NeuroAegis</span>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-300">
