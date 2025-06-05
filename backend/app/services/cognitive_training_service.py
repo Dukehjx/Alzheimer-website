@@ -371,46 +371,27 @@ class CognitiveTrainingService:
     def evaluate_memory_match_session(exercise: Exercise, matched_pairs: int, total_pairs: int,
                                     moves_used: int, time_elapsed: int, final_score: int, accuracy: float) -> Dict:
         """
-        Evaluate a Memory Match exercise session.
+        Evaluate a Memory Match session.
         
         Args:
-            exercise: The exercise that was completed.
+            exercise: The memory match exercise.
             matched_pairs: Number of pairs successfully matched.
             total_pairs: Total number of pairs in the game.
-            moves_used: Total number of moves/flips made.
-            time_elapsed: Time taken to complete the game in seconds.
-            final_score: Final score calculated by the frontend.
-            accuracy: Percentage of pairs matched (0-100).
+            moves_used: Number of moves (card flips) used.
+            time_elapsed: Time taken in seconds.
+            final_score: Final score calculated.
+            accuracy: Percentage accuracy.
             
         Returns:
-            Dict: Evaluation results containing score, accuracy, and feedback.
+            Dict: Evaluation results with score, accuracy, feedback, etc.
         """
-        # Get ideal parameters from exercise content
-        ideal_moves = exercise.content.get("ideal_moves", total_pairs * 2)
-        time_bonus_threshold = exercise.content.get("time_bonus", 60)
+        # Calculate efficiency ratio
+        content = exercise.content
+        ideal_moves = content.get("ideal_moves", total_pairs * 2)
+        efficiency = max(0, min(100, (ideal_moves / moves_used) * 100)) if moves_used > 0 else 100
         
-        # Calculate efficiency metrics
-        completion_rate = matched_pairs / total_pairs if total_pairs > 0 else 0
-        move_efficiency = ideal_moves / moves_used if moves_used > 0 else 0
-        time_efficiency = time_bonus_threshold / time_elapsed if time_elapsed > 0 else 0
-        
-        # Normalize the final score to 0-100 range for consistency with other exercises
-        normalized_score = min(100, max(0, final_score / 100))
-        
-        # Calculate overall performance score (weighted average)
-        performance_score = (
-            completion_rate * 0.5 +  # 50% weight on completion
-            move_efficiency * 0.3 +  # 30% weight on move efficiency
-            time_efficiency * 0.2    # 20% weight on time efficiency
-        ) * 100
-        
-        # Cap the performance score at 100
-        performance_score = min(100, performance_score)
-        
-        # Use the higher of normalized frontend score or calculated performance score
-        final_evaluation_score = max(normalized_score, performance_score)
-        
-        # Determine speed rating
+        # Calculate speed rating
+        time_bonus_threshold = content.get("time_bonus", 60)
         if time_elapsed <= time_bonus_threshold * 0.5:
             speed_rating = "excellent"
         elif time_elapsed <= time_bonus_threshold * 0.75:
@@ -418,27 +399,128 @@ class CognitiveTrainingService:
         elif time_elapsed <= time_bonus_threshold:
             speed_rating = "average"
         else:
-            speed_rating = "needs improvement"
+            speed_rating = "slow"
         
-        # Generate feedback based on performance
-        if completion_rate == 1.0 and move_efficiency >= 0.8:
-            feedback = "Outstanding! Perfect memory performance with excellent efficiency."
-        elif completion_rate >= 0.9 and move_efficiency >= 0.6:
-            feedback = "Excellent memory work! Your visual processing and attention are strong."
-        elif completion_rate >= 0.75:
-            feedback = "Good memory performance. Practice will help improve your efficiency."
-        elif completion_rate >= 0.5:
-            feedback = "Fair performance. Focus on developing memory strategies and visual attention."
+        # Generate contextual feedback
+        if accuracy >= 100:
+            feedback = f"🎉 Perfect score! You matched all {total_pairs} pairs with {speed_rating} speed and {efficiency:.1f}% efficiency."
+        elif accuracy >= 80:
+            feedback = f"👍 Great job! You matched {matched_pairs}/{total_pairs} pairs. Your efficiency was {efficiency:.1f}%."
+        elif accuracy >= 60:
+            feedback = f"🔄 Good effort! You matched {matched_pairs}/{total_pairs} pairs. Try to be more systematic in your approach."
+        elif accuracy >= 40:
+            feedback = f"💪 Keep practicing! You matched {matched_pairs}/{total_pairs} pairs. Focus on remembering card positions."
         else:
-            feedback = "Memory training will help. Try to focus on patterns and use systematic approaches."
+            feedback = f"📚 Don't give up! Memory games improve with practice. Try starting with an easier difficulty."
+        
+        # Add move efficiency tip
+        if moves_used > ideal_moves * 1.5:
+            feedback += " Tip: Try to remember where you've seen cards to reduce moves."
         
         return {
-            "score": final_evaluation_score,
+            "score": final_score,
             "accuracy": accuracy,
             "feedback": feedback,
-            "efficiency": move_efficiency,
+            "efficiency": efficiency,
             "speed_rating": speed_rating,
-            "completion_rate": completion_rate * 100
+            "pairs_matched": matched_pairs,
+            "moves_used": moves_used,
+            "time_taken": time_elapsed
+        }
+
+    @staticmethod
+    def evaluate_sequence_ordering_session(exercise: Exercise, user_order: List[str], moves_used: int,
+                                         time_elapsed: int, correct_count: int, total_steps: int,
+                                         accuracy: float, base_points: int, perfect_bonus: int, 
+                                         timed_bonus: int) -> Dict:
+        """
+        Evaluate a Sequence Ordering session.
+        
+        Args:
+            exercise: The sequence ordering exercise.
+            user_order: Order of step IDs as arranged by user.
+            moves_used: Number of moves/swaps made.
+            time_elapsed: Time taken in seconds.
+            correct_count: Number of correctly placed steps.
+            total_steps: Total number of steps in the sequence.
+            accuracy: Percentage accuracy (correct_count / total_steps * 100).
+            base_points: Base points from correct placements.
+            perfect_bonus: Perfect sequence bonus points.
+            timed_bonus: Time bonus points.
+            
+        Returns:
+            Dict: Evaluation results with score, accuracy, feedback, etc.
+        """
+        # Calculate efficiency ratio (fewer moves is better)
+        ideal_moves = max(1, total_steps - 1)  # Minimum moves for perfect ordering
+        efficiency = max(0, min(100, (ideal_moves / moves_used) * 100)) if moves_used > 0 else 100
+        
+        # Calculate speed rating based on difficulty
+        content = exercise.content
+        difficulty = content.get("difficulty", "MEDIUM")
+        game_mode = content.get("game_mode", "untimed")
+        
+        # Time thresholds based on difficulty
+        time_thresholds = {
+            "EASY": {"excellent": 30, "good": 60, "average": 90},
+            "MEDIUM": {"excellent": 45, "good": 90, "average": 120},
+            "HARD": {"excellent": 60, "good": 120, "average": 180}
+        }
+        
+        thresholds = time_thresholds.get(difficulty, time_thresholds["MEDIUM"])
+        
+        if time_elapsed <= thresholds["excellent"]:
+            speed_rating = "excellent"
+        elif time_elapsed <= thresholds["good"]:
+            speed_rating = "good"
+        elif time_elapsed <= thresholds["average"]:
+            speed_rating = "average"
+        else:
+            speed_rating = "needs improvement"
+        
+        # Calculate final score
+        final_score = base_points + perfect_bonus + timed_bonus
+        
+        # Generate contextual feedback
+        if accuracy >= 100:
+            feedback = f"🎉 Perfect sequence! You correctly arranged all {total_steps} steps"
+            if game_mode == "timed":
+                feedback += f" with {speed_rating} speed"
+            if efficiency >= 90:
+                feedback += f" and excellent efficiency ({efficiency:.1f}%)"
+            feedback += "."
+        elif accuracy >= 80:
+            feedback = f"👍 Excellent work! You got {correct_count} out of {total_steps} steps correct ({accuracy:.1f}% accuracy)."
+            if efficiency >= 70:
+                feedback += f" Your move efficiency was good at {efficiency:.1f}%."
+        elif accuracy >= 60:
+            feedback = f"🔄 Good effort! You arranged {correct_count} out of {total_steps} steps correctly. "
+            feedback += "Try to think about the logical flow between steps."
+        elif accuracy >= 40:
+            feedback = f"💪 Keep practicing! You got {correct_count} out of {total_steps} steps right. "
+            feedback += "Focus on understanding the cause-and-effect relationships."
+        else:
+            feedback = f"📚 Don't give up! You placed {correct_count} steps correctly. "
+            feedback += "Try reading through all steps first to understand the overall process."
+        
+        # Add efficiency tip if needed
+        if moves_used > ideal_moves * 2:
+            feedback += " Tip: Plan your moves before starting to improve efficiency."
+        
+        # Add cognitive benefits note
+        cognitive_note = " This exercise enhances executive function and sequential reasoning skills."
+        
+        return {
+            "score": final_score,
+            "accuracy": accuracy,
+            "feedback": feedback + cognitive_note,
+            "efficiency": efficiency,
+            "speed_rating": speed_rating,
+            "correct_count": correct_count,
+            "total_steps": total_steps,
+            "moves_used": moves_used,
+            "time_taken": time_elapsed,
+            "cognitive_domains": ["executive function", "sequential reasoning", "temporal understanding", "working memory"]
         }
     
     @staticmethod
@@ -528,6 +610,10 @@ class CognitiveTrainingService:
                     strengths.append("verbal fluency")
                 elif ex_type == ExerciseType.MEMORY_MATCH or ex_type == "memory_match":
                     strengths.append("memory match")
+                elif ex_type == ExerciseType.SEQUENCE_ORDERING or ex_type == "sequence_ordering":
+                    strengths.append("sequence ordering")
+                elif ex_type == ExerciseType.CATEGORY_NAMING or ex_type == "category_naming":
+                    strengths.append("category naming")
             elif avg_score <= 60:
                 if ex_type == ExerciseType.WORD_RECALL or ex_type == "word_recall":
                     areas_for_improvement.append("word recall")
@@ -535,6 +621,10 @@ class CognitiveTrainingService:
                     areas_for_improvement.append("verbal fluency")
                 elif ex_type == ExerciseType.MEMORY_MATCH or ex_type == "memory_match":
                     areas_for_improvement.append("memory match")
+                elif ex_type == ExerciseType.SEQUENCE_ORDERING or ex_type == "sequence_ordering":
+                    areas_for_improvement.append("sequence ordering")
+                elif ex_type == ExerciseType.CATEGORY_NAMING or ex_type == "category_naming":
+                    areas_for_improvement.append("category naming")
         
         user_metrics["strengths"] = list(set(strengths))  # Remove duplicates
         user_metrics["areas_for_improvement"] = list(set(areas_for_improvement))  # Remove duplicates

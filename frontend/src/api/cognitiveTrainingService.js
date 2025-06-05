@@ -83,6 +83,48 @@ export const submitCategoryNamingResults = async (gameResults) => {
 };
 
 /**
+ * Submit Sequence Ordering game results
+ * @param {Object} gameResults - The game results data
+ * @param {string} gameResults.exercise_id - Unique exercise ID
+ * @param {string} gameResults.challenge_id - Challenge ID used in the game
+ * @param {string} gameResults.difficulty - Difficulty level (EASY, MEDIUM, HARD)
+ * @param {string} gameResults.game_mode - Game mode (untimed, timed)
+ * @param {string[]} gameResults.user_order - Order of step IDs as arranged by user
+ * @param {number} gameResults.moves_used - Number of moves/swaps made
+ * @param {number} gameResults.time_elapsed - Time taken in seconds
+ * @param {number} gameResults.correct_count - Number of correctly placed steps
+ * @param {number} gameResults.total_steps - Total number of steps in the sequence
+ * @param {number} gameResults.accuracy - Percentage accuracy
+ * @param {number} gameResults.base_points - Base points from correct placements
+ * @param {number} gameResults.perfect_bonus - Perfect sequence bonus points
+ * @param {number} gameResults.timed_bonus - Time bonus points
+ * @param {number} gameResults.final_score - Final score calculated by the frontend
+ * @returns {Promise<Object>} API response with evaluation results
+ */
+export const submitSequenceOrderingResults = async (gameResults) => {
+    try {
+        console.log('Submitting Sequence Ordering results:', gameResults);
+
+        const response = await apiClient.post('/cognitive-training/sequence-ordering/submit', gameResults);
+
+        console.log('Sequence Ordering submission successful:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error submitting Sequence Ordering results:', error);
+
+        if (error.response?.status === 400) {
+            throw new Error('Invalid game data. Please try playing the game again.');
+        } else if (error.response?.status === 401) {
+            throw new Error('Please log in to save your progress.');
+        } else if (error.response?.status >= 500) {
+            throw new Error('Server error. Your progress could not be saved. Please try again later.');
+        } else {
+            throw new Error('Failed to save your progress. Please check your connection and try again.');
+        }
+    }
+};
+
+/**
  * Submit Word Recall exercise results
  * @param {Object} exerciseResults - The exercise results data
  * @param {string} exerciseResults.exercise_id - Unique exercise ID

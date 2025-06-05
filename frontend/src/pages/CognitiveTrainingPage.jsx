@@ -77,6 +77,40 @@ function CognitiveTrainingPage() {
             </Link>
           </div>
         </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+          <div className="bg-purple-100 dark:bg-purple-900 p-4">
+            <h3 className="text-xl font-semibold text-purple-800 dark:text-purple-200">Sequence Ordering</h3>
+          </div>
+          <div className="p-6">
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              Arrange shuffled steps in chronological or logical order to enhance executive function and temporal reasoning.
+            </p>
+            <Link
+              to="/cognitive-training/sequence-ordering"
+              className="inline-block bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-600"
+            >
+              Start Exercise
+            </Link>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+          <div className="bg-green-100 dark:bg-green-900 p-4">
+            <h3 className="text-xl font-semibold text-green-800 dark:text-green-200">Memory Match Game</h3>
+          </div>
+          <div className="p-6">
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              Improve your working memory by matching question-answer pairs in a card-flipping game.
+            </p>
+            <Link
+              to="/cognitive-training/memory-match"
+              className="inline-block bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
+            >
+              Start Exercise
+            </Link>
+          </div>
+        </div>
       </div>
 
       <div className="mt-12 bg-gray-50 dark:bg-gray-700 rounded-lg p-6 shadow-sm">

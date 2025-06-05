@@ -106,6 +106,16 @@ const CognitiveTraining = () => {
             benefits: ['Enhances semantic memory', 'Improves word retrieval', 'Boosts cognitive processing speed'],
             difficulty: 'Beginner to Expert',
             duration: '1-3 minutes'
+        },
+        {
+            id: 'sequence-ordering',
+            title: 'Sequence Ordering Game',
+            description: 'Arrange shuffled steps in their correct chronological or logical order.',
+            icon: <span className="text-orange-500 text-3xl">🔄</span>,
+            path: '/cognitive-training/sequence-ordering',
+            benefits: ['Enhances executive function', 'Improves sequential reasoning', 'Builds temporal understanding'],
+            difficulty: 'Easy to Hard',
+            duration: '2-5 minutes'
         }
     ];
 
@@ -158,6 +168,10 @@ const CognitiveTraining = () => {
             category_naming: {
                 backgroundColor: 'rgba(79, 70, 229, 0.2)',
                 borderColor: 'rgba(79, 70, 229, 1)',
+            },
+            sequence_ordering: {
+                backgroundColor: 'rgba(251, 146, 60, 0.2)',
+                borderColor: 'rgba(251, 146, 60, 1)',
             }
         };
 
@@ -166,7 +180,8 @@ const CognitiveTraining = () => {
             word_recall: 'Word Recall',
             language_fluency: 'Language Fluency',
             memory_match: 'Memory Match',
-            category_naming: 'Category Naming'
+            category_naming: 'Category Naming',
+            sequence_ordering: 'Sequence Ordering'
         };
 
         // Generate datasets from user data
@@ -391,6 +406,22 @@ const CognitiveTraining = () => {
                                 <div className="mb-4 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                                     <p className="text-blue-800 dark:text-blue-300 text-sm">
                                         <span className="font-medium">Your Average Score:</span> {metrics.average_scores.memory_match.toFixed(1)}%
+                                    </p>
+                                </div>
+                            )}
+
+                            {metrics?.average_scores && exercise.id === 'category-naming' && metrics.average_scores.category_naming && (
+                                <div className="mb-4 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                                    <p className="text-blue-800 dark:text-blue-300 text-sm">
+                                        <span className="font-medium">Your Average Score:</span> {metrics.average_scores.category_naming.toFixed(1)}%
+                                    </p>
+                                </div>
+                            )}
+
+                            {metrics?.average_scores && exercise.id === 'sequence-ordering' && metrics.average_scores.sequence_ordering && (
+                                <div className="mb-4 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                                    <p className="text-blue-800 dark:text-blue-300 text-sm">
+                                        <span className="font-medium">Your Average Score:</span> {metrics.average_scores.sequence_ordering.toFixed(1)}%
                                     </p>
                                 </div>
                             )}

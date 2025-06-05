@@ -69,6 +69,23 @@ class CategoryNamingRequest(BaseModel):
     milestone_bonus: int
     final_score: int
 
+class SequenceOrderingRequest(BaseModel):
+    """Request model for submitting Sequence Ordering game results."""
+    exercise_id: str
+    challenge_id: str
+    difficulty: str
+    game_mode: str
+    user_order: List[str]  # Order of step IDs as arranged by user
+    moves_used: int
+    time_elapsed: int  # Time taken in seconds
+    correct_count: int
+    total_steps: int
+    accuracy: float  # Percentage accuracy
+    base_points: int
+    perfect_bonus: int
+    timed_bonus: int
+    final_score: int
+
 class ExerciseResultResponse(BaseModel):
     """Response model for exercise evaluation results."""
     score: float
@@ -641,6 +658,139 @@ async def submit_category_naming(
         session_id=session_id
     )
 
+@router.post("/sequence-ordering/submit", response_model=ExerciseResultResponse, summary="Submit Sequence Ordering Game results")
+async def submit_sequence_ordering(
+    request: SequenceOrderingRequest,
+    current_user: UserInDB = Depends(get_current_user)
+):
+    """
+    Submit results for a Sequence Ordering Game and get evaluation results.
+    
+    - **exercise_id**: ID of the Sequence Ordering exercise
+    - **challenge_id**: Challenge ID used in the game
+    - **difficulty**: Difficulty level (EASY, MEDIUM, HARD)
+    - **game_mode**: Game mode (relaxed, timed, challenge)
+    - **user_order**: Order of step IDs as arranged by user
+    - **moves_used**: Total number of moves/flips made
+    - **time_elapsed**: Time taken to complete the game in seconds
+    - **correct_count**: Number of correct steps
+    - **total_steps**: Total number of steps in the game
+    - **accuracy**: Percentage accuracy
+    - **base_points**: Base points from correct steps
+    - **perfect_bonus**: Perfect bonus points
+    - **timed_bonus**: Timed bonus points
+    - **final_score**: Final score calculated
+    """
+    # Convert difficulty format
+    difficulty_map = {
+        'EASY': DifficultyLevel.BEGINNER,
+        'MEDIUM': DifficultyLevel.INTERMEDIATE,
+        'HARD': DifficultyLevel.ADVANCED
+    }
+    difficulty = difficulty_map.get(request.difficulty, DifficultyLevel.INTERMEDIATE)
+    
+    # Create a structured exercise object for evaluation
+    exercise = Exercise(
+        id=request.exercise_id,
+        title=f"{difficulty.capitalize()} Sequence Ordering Game",
+        description="Order steps correctly to improve your sequence memory and attention.",
+        exercise_type=ExerciseType.SEQUENCE_ORDERING,
+        difficulty=difficulty,
+        estimated_duration=request.time_elapsed + 30,  # Add setup time
+        instructions=f"Order {request.total_steps} steps correctly.",
+        content={
+            "challenge_id": request.challenge_id,
+            "difficulty": request.difficulty,
+            "game_mode": request.game_mode
+        },
+        cognitive_domains=["working memory", "visual processing", "attention", "executive function"]
+    )
+    
+    # Evaluate the session
+    evaluation_result = CognitiveTrainingService.evaluate_sequence_ordering_session(
+        exercise=exercise,
+        user_order=request.user_order,
+        moves_used=request.moves_used,
+        time_elapsed=request.time_elapsed,
+        correct_count=request.correct_count,
+        total_steps=request.total_steps,
+        accuracy=request.accuracy,
+        base_points=request.base_points,
+        perfect_bonus=request.perfect_bonus,
+        timed_bonus=request.timed_bonus
+    )
+    
+    # Calculate start time from end time and duration
+    end_time = datetime.utcnow()
+    start_time = end_time - timedelta(seconds=request.time_elapsed)
+    
+    # Create session record
+    session = ExerciseSession(
+        user_id=current_user.id,
+        exercise_id=request.exercise_id,
+        start_time=start_time,
+        end_time=end_time,
+        completed=True,
+        score=evaluation_result["score"],
+        accuracy=evaluation_result["accuracy"],
+        answers={
+            "user_order": request.user_order,
+            "moves_used": request.moves_used,
+            "game_mode": request.game_mode
+        }
+    )
+    
+    # Save session to database
+    db = get_database()
+    session_data = {
+        "user_id": current_user.id,
+        "exercise_id": request.exercise_id,
+        "exercise_type": ExerciseType.SEQUENCE_ORDERING,
+        "difficulty": difficulty,
+        "start_time": session.start_time,
+        "end_time": session.end_time,
+        "duration": request.time_elapsed,
+        "completed": True,
+        "score": evaluation_result["score"],
+        "accuracy": evaluation_result["accuracy"],
+        "answers": {
+            "user_order": request.user_order,
+            "moves_used": request.moves_used,
+            "game_mode": request.game_mode
+        },
+        "details": {
+            "final_score": request.final_score,
+            "efficiency": evaluation_result.get("efficiency", 0),
+            "speed_rating": evaluation_result.get("speed_rating", "average")
+        },
+        "feedback": evaluation_result["feedback"],
+        "created_at": datetime.utcnow()
+    }
+    
+    result = await db[COLLECTION_TRAINING_SESSIONS].insert_one(session_data)
+    session_id = str(result.inserted_id)
+    
+    # Update user's progress metrics
+    await CognitiveTrainingService.update_progress_metrics(
+        user_id=current_user.id,
+        exercise_session=session,
+        evaluation_result=evaluation_result,
+        exercise_type=ExerciseType.SEQUENCE_ORDERING
+    )
+    
+    # Return the results
+    return ExerciseResultResponse(
+        score=evaluation_result["score"],
+        accuracy=evaluation_result["accuracy"],
+        feedback=evaluation_result["feedback"],
+        details={
+            "final_score": request.final_score,
+            "efficiency": evaluation_result.get("efficiency", 0),
+            "speed_rating": evaluation_result.get("speed_rating", "average")
+        },
+        session_id=session_id
+    )
+
 @router.get("/progress", response_model=ProgressMetrics, summary="Get user's training progress metrics")
 async def get_progress_metrics(
     current_user: UserInDB = Depends(get_current_user)
@@ -685,10 +835,10 @@ async def get_progress_metrics(
         for ex_type, scores in exercise_scores.items()
     }
     
-    # Calculate performance trends (last 5 sessions per exercise type)
+    # Calculate performance trends (last 10 sessions per exercise type)
     performance_trends = {}
     for ex_type, scores in exercise_scores.items():
-        performance_trends[ex_type] = scores[-5:] if len(scores) > 5 else scores
+        performance_trends[ex_type] = scores[-10:] if len(scores) > 10 else scores
     
     # Determine strengths and areas for improvement
     strengths = []
@@ -702,6 +852,10 @@ async def get_progress_metrics(
                 strengths.append("verbal fluency")
             elif ex_type == ExerciseType.MEMORY_MATCH:
                 strengths.append("memory match")
+            elif ex_type == ExerciseType.CATEGORY_NAMING:
+                strengths.append("category naming")
+            elif ex_type == ExerciseType.SEQUENCE_ORDERING:
+                strengths.append("sequence ordering")
         elif avg_score <= 60:
             if ex_type == ExerciseType.WORD_RECALL:
                 areas_for_improvement.append("word recall")
@@ -709,6 +863,10 @@ async def get_progress_metrics(
                 areas_for_improvement.append("verbal fluency")
             elif ex_type == ExerciseType.MEMORY_MATCH:
                 areas_for_improvement.append("memory match")
+            elif ex_type == ExerciseType.CATEGORY_NAMING:
+                areas_for_improvement.append("category naming")
+            elif ex_type == ExerciseType.SEQUENCE_ORDERING:
+                areas_for_improvement.append("sequence ordering")
     
     # Calculate consistency score (improved implementation)
     consistency_score = 0.0
