@@ -1,0 +1,213 @@
+{
+    "nav": {
+        "home": "ホーム",
+        "aiScreening": "AI検査",
+        "cognitiveTraining": "認知トレーニング",
+        "resourceHub": "リソースセンター",
+        "login": "ログイン",
+        "register": "新規登録",
+        "profile": "プロフィール",
+        "logout": "ログアウト",
+        "openMenu": "メインメニューを開く",
+        "closeMenu": "メニューを閉じる"
+    },
+    "common": {
+        "getStarted": "始める！",
+        "learnMore": "詳細を見る",
+        "submit": "送信",
+        "cancel": "キャンセル",
+        "save": "保存",
+        "edit": "編集",
+        "delete": "削除",
+        "back": "戻る",
+        "next": "次へ",
+        "previous": "前へ",
+        "loading": "読み込み中...",
+        "error": "エラー",
+        "success": "成功",
+        "yes": "はい",
+        "no": "いいえ",
+        "continue": "続行",
+        "finish": "完了",
+        "restart": "再開"
+    },
+    "home": {
+        "poweredByAI": "先進AI技術により駆動",
+        "title": "アルツハイマー病",
+        "subtitle": "リスク要因",
+        "description": "当プラットフォームは、先進的なAI技術を使用して音声とテキストパターンを分析し、認知機能低下の早期兆候を特定します。包括的な評価ツールを通じて軽度認知障害（MCI）の早期発見とアルツハイマー病予防を支援します。",
+        "trustIndicators": {
+            "aiValidated": "AI検証済み",
+            "hipaaCompliant": "HIPAA準拠",
+            "evidenceBased": "エビデンスベース"
+        },
+        "imageAlt": "AI駆動型アルツハイマー病検出",
+        "features": {
+            "comprehensiveCare": "包括的ケア",
+            "title": "脳の健康に必要なすべて",
+            "description": "当プラットフォームは、AI駆動の分析、認知トレーニング、リソースを組み合わせて、あなたの脳の健康な人生をサポートします。",
+            "earlyDetection": {
+                "title": "早期発見テスト",
+                "description": "科学的に設計されたテストでMCIまたは早期アルツハイマー病の潜在的兆候を評価し、迅速または包括的な評価オプションを提供します。",
+                "cta": "テストを受ける"
+            },
+            "aiScreening": {
+                "title": "AI検査",
+                "description": "音声またはテキストサンプルを提出してAI分析を行い、言語パターンを調べて潜在的な認知機能低下を評価します。",
+                "cta": "AI検査を試す"
+            },
+            "cognitiveTraining": {
+                "title": "認知トレーニング",
+                "description": "単語記憶や読解力など、AI生成の言語ベースのチャレンジに参加して、認知能力を強化します。",
+                "cta": "トレーニング開始"
+            },
+            "resourceHub": {
+                "title": "リソースセンター",
+                "description": "早期症状、予防戦略、介護のコツに関する包括的な情報と最新の研究にアクセスできます。",
+                "cta": "リソースを閲覧"
+            }
+        }
+    },
+    "quiz": {
+        "title": "早期発見テスト",
+        "description": "科学的根拠に基づく認知評価を受けて、軽度認知障害の潜在的な早期兆候を特定します。",
+        "quickTest": "クイックテスト",
+        "comprehensiveTest": "包括的テスト",
+        "quickTestDesc": "6問、2-3分",
+        "comprehensiveTestDesc": "20問、10-15分",
+        "disclaimer": "このテストは教育目的のみであり、専門的な医学診断に代わるものではありません。",
+        "medicalAdvice": "適切な医学的評価については医療専門家にご相談ください。",
+        "startQuiz": "テスト開始",
+        "results": {
+            "score": "あなたのスコア",
+            "lowRisk": "低リスク",
+            "moderateRisk": "中リスク",
+            "highRisk": "高リスク",
+            "recommendation": "推奨事項",
+            "seeDoctor": "さらなる評価のため医療専門家にご相談ください。"
+        }
+    },
+    "aiScreening": {
+        "title": "AI駆動認知検査",
+        "description": "音声をアップロードまたはテキストを入力して認知パターンのAI分析を行います",
+        "uploadAudio": "音声をアップロード",
+        "enterText": "テキストを入力",
+        "analyze": "分析",
+        "analysisResults": "分析結果",
+        "riskScore": "リスクスコア",
+        "recommendations": "推奨事項"
+    },
+    "cognitiveTraining": {
+        "title": "認知トレーニング",
+        "description": "AI駆動のエクササイズで認知能力を強化します",
+        "wordRecall": "単語記憶",
+        "languageFluency": "言語流暢性",
+        "memoryMatch": "記憶マッチング",
+        "categoryNaming": "カテゴリ命名",
+        "readingComprehension": "読解力",
+        "score": "スコア",
+        "level": "レベル",
+        "timeRemaining": "残り時間",
+        "gameComplete": "ゲーム完了！",
+        "yourScore": "あなたのスコア",
+        "playAgain": "もう一度プレイ"
+    },
+    "resources": {
+        "title": "リソースセンター",
+        "description": "アルツハイマー病予防と認知健康に関する包括的情報",
+        "categories": {
+            "prevention": "予防",
+            "earlySymptoms": "早期症状",
+            "caregiving": "介護"
+        },
+        "latestArticles": "最新記事",
+        "researchUpdates": "研究更新"
+    },
+    "auth": {
+        "login": {
+            "title": "アカウントにログイン",
+            "email": "メールアドレス",
+            "password": "パスワード",
+            "forgotPassword": "パスワードをお忘れですか？",
+            "noAccount": "アカウントをお持ちでないですか？",
+            "signUp": "こちらで新規登録"
+        },
+        "register": {
+            "title": "アカウントを作成",
+            "fullName": "氏名",
+            "email": "メールアドレス",
+            "password": "パスワード",
+            "confirmPassword": "パスワード確認",
+            "haveAccount": "すでにアカウントをお持ちですか？",
+            "signIn": "こちらでサインイン"
+        }
+    },
+    "profile": {
+        "title": "ユーザープロフィール",
+        "personalInfo": "個人情報",
+        "cognitiveHistory": "認知評価履歴",
+        "settings": "設定",
+        "language": "言語",
+        "theme": "テーマ",
+        "fontSize": "フォントサイズ"
+    },
+    "footer": {
+        "company": "NeuroAegis",
+        "description": "認知健康モニタリングとアルツハイマー病予防のためのAI駆動プラットフォーム。",
+        "sections": {
+            "platform": "プラットフォーム",
+            "company": "会社",
+            "legal": "法的事項"
+        },
+        "links": {
+            "privacy": "プライバシーポリシー",
+            "terms": "利用規約",
+            "cookies": "Cookieポリシー",
+            "dataProtection": "データ保護",
+            "aboutUs": "私たちについて",
+            "ourTeam": "私たちのチーム",
+            "careers": "キャリア",
+            "contactUs": "お問い合わせ",
+            "healthMonitoring": "健康モニタリング"
+        },
+        "allRightsReserved": "全著作権所有"
+    },
+    "legal": {
+        "privacy": {
+            "title": "プライバシーポリシー",
+            "lastUpdated": "最終更新"
+        },
+        "terms": {
+            "title": "利用規約",
+            "lastUpdated": "最終更新"
+        },
+        "cookies": {
+            "title": "Cookieポリシー",
+            "lastUpdated": "最終更新"
+        },
+        "dataProtection": {
+            "title": "データ保護",
+            "lastUpdated": "最終更新"
+        }
+    },
+    "theme": {
+        "light": "ライト",
+        "dark": "ダーク",
+        "system": "システム"
+    },
+    "language": {
+        "english": "English",
+        "thai": "ไทย",
+        "chinese": "中文",
+        "traditionalChinese": "繁體中文",
+        "japanese": "日本語",
+        "korean": "한국어",
+        "spanish": "Español",
+        "portuguese": "Português",
+        "arabic": "العربية",
+        "hindi": "हिन्दी",
+        "malay": "Bahasa Melayu",
+        "vietnamese": "Tiếng Việt",
+        "russian": "Русский"
+    }
+}

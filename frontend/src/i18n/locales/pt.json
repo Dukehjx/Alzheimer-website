@@ -1,0 +1,213 @@
+{
+    "nav": {
+        "home": "Início",
+        "aiScreening": "Triagem IA",
+        "cognitiveTraining": "Treinamento Cognitivo",
+        "resourceHub": "Centro de Recursos",
+        "login": "Entrar",
+        "register": "Cadastrar",
+        "profile": "Perfil",
+        "logout": "Sair",
+        "openMenu": "Abrir menu principal",
+        "closeMenu": "Fechar menu"
+    },
+    "common": {
+        "getStarted": "Começar!",
+        "learnMore": "Saiba mais",
+        "submit": "Enviar",
+        "cancel": "Cancelar",
+        "save": "Salvar",
+        "edit": "Editar",
+        "delete": "Excluir",
+        "back": "Voltar",
+        "next": "Próximo",
+        "previous": "Anterior",
+        "loading": "Carregando...",
+        "error": "Erro",
+        "success": "Sucesso",
+        "yes": "Sim",
+        "no": "Não",
+        "continue": "Continuar",
+        "finish": "Finalizar",
+        "restart": "Reiniciar"
+    },
+    "home": {
+        "poweredByAI": "Impulsionado por IA Avançada",
+        "title": "Doença de Alzheimer",
+        "subtitle": "fatores de risco",
+        "description": "Nossa plataforma usa IA avançada para analisar padrões de fala e texto em busca de sinais precoces de declínio cognitivo, ajudando na detecção precoce do Comprometimento Cognitivo Leve (CCL) e prevenção do Alzheimer através de ferramentas de avaliação abrangentes.",
+        "trustIndicators": {
+            "aiValidated": "Validado por IA",
+            "hipaaCompliant": "Compatível com HIPAA",
+            "evidenceBased": "Baseado em Evidências"
+        },
+        "imageAlt": "Detecção de Alzheimer Impulsionada por IA",
+        "features": {
+            "comprehensiveCare": "Cuidado Abrangente",
+            "title": "Tudo que você precisa para a saúde cognitiva",
+            "description": "Nossa plataforma combina análise impulsionada por IA, treinamento cognitivo e recursos para apoiar sua jornada de saúde cerebral.",
+            "earlyDetection": {
+                "title": "Teste de Detecção Precoce",
+                "description": "Faça nosso teste cientificamente projetado para avaliar sinais potenciais de CCL ou doença de Alzheimer precoce com opções de avaliação rápida ou abrangente.",
+                "cta": "Fazer Teste"
+            },
+            "aiScreening": {
+                "title": "Triagem IA",
+                "description": "Envie amostras de fala ou texto para análise de IA para avaliar o declínio cognitivo potencial examinando padrões linguísticos.",
+                "cta": "Experimentar Triagem IA"
+            },
+            "cognitiveTraining": {
+                "title": "Treinamento Cognitivo",
+                "description": "Participe de desafios baseados em linguagem gerados por IA, como recordação de palavras e compreensão de leitura, para fortalecer as habilidades cognitivas.",
+                "cta": "Iniciar Treinamento"
+            },
+            "resourceHub": {
+                "title": "Centro de Recursos",
+                "description": "Acesse informações abrangentes sobre sintomas precoces, estratégias de prevenção e dicas de cuidado, bem como as pesquisas mais recentes.",
+                "cta": "Explorar Recursos"
+            }
+        }
+    },
+    "quiz": {
+        "title": "Teste de Detecção Precoce",
+        "description": "Faça nossa avaliação cognitiva baseada cientificamente para identificar potenciais sinais precoces de comprometimento cognitivo leve.",
+        "quickTest": "Teste Rápido",
+        "comprehensiveTest": "Teste Abrangente",
+        "quickTestDesc": "6 perguntas, 2-3 minutos",
+        "comprehensiveTestDesc": "20 perguntas, 10-15 minutos",
+        "disclaimer": "Este teste é apenas para fins educacionais e não substitui o diagnóstico médico profissional.",
+        "medicalAdvice": "Consulte profissionais de saúde para avaliação médica adequada.",
+        "startQuiz": "Iniciar Teste",
+        "results": {
+            "score": "Sua Pontuação",
+            "lowRisk": "Baixo Risco",
+            "moderateRisk": "Risco Moderado",
+            "highRisk": "Alto Risco",
+            "recommendation": "Recomendação",
+            "seeDoctor": "Por favor, consulte um profissional de saúde para avaliação adicional."
+        }
+    },
+    "aiScreening": {
+        "title": "Triagem Cognitiva Impulsionada por IA",
+        "description": "Faça upload de áudio ou digite texto para análise de IA de padrões cognitivos",
+        "uploadAudio": "Fazer Upload de Áudio",
+        "enterText": "Inserir Texto",
+        "analyze": "Analisar",
+        "analysisResults": "Resultados da Análise",
+        "riskScore": "Pontuação de Risco",
+        "recommendations": "Recomendações"
+    },
+    "cognitiveTraining": {
+        "title": "Treinamento Cognitivo",
+        "description": "Fortaleça suas habilidades cognitivas com exercícios impulsionados por IA",
+        "wordRecall": "Recordação de Palavras",
+        "languageFluency": "Fluência Linguística",
+        "memoryMatch": "Correspondência de Memória",
+        "categoryNaming": "Nomeação de Categorias",
+        "readingComprehension": "Compreensão de Leitura",
+        "score": "Pontuação",
+        "level": "Nível",
+        "timeRemaining": "Tempo Restante",
+        "gameComplete": "Jogo Concluído!",
+        "yourScore": "Sua Pontuação",
+        "playAgain": "Jogar Novamente"
+    },
+    "resources": {
+        "title": "Centro de Recursos",
+        "description": "Informações abrangentes sobre prevenção do Alzheimer e saúde cognitiva",
+        "categories": {
+            "prevention": "Prevenção",
+            "earlySymptoms": "Sintomas Precoces",
+            "caregiving": "Cuidado"
+        },
+        "latestArticles": "Artigos Recentes",
+        "researchUpdates": "Atualizações de Pesquisa"
+    },
+    "auth": {
+        "login": {
+            "title": "Entre na sua conta",
+            "email": "Endereço de e-mail",
+            "password": "Senha",
+            "forgotPassword": "Esqueceu sua senha?",
+            "noAccount": "Não tem uma conta?",
+            "signUp": "Cadastre-se aqui"
+        },
+        "register": {
+            "title": "Crie sua conta",
+            "fullName": "Nome completo",
+            "email": "Endereço de e-mail",
+            "password": "Senha",
+            "confirmPassword": "Confirmar senha",
+            "haveAccount": "Já tem uma conta?",
+            "signIn": "Entre aqui"
+        }
+    },
+    "profile": {
+        "title": "Perfil do Usuário",
+        "personalInfo": "Informações Pessoais",
+        "cognitiveHistory": "Histórico de Avaliação Cognitiva",
+        "settings": "Configurações",
+        "language": "Idioma",
+        "theme": "Tema",
+        "fontSize": "Tamanho da Fonte"
+    },
+    "footer": {
+        "company": "NeuroAegis",
+        "description": "Plataforma impulsionada por IA para monitoramento de saúde cognitiva e prevenção do Alzheimer.",
+        "sections": {
+            "platform": "Plataforma",
+            "company": "Empresa",
+            "legal": "Legal"
+        },
+        "links": {
+            "privacy": "Política de Privacidade",
+            "terms": "Termos de Serviço",
+            "cookies": "Política de Cookies",
+            "dataProtection": "Proteção de Dados",
+            "aboutUs": "Sobre Nós",
+            "ourTeam": "Nossa Equipe",
+            "careers": "Carreiras",
+            "contactUs": "Entre em Contato",
+            "healthMonitoring": "Monitoramento de Saúde"
+        },
+        "allRightsReserved": "Todos os direitos reservados."
+    },
+    "legal": {
+        "privacy": {
+            "title": "Política de Privacidade",
+            "lastUpdated": "Última atualização"
+        },
+        "terms": {
+            "title": "Termos de Serviço",
+            "lastUpdated": "Última atualização"
+        },
+        "cookies": {
+            "title": "Política de Cookies",
+            "lastUpdated": "Última atualização"
+        },
+        "dataProtection": {
+            "title": "Proteção de Dados",
+            "lastUpdated": "Última atualização"
+        }
+    },
+    "theme": {
+        "light": "Claro",
+        "dark": "Escuro",
+        "system": "Sistema"
+    },
+    "language": {
+        "english": "English",
+        "thai": "ไทย",
+        "chinese": "中文",
+        "traditionalChinese": "繁體中文",
+        "japanese": "日本語",
+        "korean": "한국어",
+        "spanish": "Español",
+        "portuguese": "Português",
+        "arabic": "العربية",
+        "hindi": "हिन्दी",
+        "malay": "Bahasa Melayu",
+        "vietnamese": "Tiếng Việt",
+        "russian": "Русский"
+    }
+}

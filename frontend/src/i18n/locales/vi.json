@@ -1,0 +1,213 @@
+{
+    "nav": {
+        "home": "Trang Chủ",
+        "aiScreening": "Sàng Lọc AI",
+        "cognitiveTraining": "Luyện Tập Nhận Thức",
+        "resourceHub": "Trung Tâm Tài Nguyên",
+        "login": "Đăng Nhập",
+        "register": "Đăng Ký",
+        "profile": "Hồ Sơ",
+        "logout": "Đăng Xuất",
+        "openMenu": "Mở menu chính",
+        "closeMenu": "Đóng menu"
+    },
+    "common": {
+        "getStarted": "Bắt Đầu!",
+        "learnMore": "Tìm hiểu thêm",
+        "submit": "Gửi",
+        "cancel": "Hủy",
+        "save": "Lưu",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "back": "Quay lại",
+        "next": "Tiếp theo",
+        "previous": "Trước đó",
+        "loading": "Đang tải...",
+        "error": "Lỗi",
+        "success": "Thành công",
+        "yes": "Có",
+        "no": "Không",
+        "continue": "Tiếp tục",
+        "finish": "Hoàn thành",
+        "restart": "Khởi động lại"
+    },
+    "home": {
+        "poweredByAI": "Được Hỗ Trợ Bởi AI Tiên Tiến",
+        "title": "Bệnh Alzheimer",
+        "subtitle": "yếu tố nguy cơ",
+        "description": "Nền tảng của chúng tôi sử dụng AI tiên tiến để phân tích các mẫu giọng nói và văn bản nhằm phát hiện các dấu hiệu sớm của suy giảm nhận thức, hỗ trợ phát hiện sớm Suy giảm Nhận thức Nhẹ (MCI) và phòng ngừa Alzheimer thông qua các công cụ đánh giá toàn diện.",
+        "trustIndicators": {
+            "aiValidated": "Được AI Xác Thực",
+            "hipaaCompliant": "Tuân thủ HIPAA",
+            "evidenceBased": "Dựa trên Bằng chứng"
+        },
+        "imageAlt": "Phát hiện Alzheimer Được Hỗ trợ bởi AI",
+        "features": {
+            "comprehensiveCare": "Chăm Sóc Toàn Diện",
+            "title": "Mọi thứ bạn cần cho sức khỏe nhận thức",
+            "description": "Nền tảng của chúng tôi kết hợp phân tích được hỗ trợ bởi AI, luyện tập nhận thức và tài nguyên để hỗ trợ hành trình sức khỏe não bộ của bạn.",
+            "earlyDetection": {
+                "title": "Bài Kiểm Tra Phát Hiện Sớm",
+                "description": "Thực hiện bài kiểm tra được thiết kế khoa học để đánh giá các dấu hiệu tiềm ẩn của MCI hoặc bệnh Alzheimer giai đoạn đầu với các tùy chọn đánh giá nhanh hoặc toàn diện.",
+                "cta": "Làm Bài Kiểm Tra"
+            },
+            "aiScreening": {
+                "title": "Sàng Lọc AI",
+                "description": "Gửi mẫu giọng nói hoặc văn bản để phân tích AI nhằm đánh giá suy giảm nhận thức tiềm ẩn bằng cách kiểm tra các mẫu ngôn ngữ.",
+                "cta": "Thử Sàng Lọc AI"
+            },
+            "cognitiveTraining": {
+                "title": "Luyện Tập Nhận Thức",
+                "description": "Tham gia các thử thách dựa trên ngôn ngữ được tạo bởi AI, như ghi nhớ từ và đọc hiểu, để tăng cường khả năng nhận thức.",
+                "cta": "Bắt Đầu Luyện Tập"
+            },
+            "resourceHub": {
+                "title": "Trung Tâm Tài Nguyên",
+                "description": "Truy cập thông tin toàn diện về các triệu chứng sớm, chiến lược phòng ngừa và mẹo chăm sóc, cũng như nghiên cứu mới nhất.",
+                "cta": "Duyệt Tài Nguyên"
+            }
+        }
+    },
+    "quiz": {
+        "title": "Bài Kiểm Tra Phát Hiện Sớm",
+        "description": "Thực hiện đánh giá nhận thức dựa trên khoa học của chúng tôi để xác định các dấu hiệu sớm tiềm ẩn của suy giảm nhận thức nhẹ.",
+        "quickTest": "Kiểm Tra Nhanh",
+        "comprehensiveTest": "Kiểm Tra Toàn Diện",
+        "quickTestDesc": "6 câu hỏi, 2-3 phút",
+        "comprehensiveTestDesc": "20 câu hỏi, 10-15 phút",
+        "disclaimer": "Bài kiểm tra này chỉ dành cho mục đích giáo dục và không thay thế chẩn đoán y tế chuyên nghiệp.",
+        "medicalAdvice": "Tham khảo ý kiến các chuyên gia chăm sóc sức khỏe để đánh giá y tế phù hợp.",
+        "startQuiz": "Bắt Đầu Kiểm Tra",
+        "results": {
+            "score": "Điểm Của Bạn",
+            "lowRisk": "Nguy Cơ Thấp",
+            "moderateRisk": "Nguy Cơ Trung Bình",
+            "highRisk": "Nguy Cơ Cao",
+            "recommendation": "Khuyến Nghị",
+            "seeDoctor": "Vui lòng tham khảo ý kiến chuyên gia chăm sóc sức khỏe để đánh giá thêm."
+        }
+    },
+    "aiScreening": {
+        "title": "Sàng Lọc Nhận Thức Được Hỗ Trợ Bởi AI",
+        "description": "Tải lên âm thanh hoặc nhập văn bản để phân tích AI các mẫu nhận thức",
+        "uploadAudio": "Tải Lên Âm Thanh",
+        "enterText": "Nhập Văn Bản",
+        "analyze": "Phân Tích",
+        "analysisResults": "Kết Quả Phân Tích",
+        "riskScore": "Điểm Nguy Cơ",
+        "recommendations": "Khuyến Nghị"
+    },
+    "cognitiveTraining": {
+        "title": "Luyện Tập Nhận Thức",
+        "description": "Tăng cường khả năng nhận thức của bạn với các bài tập được hỗ trợ bởi AI",
+        "wordRecall": "Ghi Nhớ Từ",
+        "languageFluency": "Trôi Chảy Ngôn Ngữ",
+        "memoryMatch": "Ghép Thẻ Trí Nhớ",
+        "categoryNaming": "Đặt Tên Danh Mục",
+        "readingComprehension": "Đọc Hiểu",
+        "score": "Điểm",
+        "level": "Cấp Độ",
+        "timeRemaining": "Thời Gian Còn Lại",
+        "gameComplete": "Hoàn Thành Trò Chơi!",
+        "yourScore": "Điểm Của Bạn",
+        "playAgain": "Chơi Lại"
+    },
+    "resources": {
+        "title": "Trung Tâm Tài Nguyên",
+        "description": "Thông tin toàn diện về phòng ngừa Alzheimer và sức khỏe nhận thức",
+        "categories": {
+            "prevention": "Phòng Ngừa",
+            "earlySymptoms": "Triệu Chứng Sớm",
+            "caregiving": "Chăm Sóc"
+        },
+        "latestArticles": "Bài Viết Mới Nhất",
+        "researchUpdates": "Cập Nhật Nghiên Cứu"
+    },
+    "auth": {
+        "login": {
+            "title": "Đăng nhập vào tài khoản của bạn",
+            "email": "Địa chỉ email",
+            "password": "Mật khẩu",
+            "forgotPassword": "Quên mật khẩu?",
+            "noAccount": "Chưa có tài khoản?",
+            "signUp": "Đăng ký tại đây"
+        },
+        "register": {
+            "title": "Tạo tài khoản của bạn",
+            "fullName": "Họ và tên",
+            "email": "Địa chỉ email",
+            "password": "Mật khẩu",
+            "confirmPassword": "Xác nhận mật khẩu",
+            "haveAccount": "Đã có tài khoản?",
+            "signIn": "Đăng nhập tại đây"
+        }
+    },
+    "profile": {
+        "title": "Hồ Sơ Người Dùng",
+        "personalInfo": "Thông Tin Cá Nhân",
+        "cognitiveHistory": "Lịch Sử Đánh Giá Nhận Thức",
+        "settings": "Cài Đặt",
+        "language": "Ngôn Ngữ",
+        "theme": "Chủ Đề",
+        "fontSize": "Kích Thước Phông Chữ"
+    },
+    "footer": {
+        "company": "NeuroAegis",
+        "description": "Nền tảng được hỗ trợ bởi AI cho giám sát sức khỏe nhận thức và phòng ngừa Alzheimer.",
+        "sections": {
+            "platform": "Nền Tảng",
+            "company": "Công Ty",
+            "legal": "Pháp Lý"
+        },
+        "links": {
+            "privacy": "Chính Sách Quyền Riêng Tư",
+            "terms": "Điều Khoản Dịch Vụ",
+            "cookies": "Chính Sách Cookie",
+            "dataProtection": "Bảo Vệ Dữ Liệu",
+            "aboutUs": "Về Chúng Tôi",
+            "ourTeam": "Đội Ngũ Của Chúng Tôi",
+            "careers": "Nghề Nghiệp",
+            "contactUs": "Liên Hệ Chúng Tôi",
+            "healthMonitoring": "Giám Sát Sức Khỏe"
+        },
+        "allRightsReserved": "Tất cả các quyền được bảo lưu."
+    },
+    "legal": {
+        "privacy": {
+            "title": "Chính Sách Quyền Riêng Tư",
+            "lastUpdated": "Cập nhật lần cuối"
+        },
+        "terms": {
+            "title": "Điều Khoản Dịch Vụ",
+            "lastUpdated": "Cập nhật lần cuối"
+        },
+        "cookies": {
+            "title": "Chính Sách Cookie",
+            "lastUpdated": "Cập nhật lần cuối"
+        },
+        "dataProtection": {
+            "title": "Bảo Vệ Dữ Liệu",
+            "lastUpdated": "Cập nhật lần cuối"
+        }
+    },
+    "theme": {
+        "light": "Sáng",
+        "dark": "Tối",
+        "system": "Hệ Thống"
+    },
+    "language": {
+        "english": "English",
+        "thai": "ไทย",
+        "chinese": "中文",
+        "traditionalChinese": "繁體中文",
+        "japanese": "日本語",
+        "korean": "한국어",
+        "spanish": "Español",
+        "portuguese": "Português",
+        "arabic": "العربية",
+        "hindi": "हिन्दी",
+        "malay": "Bahasa Melayu",
+        "vietnamese": "Tiếng Việt",
+        "russian": "Русский"
+    }
+}

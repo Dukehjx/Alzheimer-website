@@ -199,6 +199,15 @@
         "english": "English",
         "thai": "ไทย",
         "chinese": "中文",
-        "traditionalChinese": "繁體中文"
+        "traditionalChinese": "繁體中文",
+        "japanese": "日本語",
+        "korean": "한국어",
+        "spanish": "Español",
+        "portuguese": "Português",
+        "arabic": "العربية",
+        "hindi": "हिन्दी",
+        "malay": "Bahasa Melayu",
+        "vietnamese": "Tiếng Việt",
+        "russian": "Русский"
     }
 }

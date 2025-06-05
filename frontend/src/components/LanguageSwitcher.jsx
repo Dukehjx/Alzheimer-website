@@ -11,13 +11,32 @@ export default function LanguageSwitcher({ className = '' }) {
         { code: 'en', name: t('language.english'), nativeName: 'English' },
         { code: 'th', name: t('language.thai'), nativeName: 'ไทย' },
         { code: 'zh', name: t('language.chinese'), nativeName: '简体中文' },
-        { code: 'zh-TW', name: t('language.traditionalChinese'), nativeName: '繁體中文' }
+        { code: 'zh-TW', name: t('language.traditionalChinese'), nativeName: '繁體中文' },
+        { code: 'ja', name: t('language.japanese'), nativeName: '日本語' },
+        { code: 'ko', name: t('language.korean'), nativeName: '한국어' },
+        { code: 'es', name: t('language.spanish'), nativeName: 'Español' },
+        { code: 'pt', name: t('language.portuguese'), nativeName: 'Português' },
+        { code: 'ar', name: t('language.arabic'), nativeName: 'العربية' },
+        { code: 'hi', name: t('language.hindi'), nativeName: 'हिन्दी' },
+        { code: 'ms', name: t('language.malay'), nativeName: 'Bahasa Melayu' },
+        { code: 'vi', name: t('language.vietnamese'), nativeName: 'Tiếng Việt' },
+        { code: 'ru', name: t('language.russian'), nativeName: 'Русский' }
     ];
 
     const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
 
     const handleLanguageChange = (languageCode) => {
         i18n.changeLanguage(languageCode);
+
+        // Set document direction for RTL languages
+        if (languageCode === 'ar') {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('lang', 'ar');
+        } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.documentElement.setAttribute('lang', languageCode);
+        }
+
         setIsOpen(false);
     };
 
@@ -34,6 +53,17 @@ export default function LanguageSwitcher({ className = '' }) {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    // Initialize document direction on mount
+    useEffect(() => {
+        if (i18n.language === 'ar') {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('lang', 'ar');
+        } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.documentElement.setAttribute('lang', i18n.language);
+        }
+    }, [i18n.language]);
 
     return (
         <div className={`relative ${className}`} ref={dropdownRef}>

@@ -1,0 +1,213 @@
+{
+    "nav": {
+        "home": "홈",
+        "aiScreening": "AI 검사",
+        "cognitiveTraining": "인지 훈련",
+        "resourceHub": "리소스 센터",
+        "login": "로그인",
+        "register": "회원가입",
+        "profile": "프로필",
+        "logout": "로그아웃",
+        "openMenu": "메인 메뉴 열기",
+        "closeMenu": "메뉴 닫기"
+    },
+    "common": {
+        "getStarted": "시작하기!",
+        "learnMore": "자세히 알아보기",
+        "submit": "제출",
+        "cancel": "취소",
+        "save": "저장",
+        "edit": "편집",
+        "delete": "삭제",
+        "back": "뒤로",
+        "next": "다음",
+        "previous": "이전",
+        "loading": "로딩 중...",
+        "error": "오류",
+        "success": "성공",
+        "yes": "예",
+        "no": "아니오",
+        "continue": "계속",
+        "finish": "완료",
+        "restart": "다시 시작"
+    },
+    "home": {
+        "poweredByAI": "첨단 AI 기술로 구동",
+        "title": "알츠하이머병",
+        "subtitle": "위험 요인",
+        "description": "저희 플랫폼은 첨단 AI 기술을 사용하여 음성 및 텍스트 패턴을 분석하고 인지 기능 저하의 초기 징후를 식별하며, 포괄적인 평가 도구를 통해 경도인지장애(MCI)의 조기 발견과 알츠하이머병 예방을 지원합니다.",
+        "trustIndicators": {
+            "aiValidated": "AI 검증",
+            "hipaaCompliant": "HIPAA 준수",
+            "evidenceBased": "근거 기반"
+        },
+        "imageAlt": "AI 기반 알츠하이머병 검출",
+        "features": {
+            "comprehensiveCare": "포괄적 케어",
+            "title": "뇌 건강을 위한 모든 것",
+            "description": "저희 플랫폼은 AI 기반 분석, 인지 훈련, 리소스를 결합하여 귀하의 뇌 건강 여정을 지원합니다.",
+            "earlyDetection": {
+                "title": "조기 발견 테스트",
+                "description": "과학적으로 설계된 테스트를 통해 MCI 또는 초기 알츠하이머병의 잠재적 징후를 평가하며, 빠르거나 포괄적인 평가 옵션을 제공합니다.",
+                "cta": "테스트 받기"
+            },
+            "aiScreening": {
+                "title": "AI 검사",
+                "description": "음성 또는 텍스트 샘플을 제출하여 AI 분석을 받고, 언어 패턴을 검사하여 잠재적인 인지 기능 저하를 평가합니다.",
+                "cta": "AI 검사 시도하기"
+            },
+            "cognitiveTraining": {
+                "title": "인지 훈련",
+                "description": "단어 기억 및 독해력과 같은 AI 생성 언어 기반 챌린지에 참여하여 인지 능력을 강화하세요.",
+                "cta": "훈련 시작"
+            },
+            "resourceHub": {
+                "title": "리소스 센터",
+                "description": "초기 증상, 예방 전략, 돌봄 팁에 대한 포괄적인 정보와 최신 연구에 접근하세요.",
+                "cta": "리소스 탐색"
+            }
+        }
+    },
+    "quiz": {
+        "title": "조기 발견 테스트",
+        "description": "과학적 근거에 기반한 인지 평가를 통해 경도인지장애의 잠재적 초기 징후를 식별하세요.",
+        "quickTest": "빠른 테스트",
+        "comprehensiveTest": "포괄적 테스트",
+        "quickTestDesc": "6문항, 2-3분",
+        "comprehensiveTestDesc": "20문항, 10-15분",
+        "disclaimer": "이 테스트는 교육 목적으로만 제공되며 전문 의학 진단을 대체하지 않습니다.",
+        "medicalAdvice": "적절한 의학적 평가를 위해 의료 전문가와 상담하시기 바랍니다.",
+        "startQuiz": "테스트 시작",
+        "results": {
+            "score": "귀하의 점수",
+            "lowRisk": "낮은 위험",
+            "moderateRisk": "중간 위험",
+            "highRisk": "높은 위험",
+            "recommendation": "권고사항",
+            "seeDoctor": "추가 평가를 위해 의료 전문가와 상담하시기 바랍니다."
+        }
+    },
+    "aiScreening": {
+        "title": "AI 기반 인지 검사",
+        "description": "오디오를 업로드하거나 텍스트를 입력하여 인지 패턴의 AI 분석을 받으세요",
+        "uploadAudio": "오디오 업로드",
+        "enterText": "텍스트 입력",
+        "analyze": "분석",
+        "analysisResults": "분석 결과",
+        "riskScore": "위험 점수",
+        "recommendations": "권고사항"
+    },
+    "cognitiveTraining": {
+        "title": "인지 훈련",
+        "description": "AI 기반 운동으로 인지 능력을 강화하세요",
+        "wordRecall": "단어 기억",
+        "languageFluency": "언어 유창성",
+        "memoryMatch": "기억 매칭",
+        "categoryNaming": "범주 명명",
+        "readingComprehension": "독해력",
+        "score": "점수",
+        "level": "레벨",
+        "timeRemaining": "남은 시간",
+        "gameComplete": "게임 완료!",
+        "yourScore": "귀하의 점수",
+        "playAgain": "다시 플레이"
+    },
+    "resources": {
+        "title": "리소스 센터",
+        "description": "알츠하이머병 예방 및 인지 건강에 대한 포괄적 정보",
+        "categories": {
+            "prevention": "예방",
+            "earlySymptoms": "초기 증상",
+            "caregiving": "돌봄"
+        },
+        "latestArticles": "최신 기사",
+        "researchUpdates": "연구 업데이트"
+    },
+    "auth": {
+        "login": {
+            "title": "계정에 로그인",
+            "email": "이메일 주소",
+            "password": "비밀번호",
+            "forgotPassword": "비밀번호를 잊으셨나요?",
+            "noAccount": "계정이 없으신가요?",
+            "signUp": "여기서 가입하기"
+        },
+        "register": {
+            "title": "계정 만들기",
+            "fullName": "성명",
+            "email": "이메일 주소",
+            "password": "비밀번호",
+            "confirmPassword": "비밀번호 확인",
+            "haveAccount": "이미 계정이 있으신가요?",
+            "signIn": "여기서 로그인하기"
+        }
+    },
+    "profile": {
+        "title": "사용자 프로필",
+        "personalInfo": "개인 정보",
+        "cognitiveHistory": "인지 평가 이력",
+        "settings": "설정",
+        "language": "언어",
+        "theme": "테마",
+        "fontSize": "글꼴 크기"
+    },
+    "footer": {
+        "company": "NeuroAegis",
+        "description": "인지 건강 모니터링 및 알츠하이머병 예방을 위한 AI 기반 플랫폼.",
+        "sections": {
+            "platform": "플랫폼",
+            "company": "회사",
+            "legal": "법적 사항"
+        },
+        "links": {
+            "privacy": "개인정보 처리방침",
+            "terms": "서비스 약관",
+            "cookies": "쿠키 정책",
+            "dataProtection": "데이터 보호",
+            "aboutUs": "회사 소개",
+            "ourTeam": "우리 팀",
+            "careers": "채용",
+            "contactUs": "문의하기",
+            "healthMonitoring": "건강 모니터링"
+        },
+        "allRightsReserved": "모든 권리 보유"
+    },
+    "legal": {
+        "privacy": {
+            "title": "개인정보 처리방침",
+            "lastUpdated": "최종 업데이트"
+        },
+        "terms": {
+            "title": "서비스 약관",
+            "lastUpdated": "최종 업데이트"
+        },
+        "cookies": {
+            "title": "쿠키 정책",
+            "lastUpdated": "최종 업데이트"
+        },
+        "dataProtection": {
+            "title": "데이터 보호",
+            "lastUpdated": "최종 업데이트"
+        }
+    },
+    "theme": {
+        "light": "라이트",
+        "dark": "다크",
+        "system": "시스템"
+    },
+    "language": {
+        "english": "English",
+        "thai": "ไทย",
+        "chinese": "中文",
+        "traditionalChinese": "繁體中文",
+        "japanese": "日本語",
+        "korean": "한국어",
+        "spanish": "Español",
+        "portuguese": "Português",
+        "arabic": "العربية",
+        "hindi": "हिन्दी",
+        "malay": "Bahasa Melayu",
+        "vietnamese": "Tiếng Việt",
+        "russian": "Русский"
+    }
+}

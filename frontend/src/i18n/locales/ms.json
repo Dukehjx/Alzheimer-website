@@ -1,0 +1,213 @@
+{
+    "nav": {
+        "home": "Laman Utama",
+        "aiScreening": "Saringan AI",
+        "cognitiveTraining": "Latihan Kognitif",
+        "resourceHub": "Pusat Sumber",
+        "login": "Log Masuk",
+        "register": "Daftar",
+        "profile": "Profil",
+        "logout": "Log Keluar",
+        "openMenu": "Buka menu utama",
+        "closeMenu": "Tutup menu"
+    },
+    "common": {
+        "getStarted": "Mulakan!",
+        "learnMore": "Ketahui lebih lanjut",
+        "submit": "Hantar",
+        "cancel": "Batal",
+        "save": "Simpan",
+        "edit": "Edit",
+        "delete": "Padam",
+        "back": "Kembali",
+        "next": "Seterusnya",
+        "previous": "Sebelumnya",
+        "loading": "Memuatkan...",
+        "error": "Ralat",
+        "success": "Berjaya",
+        "yes": "Ya",
+        "no": "Tidak",
+        "continue": "Teruskan",
+        "finish": "Selesai",
+        "restart": "Mula Semula"
+    },
+    "home": {
+        "poweredByAI": "Dikuasakan oleh AI Termaju",
+        "title": "Penyakit Alzheimer",
+        "subtitle": "faktor risiko",
+        "description": "Platform kami menggunakan AI termaju untuk menganalisis corak pertuturan dan teks bagi mengesan tanda-tanda awal kemerosotan kognitif, membantu pengesanan awal Kemerosotan Kognitif Ringan (MCI) dan pencegahan Alzheimer melalui alat penilaian yang komprehensif.",
+        "trustIndicators": {
+            "aiValidated": "Disahkan AI",
+            "hipaaCompliant": "Mematuhi HIPAA",
+            "evidenceBased": "Berasaskan Bukti"
+        },
+        "imageAlt": "Pengesanan Alzheimer Berkuasa AI",
+        "features": {
+            "comprehensiveCare": "Penjagaan Menyeluruh",
+            "title": "Segala yang anda perlukan untuk kesihatan kognitif",
+            "description": "Platform kami menggabungkan analisis berkuasa AI, latihan kognitif, dan sumber untuk menyokong perjalanan kesihatan otak anda.",
+            "earlyDetection": {
+                "title": "Ujian Pengesanan Awal",
+                "description": "Ambil ujian yang direka secara saintifik untuk menilai tanda-tanda berpotensi MCI atau penyakit Alzheimer awal dengan pilihan penilaian pantas atau komprehensif.",
+                "cta": "Ambil Ujian"
+            },
+            "aiScreening": {
+                "title": "Saringan AI",
+                "description": "Hantar sampel pertuturan atau teks untuk analisis AI bagi menilai kemerosotan kognitif yang berpotensi dengan memeriksa corak linguistik.",
+                "cta": "Cuba Saringan AI"
+            },
+            "cognitiveTraining": {
+                "title": "Latihan Kognitif",
+                "description": "Sertai cabaran berasaskan bahasa yang dijana AI, seperti ingatan perkataan dan pemahaman bacaan, untuk mengukuhkan keupayaan kognitif.",
+                "cta": "Mula Latihan"
+            },
+            "resourceHub": {
+                "title": "Pusat Sumber",
+                "description": "Akses maklumat komprehensif mengenai simptom awal, strategi pencegahan, dan tips penjagaan, serta penyelidikan terkini.",
+                "cta": "Layari Sumber"
+            }
+        }
+    },
+    "quiz": {
+        "title": "Ujian Pengesanan Awal",
+        "description": "Ambil penilaian kognitif berasaskan saintifik kami untuk mengenal pasti tanda-tanda awal kemerosotan kognitif ringan yang berpotensi.",
+        "quickTest": "Ujian Pantas",
+        "comprehensiveTest": "Ujian Komprehensif",
+        "quickTestDesc": "6 soalan, 2-3 minit",
+        "comprehensiveTestDesc": "20 soalan, 10-15 minit",
+        "disclaimer": "Ujian ini adalah untuk tujuan pendidikan sahaja dan tidak menggantikan diagnosis perubatan profesional.",
+        "medicalAdvice": "Berunding dengan profesional penjagaan kesihatan untuk penilaian perubatan yang sewajarnya.",
+        "startQuiz": "Mula Ujian",
+        "results": {
+            "score": "Skor Anda",
+            "lowRisk": "Risiko Rendah",
+            "moderateRisk": "Risiko Sederhana",
+            "highRisk": "Risiko Tinggi",
+            "recommendation": "Cadangan",
+            "seeDoctor": "Sila berunding dengan profesional penjagaan kesihatan untuk penilaian lanjut."
+        }
+    },
+    "aiScreening": {
+        "title": "Saringan Kognitif Berkuasa AI",
+        "description": "Muat naik audio atau masukkan teks untuk analisis AI corak kognitif",
+        "uploadAudio": "Muat Naik Audio",
+        "enterText": "Masukkan Teks",
+        "analyze": "Analisis",
+        "analysisResults": "Hasil Analisis",
+        "riskScore": "Skor Risiko",
+        "recommendations": "Cadangan"
+    },
+    "cognitiveTraining": {
+        "title": "Latihan Kognitif",
+        "description": "Kukuhkan keupayaan kognitif anda dengan latihan berkuasa AI",
+        "wordRecall": "Ingatan Perkataan",
+        "languageFluency": "Kelancaran Bahasa",
+        "memoryMatch": "Padanan Ingatan",
+        "categoryNaming": "Penamaan Kategori",
+        "readingComprehension": "Pemahaman Bacaan",
+        "score": "Skor",
+        "level": "Tahap",
+        "timeRemaining": "Masa Berbaki",
+        "gameComplete": "Permainan Selesai!",
+        "yourScore": "Skor Anda",
+        "playAgain": "Main Lagi"
+    },
+    "resources": {
+        "title": "Pusat Sumber",
+        "description": "Maklumat komprehensif mengenai pencegahan Alzheimer dan kesihatan kognitif",
+        "categories": {
+            "prevention": "Pencegahan",
+            "earlySymptoms": "Simptom Awal",
+            "caregiving": "Penjagaan"
+        },
+        "latestArticles": "Artikel Terkini",
+        "researchUpdates": "Kemas Kini Penyelidikan"
+    },
+    "auth": {
+        "login": {
+            "title": "Log masuk ke akaun anda",
+            "email": "Alamat e-mel",
+            "password": "Kata laluan",
+            "forgotPassword": "Terlupa kata laluan?",
+            "noAccount": "Tiada akaun?",
+            "signUp": "Daftar di sini"
+        },
+        "register": {
+            "title": "Cipta akaun anda",
+            "fullName": "Nama penuh",
+            "email": "Alamat e-mel",
+            "password": "Kata laluan",
+            "confirmPassword": "Sahkan kata laluan",
+            "haveAccount": "Sudah ada akaun?",
+            "signIn": "Log masuk di sini"
+        }
+    },
+    "profile": {
+        "title": "Profil Pengguna",
+        "personalInfo": "Maklumat Peribadi",
+        "cognitiveHistory": "Sejarah Penilaian Kognitif",
+        "settings": "Tetapan",
+        "language": "Bahasa",
+        "theme": "Tema",
+        "fontSize": "Saiz Fon"
+    },
+    "footer": {
+        "company": "NeuroAegis",
+        "description": "Platform berkuasa AI untuk pemantauan kesihatan kognitif dan pencegahan Alzheimer.",
+        "sections": {
+            "platform": "Platform",
+            "company": "Syarikat",
+            "legal": "Undang-undang"
+        },
+        "links": {
+            "privacy": "Dasar Privasi",
+            "terms": "Terma Perkhidmatan",
+            "cookies": "Dasar Kuki",
+            "dataProtection": "Perlindungan Data",
+            "aboutUs": "Tentang Kami",
+            "ourTeam": "Pasukan Kami",
+            "careers": "Kerjaya",
+            "contactUs": "Hubungi Kami",
+            "healthMonitoring": "Pemantauan Kesihatan"
+        },
+        "allRightsReserved": "Semua hak terpelihara."
+    },
+    "legal": {
+        "privacy": {
+            "title": "Dasar Privasi",
+            "lastUpdated": "Kemas kini terakhir"
+        },
+        "terms": {
+            "title": "Terma Perkhidmatan",
+            "lastUpdated": "Kemas kini terakhir"
+        },
+        "cookies": {
+            "title": "Dasar Kuki",
+            "lastUpdated": "Kemas kini terakhir"
+        },
+        "dataProtection": {
+            "title": "Perlindungan Data",
+            "lastUpdated": "Kemas kini terakhir"
+        }
+    },
+    "theme": {
+        "light": "Cerah",
+        "dark": "Gelap",
+        "system": "Sistem"
+    },
+    "language": {
+        "english": "English",
+        "thai": "ไทย",
+        "chinese": "中文",
+        "traditionalChinese": "繁體中文",
+        "japanese": "日本語",
+        "korean": "한국어",
+        "spanish": "Español",
+        "portuguese": "Português",
+        "arabic": "العربية",
+        "hindi": "हिन्दी",
+        "malay": "Bahasa Melayu",
+        "vietnamese": "Tiếng Việt",
+        "russian": "Русский"
+    }
+}

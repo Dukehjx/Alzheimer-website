@@ -604,4 +604,77 @@ html[data-font-size="large"] button {
   .shake-animation {
     animation: none;
   }
+}
+
+/* RTL Support for Arabic */
+html[dir="rtl"] {
+  direction: rtl;
+}
+
+html[dir="rtl"] body {
+  text-align: right;
+}
+
+/* RTL-specific navigation adjustments */
+html[dir="rtl"] .navigation-container {
+  flex-direction: row-reverse;
+}
+
+html[dir="rtl"] .flex-row-reverse {
+  flex-direction: row;
+}
+
+html[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+html[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+/* RTL-specific spacing adjustments */
+html[dir="rtl"] .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+html[dir="rtl"] .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+html[dir="rtl"] .ml-3 {
+  margin-left: 0;
+  margin-right: 0.75rem;
+}
+
+html[dir="rtl"] .mr-3 {
+  margin-right: 0;
+  margin-left: 0.75rem;
+}
+
+html[dir="rtl"] .pl-3 {
+  padding-left: 0;
+  padding-right: 0.75rem;
+}
+
+html[dir="rtl"] .pr-3 {
+  padding-right: 0;
+  padding-left: 0.75rem;
+}
+
+/* RTL-specific dropdown positioning */
+html[dir="rtl"] .absolute.right-0 {
+  right: auto;
+  left: 0;
+}
+
+html[dir="rtl"] .absolute.left-0 {
+  left: auto;
+  right: 0;
+}
+
+/* Arabic font support */
+html[lang="ar"], html[lang="ar"] * {
+  font-family: 'Segoe UI', 'Arial Unicode MS', 'Tahoma', sans-serif;
 } 
