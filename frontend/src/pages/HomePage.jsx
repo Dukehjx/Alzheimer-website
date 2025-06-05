@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import homepageImage from '../assets/homepage-image.png';
 
 export default function HomePage() {
+  const { t } = useTranslation();
+
   return (
     <div className="w-full">
       {/* Hero Section with Modern Flat Design */}
@@ -48,14 +51,14 @@ export default function HomePage() {
                     <svg className="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
                     </svg>
-                    Powered by Advanced AI
+                    {t('home.poweredByAI')}
                   </span>
                 </div>
 
                 <h1 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl lg:text-7xl leading-tight mb-8">
-                  <span className="text-blue-600 block mb-2">Alzheimer's</span>
+                  <span className="text-blue-600 block mb-2">{t('home.title')}</span>
                   <span className="text-blue-500 block relative">
-                    risk factors
+                    {t('home.subtitle')}
                     {/* Decorative underline */}
                     <div className="absolute -bottom-2 left-0 w-32 h-1 bg-gradient-to-r from-blue-400 to-purple-400 opacity-60"
                       style={{
@@ -66,9 +69,7 @@ export default function HomePage() {
 
                 <div className="relative">
                   <p className="text-xl leading-relaxed text-gray-700 font-normal max-w-lg mb-10 relative z-10">
-                    Our platform uses <span className="font-semibold text-blue-600">advanced AI</span> to analyze speech and text patterns for early signs of cognitive decline,
-                    helping with <span className="font-semibold text-purple-600">early detection</span> of Mild Cognitive Impairment (MCI) and Alzheimer's prevention through
-                    comprehensive assessment tools.
+                    {t('home.description')}
                   </p>
                   {/* Subtle background decoration for text */}
                   <div className="absolute top-4 -left-4 w-8 h-8 bg-gradient-to-br from-yellow-200 to-orange-200 opacity-20"
@@ -87,7 +88,7 @@ export default function HomePage() {
                       style={{
                         borderRadius: '50% 50% 50% 50%'
                       }}></div>
-                    <span className="relative z-10">Get started!</span>
+                    <span className="relative z-10">{t('common.getStarted')}</span>
                     <svg className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-1 relative z-10" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                     </svg>
@@ -96,7 +97,7 @@ export default function HomePage() {
                     to="/resources"
                     className="text-xl font-semibold leading-6 text-gray-700 hover:text-blue-600 transition-colors duration-200 flex items-center group relative"
                   >
-                    Learn more
+                    {t('common.learnMore')}
                     <span className="ml-2 transition-transform group-hover:translate-x-1 text-blue-500" aria-hidden="true">→</span>
                     {/* Underline decoration */}
                     <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-400 group-hover:w-full transition-all duration-300"
@@ -119,21 +120,21 @@ export default function HomePage() {
                       style={{
                         borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%'
                       }}></div>
-                    <span className="text-sm text-gray-700 font-semibold">AI-Validated</span>
+                    <span className="text-sm text-gray-700 font-semibold">{t('home.trustIndicators.aiValidated')}</span>
                   </div>
                   <div className="flex items-center gap-3 relative">
                     <div className="h-4 w-4 bg-gradient-to-br from-blue-400 to-cyan-500 shadow-lg"
                       style={{
                         borderRadius: '60% 40% 50% 50% / 50% 50% 50% 50%'
                       }}></div>
-                    <span className="text-sm text-gray-700 font-semibold">HIPAA Compliant</span>
+                    <span className="text-sm text-gray-700 font-semibold">{t('home.trustIndicators.hipaaCompliant')}</span>
                   </div>
                   <div className="flex items-center gap-3 relative">
                     <div className="h-4 w-4 bg-gradient-to-br from-purple-400 to-pink-500 shadow-lg"
                       style={{
                         borderRadius: '40% 60% 60% 40% / 60% 40% 60% 40%'
                       }}></div>
-                    <span className="text-sm text-gray-700 font-semibold">Evidence-Based</span>
+                    <span className="text-sm text-gray-700 font-semibold">{t('home.trustIndicators.evidenceBased')}</span>
                   </div>
                 </div>
               </div>
@@ -159,7 +160,7 @@ export default function HomePage() {
                     }}>
                     <img
                       src={homepageImage}
-                      alt="AI-Powered Alzheimer's Detection"
+                      alt={t('home.imageAlt')}
                       className="w-full h-auto mx-auto object-cover transform scale-125"
                       style={{
                         borderRadius: '40% 40% 40% 40% / 30% 30% 70% 70%'
@@ -217,14 +218,14 @@ export default function HomePage() {
                 <svg className="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Comprehensive Care
+                {t('home.features.comprehensiveCare')}
               </span>
             </div>
             <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Everything you need for cognitive health
+              {t('home.features.title')}
             </h2>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Our platform combines AI-powered analysis, cognitive training, and resources to support your brain health journey.
+              {t('home.features.description')}
             </p>
           </div>
 
@@ -237,15 +238,15 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3-6h3.75m-3.75 3h3.75m-3.75 3h3.75M6.75 6h10.5a2.25 2.25 0 012.25 2.25v10.5a2.25 2.25 0 01-2.25 2.25H6.75a2.25 2.25 0 01-2.25-2.25V8.25A2.25 2.25 0 016.75 6z" />
                     </svg>
                   </div>
-                  Early Detection Quiz
+                  {t('home.features.earlyDetection.title')}
                 </dt>
                 <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
                   <p className="flex-auto">
-                    Take our scientifically-designed quiz to assess potential signs of MCI or early Alzheimer's disease with quick or comprehensive assessments.
+                    {t('home.features.earlyDetection.description')}
                   </p>
                   <p className="mt-6">
                     <Link to="/quiz" className="inline-flex items-center text-sm font-semibold leading-6 text-blue-600 hover:text-blue-700 transition-colors duration-200 group">
-                      Take Quiz
+                      {t('home.features.earlyDetection.cta')}
                       <span className="ml-1 transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
                     </Link>
                   </p>
@@ -259,15 +260,15 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
                     </svg>
                   </div>
-                  AI Screening
+                  {t('home.features.aiScreening.title')}
                 </dt>
                 <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
                   <p className="flex-auto">
-                    Submit speech or text samples for AI analysis to assess potential cognitive decline by examining linguistic patterns.
+                    {t('home.features.aiScreening.description')}
                   </p>
                   <p className="mt-6">
                     <Link to="/screening" className="inline-flex items-center text-sm font-semibold leading-6 text-purple-600 hover:text-purple-700 transition-colors duration-200 group">
-                      Try AI Screening
+                      {t('home.features.aiScreening.cta')}
                       <span className="ml-1 transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
                     </Link>
                   </p>
@@ -281,15 +282,15 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
                     </svg>
                   </div>
-                  Cognitive Training
+                  {t('home.features.cognitiveTraining.title')}
                 </dt>
                 <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
                   <p className="flex-auto">
-                    Engage in AI-generated language-based challenges, such as word recall and reading comprehension, to strengthen cognitive abilities.
+                    {t('home.features.cognitiveTraining.description')}
                   </p>
                   <p className="mt-6">
-                    <Link to="/training" className="inline-flex items-center text-sm font-semibold leading-6 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 group">
-                      Start Training
+                    <Link to="/cognitive-training" className="inline-flex items-center text-sm font-semibold leading-6 text-yellow-600 hover:text-yellow-700 transition-colors duration-200 group">
+                      {t('home.features.cognitiveTraining.cta')}
                       <span className="ml-1 transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
                     </Link>
                   </p>
@@ -303,15 +304,15 @@ export default function HomePage() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                     </svg>
                   </div>
-                  Resource Hub
+                  {t('home.features.resourceHub.title')}
                 </dt>
                 <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
                   <p className="flex-auto">
-                    Access comprehensive information on early symptoms, prevention strategies, and caregiving tips, as well as the latest research.
+                    {t('home.features.resourceHub.description')}
                   </p>
                   <p className="mt-6">
                     <Link to="/resources" className="inline-flex items-center text-sm font-semibold leading-6 text-green-600 hover:text-green-700 transition-colors duration-200 group">
-                      Browse Resources
+                      {t('home.features.resourceHub.cta')}
                       <span className="ml-1 transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
                     </Link>
                   </p>

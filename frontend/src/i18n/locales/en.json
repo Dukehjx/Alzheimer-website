@@ -1,0 +1,202 @@
+{
+    "nav": {
+        "home": "Home",
+        "aiScreening": "AI Screening",
+        "cognitiveTraining": "Cognitive Training",
+        "resourceHub": "Resource Hub",
+        "login": "Log in",
+        "register": "Sign up",
+        "profile": "Profile",
+        "logout": "Logout",
+        "openMenu": "Open main menu",
+        "closeMenu": "Close menu"
+    },
+    "common": {
+        "getStarted": "Get started!",
+        "learnMore": "Learn more",
+        "submit": "Submit",
+        "cancel": "Cancel",
+        "save": "Save",
+        "edit": "Edit",
+        "delete": "Delete",
+        "back": "Back",
+        "next": "Next",
+        "previous": "Previous",
+        "loading": "Loading...",
+        "error": "Error",
+        "success": "Success",
+        "yes": "Yes",
+        "no": "No",
+        "continue": "Continue",
+        "finish": "Finish",
+        "restart": "Restart"
+    },
+    "home": {
+        "poweredByAI": "Powered by Advanced AI",
+        "title": "Alzheimer's",
+        "subtitle": "risk factors",
+        "description": "Our platform uses advanced AI to analyze speech and text patterns for early signs of cognitive decline, helping with early detection of Mild Cognitive Impairment (MCI) and Alzheimer's prevention through comprehensive assessment tools.",
+        "trustIndicators": {
+            "aiValidated": "AI-Validated",
+            "hipaaCompliant": "HIPAA Compliant",
+            "evidenceBased": "Evidence-Based"
+        },
+        "imageAlt": "AI-Powered Alzheimer's Detection",
+        "features": {
+            "comprehensiveCare": "Comprehensive Care",
+            "title": "Everything you need for cognitive health",
+            "description": "Our platform combines AI-powered analysis, cognitive training, and resources to support your brain health journey.",
+            "earlyDetection": {
+                "title": "Early Detection Quiz",
+                "description": "Take our scientifically-designed quiz to assess potential signs of MCI or early Alzheimer's disease with quick or comprehensive assessments.",
+                "cta": "Take Quiz"
+            },
+            "aiScreening": {
+                "title": "AI Screening",
+                "description": "Submit speech or text samples for AI analysis to assess potential cognitive decline by examining linguistic patterns.",
+                "cta": "Try AI Screening"
+            },
+            "cognitiveTraining": {
+                "title": "Cognitive Training",
+                "description": "Engage in AI-generated language-based challenges, such as word recall and reading comprehension, to strengthen cognitive abilities.",
+                "cta": "Start Training"
+            },
+            "resourceHub": {
+                "title": "Resource Hub",
+                "description": "Access comprehensive information on early symptoms, prevention strategies, and caregiving tips, as well as the latest research.",
+                "cta": "Browse Resources"
+            }
+        }
+    },
+    "quiz": {
+        "title": "Early Detection Quiz",
+        "description": "Take our scientifically-based cognitive assessment to identify potential early signs of mild cognitive impairment.",
+        "quickTest": "Quick Test",
+        "comprehensiveTest": "Comprehensive Test",
+        "quickTestDesc": "6 questions, 2-3 minutes",
+        "comprehensiveTestDesc": "20 questions, 10-15 minutes",
+        "disclaimer": "This quiz is for educational purposes only and does not replace professional medical diagnosis.",
+        "medicalAdvice": "Consult with healthcare professionals for proper medical evaluation.",
+        "startQuiz": "Start Quiz",
+        "results": {
+            "score": "Your Score",
+            "lowRisk": "Low Risk",
+            "moderateRisk": "Moderate Risk",
+            "highRisk": "High Risk",
+            "recommendation": "Recommendation",
+            "seeDoctor": "Please consult with a healthcare professional for further evaluation."
+        }
+    },
+    "aiScreening": {
+        "title": "AI-Powered Cognitive Screening",
+        "description": "Upload audio or enter text for AI analysis of cognitive patterns",
+        "uploadAudio": "Upload Audio",
+        "enterText": "Enter Text",
+        "analyze": "Analyze",
+        "analysisResults": "Analysis Results",
+        "riskScore": "Risk Score",
+        "recommendations": "Recommendations"
+    },
+    "cognitiveTraining": {
+        "title": "Cognitive Training",
+        "description": "Strengthen your cognitive abilities with AI-powered exercises",
+        "wordRecall": "Word Recall",
+        "languageFluency": "Language Fluency",
+        "memoryMatch": "Memory Match",
+        "categoryNaming": "Category Naming",
+        "readingComprehension": "Reading Comprehension",
+        "score": "Score",
+        "level": "Level",
+        "timeRemaining": "Time Remaining",
+        "gameComplete": "Game Complete!",
+        "yourScore": "Your Score",
+        "playAgain": "Play Again"
+    },
+    "resources": {
+        "title": "Resource Hub",
+        "description": "Comprehensive information on Alzheimer's prevention and cognitive health",
+        "categories": {
+            "prevention": "Prevention",
+            "earlySymptoms": "Early Symptoms",
+            "caregiving": "Caregiving"
+        },
+        "latestArticles": "Latest Articles",
+        "researchUpdates": "Research Updates"
+    },
+    "auth": {
+        "login": {
+            "title": "Log in to your account",
+            "email": "Email address",
+            "password": "Password",
+            "forgotPassword": "Forgot your password?",
+            "noAccount": "Don't have an account?",
+            "signUp": "Sign up here"
+        },
+        "register": {
+            "title": "Create your account",
+            "fullName": "Full name",
+            "email": "Email address",
+            "password": "Password",
+            "confirmPassword": "Confirm password",
+            "haveAccount": "Already have an account?",
+            "signIn": "Sign in here"
+        }
+    },
+    "profile": {
+        "title": "User Profile",
+        "personalInfo": "Personal Information",
+        "cognitiveHistory": "Cognitive Assessment History",
+        "settings": "Settings",
+        "language": "Language",
+        "theme": "Theme",
+        "fontSize": "Font Size"
+    },
+    "footer": {
+        "company": "NeuroAegis",
+        "description": "AI-powered platform for cognitive health monitoring and Alzheimer's prevention.",
+        "sections": {
+            "platform": "Platform",
+            "company": "Company",
+            "legal": "Legal"
+        },
+        "links": {
+            "privacy": "Privacy Policy",
+            "terms": "Terms of Service",
+            "cookies": "Cookie Policy",
+            "dataProtection": "Data Protection",
+            "aboutUs": "About Us",
+            "ourTeam": "Our Team",
+            "careers": "Careers",
+            "contactUs": "Contact Us",
+            "healthMonitoring": "Health Monitoring"
+        },
+        "allRightsReserved": "All rights reserved."
+    },
+    "legal": {
+        "privacy": {
+            "title": "Privacy Policy",
+            "lastUpdated": "Last updated"
+        },
+        "terms": {
+            "title": "Terms of Service",
+            "lastUpdated": "Last updated"
+        },
+        "cookies": {
+            "title": "Cookie Policy",
+            "lastUpdated": "Last updated"
+        },
+        "dataProtection": {
+            "title": "Data Protection",
+            "lastUpdated": "Last updated"
+        }
+    },
+    "theme": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+    },
+    "language": {
+        "english": "English",
+        "thai": "ไทย"
+    }
+}

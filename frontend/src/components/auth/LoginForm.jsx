@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function LoginForm() {
@@ -10,6 +11,7 @@ export default function LoginForm() {
 
     const { login } = useAuth();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const handleInputChange = () => {
         if (error) setError('');
@@ -45,11 +47,11 @@ export default function LoginForm() {
             <div className="mt-7 bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
                 <div className="p-4 sm:p-7">
                     <div className="text-center">
-                        <h1 className="block text-2xl font-bold text-gray-800 dark:text-white">Sign in</h1>
+                        <h1 className="block text-2xl font-bold text-gray-800 dark:text-white">{t('auth.login.title')}</h1>
                         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                            Don't have an account yet?{' '}
+                            {t('auth.login.noAccount')}{' '}
                             <Link to="/register" className="text-primary-600 decoration-2 hover:underline font-medium dark:text-primary-400">
-                                Create an account
+                                {t('auth.login.signUp')}
                             </Link>
                         </p>
                     </div>
@@ -64,7 +66,7 @@ export default function LoginForm() {
                         <form onSubmit={handleSubmit}>
                             <div className="grid gap-y-4">
                                 <div>
-                                    <label htmlFor="email" className="block text-sm mb-2 dark:text-white">Email address</label>
+                                    <label htmlFor="email" className="block text-sm mb-2 dark:text-white">{t('auth.login.email')}</label>
                                     <div className="relative">
                                         <input
                                             type="email"
@@ -84,9 +86,9 @@ export default function LoginForm() {
 
                                 <div>
                                     <div className="flex justify-between items-center">
-                                        <label htmlFor="password" className="block text-sm mb-2 dark:text-white">Password</label>
+                                        <label htmlFor="password" className="block text-sm mb-2 dark:text-white">{t('auth.login.password')}</label>
                                         <Link to="/forgot-password" className="text-sm text-primary-600 decoration-2 hover:underline font-medium dark:text-primary-400">
-                                            Forgot password?
+                                            {t('auth.login.forgotPassword')}
                                         </Link>
                                     </div>
                                     <div className="relative">
@@ -125,7 +127,7 @@ export default function LoginForm() {
                                     className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-50 disabled:pointer-events-none dark:bg-primary-500 dark:hover:bg-primary-600"
                                     disabled={isSubmitting}
                                 >
-                                    {isSubmitting ? 'Signing in...' : 'Sign in'}
+                                    {isSubmitting ? t('common.loading') : t('nav.login')}
                                 </button>
                             </div>
                         </form>

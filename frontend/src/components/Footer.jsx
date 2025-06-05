@@ -1,37 +1,39 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import logo from '../assets/neuroaegis-logo.png';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const { t } = useTranslation();
 
   const footerLinks = [
     {
-      title: 'Platform',
+      title: t('footer.sections.platform'),
       links: [
-        { name: 'Early Detection Quiz', path: '/quiz' },
-        { name: 'AI Screening', path: '/screening' },
-        { name: 'Cognitive Training', path: '/training' },
-        { name: 'Resource Hub', path: '/resources' },
-        { name: 'Health Monitoring', path: '/health-monitoring' },
+        { name: t('quiz.title'), path: '/quiz' },
+        { name: t('nav.aiScreening'), path: '/screening' },
+        { name: t('nav.cognitiveTraining'), path: '/cognitive-training' },
+        { name: t('nav.resourceHub'), path: '/resources' },
+        { name: t('footer.links.healthMonitoring'), path: '/health-monitoring' },
       ],
     },
     {
-      title: 'Company',
+      title: t('footer.sections.company'),
       links: [
-        { name: 'About Us', path: '/about' },
-        { name: 'Our Team', path: '/team' },
-        { name: 'Careers', path: '/careers' },
-        { name: 'Contact Us', path: '/contact' },
+        { name: t('footer.links.aboutUs'), path: '/about' },
+        { name: t('footer.links.ourTeam'), path: '/team' },
+        { name: t('footer.links.careers'), path: '/careers' },
+        { name: t('footer.links.contactUs'), path: '/contact' },
       ],
     },
     {
-      title: 'Legal',
+      title: t('footer.sections.legal'),
       links: [
-        { name: 'Privacy Policy', path: '/privacy' },
-        { name: 'Terms of Service', path: '/terms' },
-        { name: 'Cookie Policy', path: '/cookies' },
-        { name: 'Data Protection', path: '/data-protection' },
+        { name: t('footer.links.privacy'), path: '/privacy' },
+        { name: t('footer.links.terms'), path: '/terms' },
+        { name: t('footer.links.cookies'), path: '/cookies' },
+        { name: t('footer.links.dataProtection'), path: '/data-protection' },
       ],
     },
   ];
@@ -44,11 +46,10 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center">
               <img src={logo} alt="NeuroAegis Logo" className="h-10 w-auto" />
-              <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">NeuroAegis</span>
+              <span className="ml-2 text-xl font-semibold text-gray-900 dark:text-white">{t('footer.company')}</span>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              AI-powered platform for early detection of Mild Cognitive Impairment (MCI) and Alzheimer's prevention,
-              developed by NeuroAegis.
+              {t('footer.description')}
             </p>
             <div className="flex space-x-4">
               <a href="https://facebook.com" className="text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">
@@ -94,7 +95,7 @@ export default function Footer() {
 
         <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col sm:flex-row justify-between items-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            © {currentYear} NeuroAegis. All rights reserved.
+            © {currentYear} {t('footer.company')}. {t('footer.allRightsReserved')}
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 sm:mt-0">
             Made with care for brain health and accessibility.
