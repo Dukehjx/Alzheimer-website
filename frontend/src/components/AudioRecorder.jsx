@@ -489,6 +489,85 @@ const AudioRecorder = () => {
         return 'text-red-500 border-red-500';
     };
 
+    // Function to translate recommendations by matching them to translation keys
+    const translateRecommendation = (recommendation, t) => {
+        const commonRecommendations = t('aiScreening.commonRecommendations', { returnObjects: true });
+
+        // Define mapping patterns for common recommendations
+        const patterns = [
+            {
+                keywords: ['engage', 'cognitive activities', 'puzzles', 'reading'],
+                key: 'engageActivities'
+            },
+            {
+                keywords: ['maintain', 'social interactions', 'social', 'stimulate'],
+                key: 'maintainSocial'
+            },
+            {
+                keywords: ['periodic', 'cognitive assessments', 'monitor changes'],
+                key: 'periodicAssessments'
+            },
+            {
+                keywords: ['memory exercises', 'word recall', 'memory'],
+                key: 'memoryExercises'
+            },
+            {
+                keywords: ['neurologist', 'baseline cognitive', 'consult'],
+                key: 'consultNeurologist'
+            },
+            {
+                keywords: ['daily journal', 'track', 'forgetfulness'],
+                key: 'dailyJournal'
+            },
+            {
+                keywords: ['physical exercise', 'moderate', 'brain health'],
+                key: 'physicalExercise'
+            },
+            {
+                keywords: ['brain-healthy diet', 'omega-3', 'diet'],
+                key: 'healthyDiet'
+            },
+            {
+                keywords: ['quality sleep', '7-9 hours', 'sleep'],
+                key: 'qualitySleep'
+            },
+            {
+                keywords: ['stress management', 'meditation', 'stress'],
+                key: 'stressManagement'
+            },
+            {
+                keywords: ['mentally stimulating', 'mental', 'stimulating'],
+                key: 'mentalStimulation'
+            },
+            {
+                keywords: ['socially active', 'relationships', 'social'],
+                key: 'socialEngagement'
+            },
+            {
+                keywords: ['medical checkups', 'regular', 'screening'],
+                key: 'regularCheckups'
+            }
+        ];
+
+        // Convert recommendation to lowercase for matching
+        const lowerRecommendation = recommendation.toLowerCase();
+
+        // Find matching pattern
+        for (const pattern of patterns) {
+            const matchCount = pattern.keywords.filter(keyword =>
+                lowerRecommendation.includes(keyword.toLowerCase())
+            ).length;
+
+            // If at least 2 keywords match, use the translation
+            if (matchCount >= 2) {
+                return commonRecommendations[pattern.key] || recommendation;
+            }
+        }
+
+        // If no pattern matches, return original recommendation
+        return recommendation;
+    };
+
     // RecordButton component to optimize updates
     const RecordButton = React.memo(({ isRecording, duration, onStart, onStop }) => {
         // Format seconds to MM:SS (integers only)
@@ -969,7 +1048,7 @@ const AudioRecorder = () => {
                                 <ul className="list-disc pl-5 space-y-2">
                                     {results.analysis.recommendations?.map((recommendation, index) => (
                                         <li key={index} className="text-gray-700 dark:text-gray-300">
-                                            {recommendation}
+                                            {translateRecommendation(recommendation, t)}
                                         </li>
                                     ))}
                                 </ul>
@@ -982,13 +1061,11 @@ const AudioRecorder = () => {
                             <h3 className="section-title text-xl font-semibold mb-4">{t('aiScreening.understandingResults')}</h3>
                             <ScoreExplanation
                                 scores={{
-                                    lexicalDiversity: Math.round((1 - (results.analysis.domain_scores?.['language'] ?? 1)) * 100),
-                                    syntacticComplexity: Math.round((1 - (results.analysis.domain_scores?.['executive_function'] ?? 1)) * 100),
-                                    semanticCoherence: results.analysis.domain_scores?.['visuospatial'] !== undefined ?
-                                        Math.round((1 - results.analysis.domain_scores['visuospatial']) * 100) :
-                                        0, // Default to 0 if visuospatial is missing, was 80 previously
-                                    speechFluency: Math.round((1 - (results.analysis.domain_scores?.['attention'] ?? 1)) * 100),
-                                    memoryCues: Math.round((1 - (results.analysis.domain_scores?.['memory'] ?? 1)) * 100)
+                                    lexicalDiversity: Math.round((1 - (results.analysis.domain_scores?.['LANGUAGE'] ?? 0.5)) * 100),
+                                    syntacticComplexity: Math.round((1 - (results.analysis.domain_scores?.['EXECUTIVE_FUNCTION'] ?? 0.5)) * 100),
+                                    semanticCoherence: Math.round((1 - (results.analysis.domain_scores?.['EXECUTIVE_FUNCTION'] ?? 0.5)) * 100), // Map to executive function since visuospatial isn't available
+                                    speechFluency: Math.round((1 - (results.analysis.domain_scores?.['ATTENTION'] ?? 0.5)) * 100),
+                                    memoryCues: Math.round((1 - (results.analysis.domain_scores?.['MEMORY'] ?? 0.5)) * 100)
                                 }}
                             />
                         </div>

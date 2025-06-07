@@ -2,6 +2,85 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { analyzeText } from '../api/aiService';
 
+// Function to translate recommendations by matching them to translation keys
+const translateRecommendation = (recommendation, t) => {
+    const commonRecommendations = t('aiScreening.commonRecommendations', { returnObjects: true });
+
+    // Define mapping patterns for common recommendations
+    const patterns = [
+        {
+            keywords: ['engage', 'cognitive activities', 'puzzles', 'reading'],
+            key: 'engageActivities'
+        },
+        {
+            keywords: ['maintain', 'social interactions', 'social', 'stimulate'],
+            key: 'maintainSocial'
+        },
+        {
+            keywords: ['periodic', 'cognitive assessments', 'monitor changes'],
+            key: 'periodicAssessments'
+        },
+        {
+            keywords: ['memory exercises', 'word recall', 'memory'],
+            key: 'memoryExercises'
+        },
+        {
+            keywords: ['neurologist', 'baseline cognitive', 'consult'],
+            key: 'consultNeurologist'
+        },
+        {
+            keywords: ['daily journal', 'track', 'forgetfulness'],
+            key: 'dailyJournal'
+        },
+        {
+            keywords: ['physical exercise', 'moderate', 'brain health'],
+            key: 'physicalExercise'
+        },
+        {
+            keywords: ['brain-healthy diet', 'omega-3', 'diet'],
+            key: 'healthyDiet'
+        },
+        {
+            keywords: ['quality sleep', '7-9 hours', 'sleep'],
+            key: 'qualitySleep'
+        },
+        {
+            keywords: ['stress management', 'meditation', 'stress'],
+            key: 'stressManagement'
+        },
+        {
+            keywords: ['mentally stimulating', 'mental', 'stimulating'],
+            key: 'mentalStimulation'
+        },
+        {
+            keywords: ['socially active', 'relationships', 'social'],
+            key: 'socialEngagement'
+        },
+        {
+            keywords: ['medical checkups', 'regular', 'screening'],
+            key: 'regularCheckups'
+        }
+    ];
+
+    // Convert recommendation to lowercase for matching
+    const lowerRecommendation = recommendation.toLowerCase();
+
+    // Find matching pattern
+    for (const pattern of patterns) {
+        const matchCount = pattern.keywords.filter(keyword =>
+            lowerRecommendation.includes(keyword.toLowerCase())
+        ).length;
+
+        // If at least 2 keywords match, use the translation
+        if (matchCount >= 2) {
+            return commonRecommendations[pattern.key] || recommendation;
+        }
+    }
+
+    // If no pattern matches, return original recommendation
+    return recommendation;
+};
+
 const TextAnalysis = () => {
     const { t, i18n } = useTranslation();
     const [text, setText] = useState('');
@@ -256,7 +335,7 @@ const TextAnalysis = () => {
                             <ul className="list-disc pl-5 space-y-2">
                                 {results.recommendations.map((recommendation, index) => (
                                     <li key={index} className="text-gray-700 dark:text-gray-300">
-                                        {recommendation}
+                                        {translateRecommendation(recommendation, t)}
                                     </li>
                                 ))}
                             </ul>
