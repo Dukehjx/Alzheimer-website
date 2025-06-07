@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { analyzeSpeech } from '../api/aiService';
 import { apiClient, uploadClient, testApiConnection } from '../api/apiClient';
 import ScoreExplanation from './ScoreExplanation';
@@ -57,6 +58,7 @@ const StatusIndicator = ({ status, message }) => {
  * and processing them for speech-to-text and analysis.
  */
 const AudioRecorder = () => {
+    const { t } = useTranslation();
     const [isRecording, setIsRecording] = useState(false);
     const [recordingDuration, setRecordingDuration] = useState(0);
     const [audioBlob, setAudioBlob] = useState(null);
@@ -467,17 +469,17 @@ const AudioRecorder = () => {
     // Format domain name for display
     const formatDomain = (domain) => {
         return domain
-            .toLowerCase()
-            .split('_')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .replace(/_/g, ' ')
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
             .join(' ');
     };
 
     // Map score to risk level text
     const getRiskLevel = (score) => {
-        if (score < 0.3) return 'Low';
-        if (score < 0.6) return 'Moderate';
-        return 'High';
+        if (score < 0.3) return t('aiScreening.lowRisk');
+        if (score < 0.6) return t('aiScreening.moderateRisk');
+        return t('aiScreening.highRisk');
     };
 
     // Map score to color
@@ -521,7 +523,7 @@ const AudioRecorder = () => {
                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                 </svg>
-                Start Recording
+                {t('aiScreening.startRecording')}
             </button>
         );
     });
@@ -719,7 +721,7 @@ const AudioRecorder = () => {
                 {/* Recording Controls */}
                 <div className="flex flex-col sm:flex-row gap-4 w-full">
                     <div className="flex-1 p-4 border border-gray-300 rounded-md dark:border-gray-600">
-                        <h3 className="text-lg font-medium mb-3">Record Audio</h3>
+                        <h3 className="text-lg font-medium mb-3">{t('aiScreening.recordAudio')}</h3>
                         <div className="flex items-center space-x-4">
                             <RecordButton isRecording={isRecording} duration={recordingDuration} onStart={handleStartRecording} onStop={handleStopRecording} />
                         </div>
@@ -727,7 +729,7 @@ const AudioRecorder = () => {
 
                     {/* File Upload */}
                     <div className="flex-1 p-4 border border-gray-300 rounded-md dark:border-gray-600">
-                        <h3 className="text-lg font-medium mb-3">Upload Audio File</h3>
+                        <h3 className="text-lg font-medium mb-3">{t('aiScreening.uploadAudioFile')}</h3>
                         <div className="flex items-center">
                             <input
                                 type="file"
@@ -746,10 +748,10 @@ const AudioRecorder = () => {
                                 <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
                                 </svg>
-                                Choose File
+                                {t('aiScreening.chooseFile')}
                             </button>
                             <span className="ml-3 text-sm text-gray-600 dark:text-gray-400">
-                                {uploadedFile ? uploadedFile.name : 'No file selected'}
+                                {uploadedFile ? uploadedFile.name : t('aiScreening.noFileSelected')}
                             </span>
                         </div>
                     </div>
@@ -758,7 +760,7 @@ const AudioRecorder = () => {
                 {/* Audio Player */}
                 {audioUrl && (
                     <div className="mt-4">
-                        <h3 className="text-lg font-medium mb-2">Audio Preview</h3>
+                        <h3 className="text-lg font-medium mb-2">{t('aiScreening.audioPreview')}</h3>
 
                         {/* Hidden native audio element for browser audio API */}
                         <audio
@@ -822,11 +824,11 @@ const AudioRecorder = () => {
 
                             {/* File info */}
                             <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 flex justify-between">
-                                <span>{uploadedFile ? uploadedFile.name : 'Recorded Audio'}</span>
+                                <span>{uploadedFile ? uploadedFile.name : t('aiScreening.recordedAudio')}</span>
                                 <span>
                                     {uploadedFile ?
                                         `${(uploadedFile.size / (1024 * 1024)).toFixed(2)} MB` :
-                                        `${recordingDuration}s recording`}
+                                        `${recordingDuration}s ${t('aiScreening.recording')}`}
                                 </span>
                             </div>
                         </div>
@@ -843,7 +845,7 @@ const AudioRecorder = () => {
                         className="rounded mr-2 border-gray-300 text-primary-600 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700"
                     />
                     <label htmlFor="includeAnalysis" className="text-sm">
-                        Include cognitive analysis of transcribed speech
+                        {t('aiScreening.includeCognitiveAnalysis')}
                     </label>
                 </div>
 
@@ -862,9 +864,9 @@ const AudioRecorder = () => {
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    Processing Audio...
+                                    {t('aiScreening.processingAudio')}
                                 </>
-                            ) : 'Process Audio'}
+                            ) : t('aiScreening.processAudio')}
                         </button>
 
                         {/* Service status indicator */}
@@ -890,7 +892,7 @@ const AudioRecorder = () => {
             {/* Results Display */}
             {results && results.success && (
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mt-6 results-container">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Transcription Results</h3>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.transcriptionResults')}</h3>
 
                     <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md mb-6">
                         <p className="text-gray-800 dark:text-gray-200 whitespace-pre-line">
@@ -898,7 +900,7 @@ const AudioRecorder = () => {
                         </p>
                         <div className="mt-2 text-right">
                             <span className="text-sm text-gray-500 dark:text-gray-400">
-                                Language: {results.transcription.language || 'auto-detected'}
+                                {t('aiScreening.language')}: {results.transcription.language || 'auto-detected'}
                             </span>
                         </div>
                     </div>
@@ -906,7 +908,7 @@ const AudioRecorder = () => {
                     {/* Cognitive Analysis Results */}
                     {results.analysis && (
                         <>
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Cognitive Analysis</h3>
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.cognitiveAnalysis')}</h3>
 
                             <div className="flex flex-col md:flex-row items-center justify-center my-6">
                                 <div className="relative inline-flex m-4">
@@ -931,20 +933,20 @@ const AudioRecorder = () => {
                                     </svg>
                                     <div className="ml-4">
                                         <p className="text-lg font-semibold">
-                                            Risk Level: {getRiskLevel(results.analysis.overall_score)}
+                                            {t('aiScreening.riskLevel')}: {getRiskLevel(results.analysis.overall_score)}
                                         </p>
                                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                                            Confidence: {Math.round((results.analysis.confidence_score || 0.75) * 100)}%
+                                            {t('aiScreening.confidence')}: {Math.round((results.analysis.confidence_score || 0.75) * 100)}%
                                         </p>
                                         <p className="text-sm text-gray-500 dark:text-gray-400">
-                                            Model: {results.analysis.model_type || 'Default'}
+                                            {t('aiScreening.model')}: {results.analysis.model_type || 'Default'}
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="border-t border-gray-200 dark:border-gray-700 my-4 py-4">
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Cognitive Domain Scores</h4>
+                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.cognitiveDomainScores')}</h4>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
                                     {Object.entries(results.analysis.domain_scores || {}).map(([domain, score]) => (
@@ -962,7 +964,7 @@ const AudioRecorder = () => {
                             </div>
 
                             <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Recommendations</h4>
+                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('aiScreening.recommendations')}</h4>
 
                                 <ul className="list-disc pl-5 space-y-2">
                                     {results.analysis.recommendations?.map((recommendation, index) => (
@@ -977,7 +979,7 @@ const AudioRecorder = () => {
 
                     {results && results.analysis && results.analysis.domain_scores && (
                         <div className="score-explanation-section mt-8">
-                            <h3 className="section-title text-xl font-semibold mb-4">Understanding Your Results</h3>
+                            <h3 className="section-title text-xl font-semibold mb-4">{t('aiScreening.understandingResults')}</h3>
                             <ScoreExplanation
                                 scores={{
                                     lexicalDiversity: Math.round((1 - (results.analysis.domain_scores?.['language'] ?? 1)) * 100),

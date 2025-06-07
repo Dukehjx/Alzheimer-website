@@ -1,13 +1,32 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { analyzeText } from '../api/aiService';
 
 const TextAnalysis = () => {
+    const { t, i18n } = useTranslation();
     const [text, setText] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [results, setResults] = useState(null);
     const [includeFeatures, setIncludeFeatures] = useState(false);
     const [language, setLanguage] = useState('en');
+
+    // Language options that match the website's supported languages
+    const languageOptions = [
+        { code: 'en', name: t('language.english') },
+        { code: 'es', name: t('language.spanish') },
+        { code: 'zh', name: t('language.chinese') },
+        { code: 'zh-TW', name: t('language.traditionalChinese') },
+        { code: 'ja', name: t('language.japanese') },
+        { code: 'ko', name: t('language.korean') },
+        { code: 'pt', name: t('language.portuguese') },
+        { code: 'ar', name: t('language.arabic') },
+        { code: 'hi', name: t('language.hindi') },
+        { code: 'ms', name: t('language.malay') },
+        { code: 'vi', name: t('language.vietnamese') },
+        { code: 'ru', name: t('language.russian') },
+        { code: 'th', name: t('language.thai') }
+    ];
 
     const handleTextChange = (e) => {
         setText(e.target.value);
@@ -23,7 +42,7 @@ const TextAnalysis = () => {
         e.preventDefault();
 
         if (!text.trim() || text.trim().length < 20) {
-            setError('Please enter at least 20 characters of text to analyze.');
+            setError(t('aiScreening.minCharactersError'));
             return;
         }
 
@@ -37,13 +56,13 @@ const TextAnalysis = () => {
                 setResults(response.data);
             } else {
                 console.error('Received an empty or invalid response from analyzeText', response);
-                setError('Received an invalid response from the server.');
+                setError(t('aiScreening.invalidResponseError'));
                 setResults(null);
             }
 
         } catch (err) {
             console.error('Analysis error:', err);
-            setError(err.message || 'An error occurred during analysis. Please try again.');
+            setError(err.message || t('aiScreening.analysisError'));
             setResults(null);
         } finally {
             setLoading(false);
@@ -61,9 +80,9 @@ const TextAnalysis = () => {
 
     // Map score to risk level text
     const getRiskLevel = (score) => {
-        if (score < 0.3) return 'Low';
-        if (score < 0.6) return 'Moderate';
-        return 'High';
+        if (score < 0.3) return t('aiScreening.lowRisk');
+        if (score < 0.6) return t('aiScreening.moderateRisk');
+        return t('aiScreening.highRisk');
     };
 
     // Map score to color
@@ -78,13 +97,13 @@ const TextAnalysis = () => {
             <form onSubmit={handleSubmit} className="mb-6">
                 <div className="mb-4">
                     <label htmlFor="text-input" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Enter Text for Analysis
+                        {t('aiScreening.enterTextForAnalysis')}
                     </label>
                     <textarea
                         id="text-input"
                         className="w-full border border-gray-300 rounded-md p-3 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white mb-4"
                         rows="6"
-                        placeholder="Type or paste text here for analysis. The more text you provide, the more accurate the analysis. Minimum 20 characters."
+                        placeholder={t('aiScreening.textPlaceholder')}
                         value={text}
                         onChange={handleTextChange}
                     />
@@ -92,7 +111,7 @@ const TextAnalysis = () => {
 
                 <div className="mb-4">
                     <label htmlFor="language-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Language
+                        {t('aiScreening.language')}
                     </label>
                     <select
                         id="language-select"
@@ -100,16 +119,18 @@ const TextAnalysis = () => {
                         onChange={handleLanguageChange}
                         className="w-full md:w-1/2 border border-gray-300 rounded-md p-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     >
-                        <option value="en">English</option>
-                        <option value="es">Spanish</option>
-                        <option value="fr">French</option>
+                        {languageOptions.map((lang) => (
+                            <option key={lang.code} value={lang.code}>
+                                {lang.name}
+                            </option>
+                        ))}
                     </select>
                 </div>
 
                 <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-4">
                     <div className="w-full">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Options
+                            {t('aiScreening.options')}
                         </label>
                         <div className="flex items-center">
                             <input
@@ -120,7 +141,7 @@ const TextAnalysis = () => {
                                 onChange={() => setIncludeFeatures(!includeFeatures)}
                             />
                             <label htmlFor="include-features" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                                Include detailed linguistic features
+                                {t('aiScreening.includeDetailedFeatures')}
                             </label>
                         </div>
                     </div>
@@ -137,9 +158,9 @@ const TextAnalysis = () => {
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
-                            Analyzing...
+                            {t('aiScreening.analyzing')}
                         </>
-                    ) : 'Analyze Text'}
+                    ) : t('aiScreening.analyzeText')}
                 </button>
             </form>
 
@@ -151,7 +172,7 @@ const TextAnalysis = () => {
 
             {results && results.success && (
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Analysis Results</h3>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.analysisResults')}</h3>
 
                     <div className="flex flex-col md:flex-row items-center justify-center my-6">
                         <div className="relative inline-flex m-4">
@@ -176,13 +197,13 @@ const TextAnalysis = () => {
                             </svg>
                             <div className="ml-4">
                                 <p className="text-lg font-semibold">
-                                    Risk Level: {getRiskLevel(results.overall_score || results.risk_score || 0.5)}
+                                    {t('aiScreening.riskLevel')}: {getRiskLevel(results.overall_score || results.risk_score || 0.5)}
                                 </p>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Confidence: {Math.round((results.confidence || 0.75) * 100)}%
+                                    {t('aiScreening.confidence')}: {Math.round((results.confidence || 0.75) * 100)}%
                                 </p>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Language: {results.language_name || 'English'}
+                                    {t('aiScreening.language')}: {results.language_name || 'English'}
                                 </p>
                             </div>
                         </div>
@@ -190,7 +211,7 @@ const TextAnalysis = () => {
 
                     {results.domain_scores && Object.keys(results.domain_scores).length > 0 && (
                         <div className="border-t border-gray-200 dark:border-gray-700 my-4 py-4">
-                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Cognitive Domain Scores</h4>
+                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.cognitiveDomainScores')}</h4>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
                                 {Object.entries(results.domain_scores).filter(([domain]) => domain !== 'overall_cognitive').map(([domain, score]) => (
@@ -210,7 +231,7 @@ const TextAnalysis = () => {
 
                     {results.detected_patterns && Object.keys(results.detected_patterns).length > 0 && (
                         <div className="border-t border-gray-200 dark:border-gray-700 my-4 py-4">
-                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Detected Patterns</h4>
+                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.detectedPatterns')}</h4>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
                                 {Object.entries(results.detected_patterns).map(([pattern, data]) => (
@@ -230,7 +251,7 @@ const TextAnalysis = () => {
 
                     {results.recommendations && results.recommendations.length > 0 && (
                         <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Recommendations</h4>
+                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('aiScreening.recommendations')}</h4>
 
                             <ul className="list-disc pl-5 space-y-2">
                                 {results.recommendations.map((recommendation, index) => (

@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import TextAnalysis from '../components/TextAnalysis';
 import AudioRecorder from '../components/AudioRecorder';
 
 function AIScreeningPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('text');  // Default to text tab
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">AI Screening</h1>
-      <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">Upload your speech or text samples for AI analysis of potential cognitive decline markers.</p>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('aiScreening.title')}</h1>
+      <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">{t('aiScreening.description')}</p>
 
       {/* Tab Navigation */}
       <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6">
@@ -19,7 +21,7 @@ function AIScreeningPage() {
             }`}
           onClick={() => setActiveTab('text')}
         >
-          Text Analysis
+          {t('aiScreening.textAnalysis')}
         </button>
         <button
           className={`py-2 px-4 font-medium ${activeTab === 'audio'
@@ -28,7 +30,7 @@ function AIScreeningPage() {
             }`}
           onClick={() => setActiveTab('audio')}
         >
-          Audio Analysis
+          {t('aiScreening.audioAnalysis')}
         </button>
       </div>
 
@@ -36,12 +38,12 @@ function AIScreeningPage() {
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         {activeTab === 'text' ? (
           <>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Text Analysis</h3>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.textAnalysis')}</h3>
             <TextAnalysis />
           </>
         ) : (
           <>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Audio Analysis</h3>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.audioAnalysis')}</h3>
             <AudioRecorder />
           </>
         )}
