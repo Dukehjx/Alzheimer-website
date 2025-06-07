@@ -172,19 +172,105 @@
         "disclaimer": "注意：これらの評価は言語パターンのAI分析に基づいており、専門的な医学的評価に代わるものではありません。認知の健康について懸念がある場合は、医療専門家にご相談ください。"
     },
     "cognitiveTraining": {
-        "title": "認知トレーニング",
-        "description": "AI駆動のエクササイズで認知能力を強化します",
-        "wordRecall": "単語記憶",
-        "languageFluency": "言語流暢性",
-        "memoryMatch": "記憶マッチング",
-        "categoryNaming": "カテゴリ命名",
-        "readingComprehension": "読解力",
-        "score": "スコア",
-        "level": "レベル",
-        "timeRemaining": "残り時間",
-        "gameComplete": "ゲーム完了！",
-        "yourScore": "あなたのスコア",
-        "playAgain": "もう一度プレイ"
+        "title": "認知トレーニング演習",
+        "errorLoadingMetrics": "進捗指標の読み込みに失敗しました。デフォルト値を使用します。",
+        "notAvailable": "利用不可",
+        "minutesShort": "分",
+        "secondsShort": "秒",
+        "session": "セッション",
+        "scorePercentage": "スコア (%)",
+        "noPerformanceData": "パフォーマンスデータがまだありません。より多くの演習を完了して進捗を確認してください。",
+        "benefits": "利点",
+        "yourAverageScore": "あなたの平均スコア",
+        "startExercise": "演習を開始",
+        "acrossAllExercises": "すべての演習タイプ",
+        "progressSummary": {
+            "title": "あなたのトレーニング進捗",
+            "totalSessions": "総セッション数",
+            "timeSpent": "費やした時間",
+            "consistencyScore": "一貫性スコア",
+            "averageAccuracy": "平均精度"
+        },
+        "consistencyMessages": {
+            "excellent": "優秀な一貫性！",
+            "good": "良い進歩です、続けてください！",
+            "improve": "改善のために定期的に演習を完了してください"
+        },
+        "welcome": {
+            "title": "認知トレーニングへようこそ！",
+            "message": "最初の演習を完了して進捗の追跡を開始してください。"
+        },
+        "exercises": {
+            "wordRecall": {
+                "title": "単語記憶チャレンジ",
+                "description": "一連の単語を記憶し思い出して記憶パフォーマンスを向上させます。",
+                "benefits": {
+                    "workingMemory": "作業記憶を改善",
+                    "verbalRecall": "言語記憶を強化",
+                    "focusAttention": "集中力と注意力を構築"
+                }
+            },
+            "languageFluency": {
+                "title": "言語流暢性ゲーム",
+                "description": "異なるカテゴリで特定の文字で始まる単語を生成します。",
+                "benefits": {
+                    "verbalFluency": "言語流暢性を向上",
+                    "cognitiveFlexibility": "認知柔軟性を改善",
+                    "vocabulary": "語彙を強化"
+                }
+            },
+            "memoryMatch": {
+                "title": "記憶マッチゲーム",
+                "description": "質問カードと対応する答えをマッチさせて記憶と注意力を改善します。",
+                "benefits": {
+                    "workingMemory": "作業記憶を強化",
+                    "visualProcessing": "視覚処理を改善",
+                    "executiveFunction": "実行機能を強化"
+                }
+            },
+            "categoryNaming": {
+                "title": "カテゴリ命名ゲーム",
+                "description": "特定のカテゴリ内でできるだけ多くのアイテムを命名して意味流暢性を向上させます。",
+                "benefits": {
+                    "semanticMemory": "意味記憶を強化",
+                    "wordRetrieval": "単語検索を改善",
+                    "processingSpeed": "認知処理速度を向上"
+                }
+            },
+            "sequenceOrdering": {
+                "title": "順序並べゲーム",
+                "description": "シャッフルされたステップを正しい時系列または論理的順序に配置します。",
+                "benefits": {
+                    "executiveFunction": "実行機能を強化",
+                    "sequentialReasoning": "順序推論を改善",
+                    "temporalUnderstanding": "時間理解を構築"
+                }
+            }
+        },
+        "difficulty": {
+            "label": "難易度",
+            "beginnerToExpert": "初心者から専門家",
+            "easyToHard": "簡単から困難"
+        },
+        "duration": {
+            "label": "所要時間",
+            "oneToThreeMinutes": "1-3分",
+            "twoToFourMinutes": "2-4分",
+            "twoToFiveMinutes": "2-5分",
+            "threeToFiveMinutes": "3-5分",
+            "twoToTenMinutes": "2-10分"
+        },
+        "cognitiveProfile": {
+            "title": "あなたの認知プロファイル",
+            "strengths": "認知的強み",
+            "areasForImprovement": "改善領域",
+            "performanceTrends": "パフォーマンス傾向"
+        },
+        "whyItMatters": {
+            "title": "認知トレーニングが重要な理由",
+            "description": "定期的な認知トレーニングは脳の健康をサポートし、認知機能低下のリスクを軽減する可能性があることが示されています。これらの演習は記憶、注意、言語、実行機能を含む特定の認知領域をターゲットにしています。",
+            "recommendation": "最良の結果を得るために、週に少なくとも3-4回のトレーニングセッションを完了し、異なる認知能力に挑戦するために演習の種類を変えることを目指してください。"
+        }
     },
     "resources": {
         "title": "リソースセンター",

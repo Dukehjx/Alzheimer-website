@@ -173,19 +173,105 @@
         "disclaimer": "Note: These assessments are based on AI analysis of language patterns and should not replace professional medical evaluation. If you have concerns about cognitive health, please consult a healthcare professional."
     },
     "cognitiveTraining": {
-        "title": "Cognitive Training",
-        "description": "Strengthen your cognitive abilities with AI-powered exercises",
-        "wordRecall": "Word Recall",
-        "languageFluency": "Language Fluency",
-        "memoryMatch": "Memory Match",
-        "categoryNaming": "Category Naming",
-        "readingComprehension": "Reading Comprehension",
-        "score": "Score",
-        "level": "Level",
-        "timeRemaining": "Time Remaining",
-        "gameComplete": "Game Complete!",
-        "yourScore": "Your Score",
-        "playAgain": "Play Again"
+        "title": "Cognitive Training Exercises",
+        "errorLoadingMetrics": "Failed to load your progress metrics. Using default values.",
+        "notAvailable": "N/A",
+        "minutesShort": "m",
+        "secondsShort": "s",
+        "session": "Session",
+        "scorePercentage": "Score (%)",
+        "noPerformanceData": "No performance data available yet. Complete more exercises to see your progress.",
+        "benefits": "Benefits",
+        "yourAverageScore": "Your Average Score",
+        "startExercise": "Start Exercise",
+        "acrossAllExercises": "Across all exercise types",
+        "progressSummary": {
+            "title": "Your Training Progress",
+            "totalSessions": "Total Sessions",
+            "timeSpent": "Time Spent",
+            "consistencyScore": "Consistency Score",
+            "averageAccuracy": "Average Accuracy"
+        },
+        "consistencyMessages": {
+            "excellent": "Excellent consistency!",
+            "good": "Good progress, keep it up!",
+            "improve": "Complete exercises regularly to improve"
+        },
+        "welcome": {
+            "title": "Welcome to Cognitive Training!",
+            "message": "Complete your first exercise to start tracking your progress."
+        },
+        "exercises": {
+            "wordRecall": {
+                "title": "Word Recall Challenge",
+                "description": "Memorize and recall a series of words to improve memory performance.",
+                "benefits": {
+                    "workingMemory": "Improves working memory",
+                    "verbalRecall": "Enhances verbal recall",
+                    "focusAttention": "Builds focus and attention"
+                }
+            },
+            "languageFluency": {
+                "title": "Language Fluency Game",
+                "description": "Generate words that start with a specific letter across different categories.",
+                "benefits": {
+                    "verbalFluency": "Boosts verbal fluency",
+                    "cognitiveFlexibility": "Improves cognitive flexibility",
+                    "vocabulary": "Enhances vocabulary"
+                }
+            },
+            "memoryMatch": {
+                "title": "Memory Match Game",
+                "description": "Match question cards with their corresponding answers to improve memory and attention.",
+                "benefits": {
+                    "workingMemory": "Strengthens working memory",
+                    "visualProcessing": "Improves visual processing",
+                    "executiveFunction": "Enhances executive function"
+                }
+            },
+            "categoryNaming": {
+                "title": "Category Naming Game",
+                "description": "Name as many items as possible within a specific category to boost semantic fluency.",
+                "benefits": {
+                    "semanticMemory": "Enhances semantic memory",
+                    "wordRetrieval": "Improves word retrieval",
+                    "processingSpeed": "Boosts cognitive processing speed"
+                }
+            },
+            "sequenceOrdering": {
+                "title": "Sequence Ordering Game",
+                "description": "Arrange shuffled steps in their correct chronological or logical order.",
+                "benefits": {
+                    "executiveFunction": "Enhances executive function",
+                    "sequentialReasoning": "Improves sequential reasoning",
+                    "temporalUnderstanding": "Builds temporal understanding"
+                }
+            }
+        },
+        "difficulty": {
+            "label": "Difficulty",
+            "beginnerToExpert": "Beginner to Expert",
+            "easyToHard": "Easy to Hard"
+        },
+        "duration": {
+            "label": "Duration",
+            "oneToThreeMinutes": "1-3 minutes",
+            "twoToFourMinutes": "2-4 minutes",
+            "twoToFiveMinutes": "2-5 minutes",
+            "threeToFiveMinutes": "3-5 minutes",
+            "twoToTenMinutes": "2-10 minutes"
+        },
+        "cognitiveProfile": {
+            "title": "Your Cognitive Profile",
+            "strengths": "Cognitive Strengths",
+            "areasForImprovement": "Areas for Improvement",
+            "performanceTrends": "Performance Trends"
+        },
+        "whyItMatters": {
+            "title": "Why Cognitive Training Matters",
+            "description": "Regular cognitive training has been shown to support brain health and may help reduce the risk of cognitive decline. These exercises target specific cognitive domains including memory, attention, language, and executive function.",
+            "recommendation": "For best results, aim to complete at least 3-4 training sessions per week, varying the types of exercises to challenge different cognitive abilities."
+        }
     },
     "resources": {
         "title": "Resource Hub",

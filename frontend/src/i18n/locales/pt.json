@@ -172,19 +172,105 @@
         "disclaimer": "Nota: Essas avaliações são baseadas na análise de IA de padrões de linguagem e não devem substituir a avaliação médica profissional. Se você tem preocupações sobre saúde cognitiva, consulte um profissional de saúde."
     },
     "cognitiveTraining": {
-        "title": "Treinamento Cognitivo",
-        "description": "Fortaleça suas habilidades cognitivas com exercícios impulsionados por IA",
-        "wordRecall": "Recordação de Palavras",
-        "languageFluency": "Fluência Linguística",
-        "memoryMatch": "Correspondência de Memória",
-        "categoryNaming": "Nomeação de Categorias",
-        "readingComprehension": "Compreensão de Leitura",
-        "score": "Pontuação",
-        "level": "Nível",
-        "timeRemaining": "Tempo Restante",
-        "gameComplete": "Jogo Concluído!",
-        "yourScore": "Sua Pontuação",
-        "playAgain": "Jogar Novamente"
+        "title": "Exercícios de Treinamento Cognitivo",
+        "errorLoadingMetrics": "Falha ao carregar métricas de progresso. Usando valores padrão.",
+        "notAvailable": "N/D",
+        "minutesShort": "min",
+        "secondsShort": "s",
+        "session": "Sessão",
+        "scorePercentage": "Pontuação (%)",
+        "noPerformanceData": "Ainda não há dados de desempenho disponíveis. Complete mais exercícios para ver seu progresso.",
+        "benefits": "Benefícios",
+        "yourAverageScore": "Sua Pontuação Média",
+        "startExercise": "Iniciar Exercício",
+        "acrossAllExercises": "Em todos os tipos de exercícios",
+        "progressSummary": {
+            "title": "Seu Progresso de Treinamento",
+            "totalSessions": "Total de Sessões",
+            "timeSpent": "Tempo Gasto",
+            "consistencyScore": "Pontuação de Consistência",
+            "averageAccuracy": "Precisão Média"
+        },
+        "consistencyMessages": {
+            "excellent": "Excelente consistência!",
+            "good": "Bom progresso, continue assim!",
+            "improve": "Complete exercícios regularmente para melhorar"
+        },
+        "welcome": {
+            "title": "Bem-vindo ao Treinamento Cognitivo!",
+            "message": "Complete seu primeiro exercício para começar a acompanhar seu progresso."
+        },
+        "exercises": {
+            "wordRecall": {
+                "title": "Desafio de Recordação de Palavras",
+                "description": "Memorize e recorde uma série de palavras para melhorar o desempenho da memória.",
+                "benefits": {
+                    "workingMemory": "Melhora a memória de trabalho",
+                    "verbalRecall": "Aprimora a recordação verbal",
+                    "focusAttention": "Desenvolve foco e atenção"
+                }
+            },
+            "languageFluency": {
+                "title": "Jogo de Fluência Linguística",
+                "description": "Gere palavras que começam com uma letra específica em diferentes categorias.",
+                "benefits": {
+                    "verbalFluency": "Aumenta a fluência verbal",
+                    "cognitiveFlexibility": "Melhora a flexibilidade cognitiva",
+                    "vocabulary": "Aprimora o vocabulário"
+                }
+            },
+            "memoryMatch": {
+                "title": "Jogo de Correspondência de Memória",
+                "description": "Combine cartas de perguntas com suas respostas correspondentes para melhorar memória e atenção.",
+                "benefits": {
+                    "workingMemory": "Fortalece a memória de trabalho",
+                    "visualProcessing": "Melhora o processamento visual",
+                    "executiveFunction": "Aprimora a função executiva"
+                }
+            },
+            "categoryNaming": {
+                "title": "Jogo de Nomeação de Categorias",
+                "description": "Nomeie o maior número possível de itens dentro de uma categoria específica para aumentar a fluência semântica.",
+                "benefits": {
+                    "semanticMemory": "Aprimora a memória semântica",
+                    "wordRetrieval": "Melhora a recuperação de palavras",
+                    "processingSpeed": "Aumenta a velocidade de processamento cognitivo"
+                }
+            },
+            "sequenceOrdering": {
+                "title": "Jogo de Ordenação de Sequências",
+                "description": "Organize passos embaralhados em sua ordem cronológica ou lógica correta.",
+                "benefits": {
+                    "executiveFunction": "Aprimora a função executiva",
+                    "sequentialReasoning": "Melhora o raciocínio sequencial",
+                    "temporalUnderstanding": "Desenvolve compreensão temporal"
+                }
+            }
+        },
+        "difficulty": {
+            "label": "Dificuldade",
+            "beginnerToExpert": "Iniciante a Especialista",
+            "easyToHard": "Fácil a Difícil"
+        },
+        "duration": {
+            "label": "Duração",
+            "oneToThreeMinutes": "1-3 minutos",
+            "twoToFourMinutes": "2-4 minutos",
+            "twoToFiveMinutes": "2-5 minutos",
+            "threeToFiveMinutes": "3-5 minutos",
+            "twoToTenMinutes": "2-10 minutos"
+        },
+        "cognitiveProfile": {
+            "title": "Seu Perfil Cognitivo",
+            "strengths": "Pontos Fortes Cognitivos",
+            "areasForImprovement": "Áreas para Melhoria",
+            "performanceTrends": "Tendências de Desempenho"
+        },
+        "whyItMatters": {
+            "title": "Por Que o Treinamento Cognitivo Importa",
+            "description": "O treinamento cognitivo regular demonstrou apoiar a saúde cerebral e pode ajudar a reduzir o risco de declínio cognitivo. Estes exercícios visam domínios cognitivos específicos incluindo memória, atenção, linguagem e função executiva.",
+            "recommendation": "Para melhores resultados, procure completar pelo menos 3-4 sessões de treinamento por semana, variando os tipos de exercícios para desafiar diferentes habilidades cognitivas."
+        }
     },
     "resources": {
         "title": "Centro de Recursos",

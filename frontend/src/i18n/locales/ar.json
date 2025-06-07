@@ -172,19 +172,105 @@
         "disclaimer": "ملاحظة: هذه التقييمات تستند إلى تحليل الذكاء الاصطناعي لأنماط اللغة ولا يجب أن تحل محل التقييم الطبي المهني. إذا كانت لديك مخاوف بشأن الصحة المعرفية، يرجى استشارة أخصائي رعاية صحية."
     },
     "cognitiveTraining": {
-        "title": "التدريب المعرفي",
-        "description": "قوّي قدراتك المعرفية بتمارين مدعومة بالذكاء الاصطناعي",
-        "wordRecall": "تذكر الكلمات",
-        "languageFluency": "طلاقة اللغة",
-        "memoryMatch": "مطابقة الذاكرة",
-        "categoryNaming": "تسمية الفئات",
-        "readingComprehension": "فهم القراءة",
-        "score": "النتيجة",
-        "level": "المستوى",
-        "timeRemaining": "الوقت المتبقي",
-        "gameComplete": "اكتملت اللعبة!",
-        "yourScore": "نتيجتك",
-        "playAgain": "العب مرة أخرى"
+        "title": "تمارين التدريب المعرفي",
+        "errorLoadingMetrics": "فشل في تحميل مقاييس التقدم. استخدام القيم الافتراضية.",
+        "notAvailable": "غير متاح",
+        "minutesShort": "د",
+        "secondsShort": "ث",
+        "session": "جلسة",
+        "scorePercentage": "النتيجة (%)",
+        "noPerformanceData": "لا توجد بيانات أداء متاحة بعد. أكمل المزيد من التمارين لرؤية تقدمك.",
+        "benefits": "الفوائد",
+        "yourAverageScore": "متوسط نتيجتك",
+        "startExercise": "بدء التمرين",
+        "acrossAllExercises": "عبر جميع أنواع التمارين",
+        "progressSummary": {
+            "title": "تقدم التدريب الخاص بك",
+            "totalSessions": "إجمالي الجلسات",
+            "timeSpent": "الوقت المستغرق",
+            "consistencyScore": "نتيجة الاتساق",
+            "averageAccuracy": "متوسط الدقة"
+        },
+        "consistencyMessages": {
+            "excellent": "اتساق ممتاز!",
+            "good": "تقدم جيد، استمر!",
+            "improve": "أكمل التمارين بانتظام للتحسن"
+        },
+        "welcome": {
+            "title": "مرحباً بك في التدريب المعرفي!",
+            "message": "أكمل تمرينك الأول لبدء تتبع تقدمك."
+        },
+        "exercises": {
+            "wordRecall": {
+                "title": "تحدي استدعاء الكلمات",
+                "description": "احفظ واستدعي سلسلة من الكلمات لتحسين أداء الذاكرة.",
+                "benefits": {
+                    "workingMemory": "يحسن الذاكرة العاملة",
+                    "verbalRecall": "يعزز الاستدعاء اللفظي",
+                    "focusAttention": "يبني التركيز والانتباه"
+                }
+            },
+            "languageFluency": {
+                "title": "لعبة الطلاقة اللغوية",
+                "description": "أنتج كلمات تبدأ بحرف معين عبر فئات مختلفة.",
+                "benefits": {
+                    "verbalFluency": "يعزز الطلاقة اللفظية",
+                    "cognitiveFlexibility": "يحسن المرونة المعرفية",
+                    "vocabulary": "يعزز المفردات"
+                }
+            },
+            "memoryMatch": {
+                "title": "لعبة مطابقة الذاكرة",
+                "description": "اربط بطاقات الأسئلة بإجاباتها المقابلة لتحسين الذاكرة والانتباه.",
+                "benefits": {
+                    "workingMemory": "يقوي الذاكرة العاملة",
+                    "visualProcessing": "يحسن المعالجة البصرية",
+                    "executiveFunction": "يعزز الوظيفة التنفيذية"
+                }
+            },
+            "categoryNaming": {
+                "title": "لعبة تسمية الفئات",
+                "description": "اذكر أكبر عدد ممكن من العناصر ضمن فئة معينة لتعزيز الطلاقة الدلالية.",
+                "benefits": {
+                    "semanticMemory": "يعزز الذاكرة الدلالية",
+                    "wordRetrieval": "يحسن استرجاع الكلمات",
+                    "processingSpeed": "يعزز سرعة المعالجة المعرفية"
+                }
+            },
+            "sequenceOrdering": {
+                "title": "لعبة ترتيب التسلسل",
+                "description": "رتب الخطوات المختلطة في ترتيبها الزمني أو المنطقي الصحيح.",
+                "benefits": {
+                    "executiveFunction": "يعزز الوظيفة التنفيذية",
+                    "sequentialReasoning": "يحسن التفكير التسلسلي",
+                    "temporalUnderstanding": "يبني الفهم الزمني"
+                }
+            }
+        },
+        "difficulty": {
+            "label": "الصعوبة",
+            "beginnerToExpert": "من المبتدئ إلى الخبير",
+            "easyToHard": "من السهل إلى الصعب"
+        },
+        "duration": {
+            "label": "المدة",
+            "oneToThreeMinutes": "1-3 دقائق",
+            "twoToFourMinutes": "2-4 دقائق",
+            "twoToFiveMinutes": "2-5 دقائق",
+            "threeToFiveMinutes": "3-5 دقائق",
+            "twoToTenMinutes": "2-10 دقائق"
+        },
+        "cognitiveProfile": {
+            "title": "ملفك المعرفي",
+            "strengths": "نقاط القوة المعرفية",
+            "areasForImprovement": "مجالات التحسن",
+            "performanceTrends": "اتجاهات الأداء"
+        },
+        "whyItMatters": {
+            "title": "لماذا يهم التدريب المعرفي",
+            "description": "ثبت أن التدريب المعرفي المنتظم يدعم صحة الدماغ وقد يساعد في تقليل خطر التدهور المعرفي. تستهدف هذه التمارين مجالات معرفية محددة تشمل الذاكرة والانتباه واللغة والوظيفة التنفيذية.",
+            "recommendation": "للحصول على أفضل النتائج، اهدف إلى إكمال 3-4 جلسات تدريب على الأقل أسبوعياً، مع تنويع أنواع التمارين لتحدي قدرات معرفية مختلفة."
+        }
     },
     "resources": {
         "title": "مركز الموارد",

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { getProgressMetrics } from '../api/cognitiveTrainingService';
 import { Line } from 'react-chartjs-2';
 import {
@@ -37,6 +38,7 @@ const DEFAULT_METRICS = {
 };
 
 const CognitiveTraining = () => {
+    const { t } = useTranslation();
     const [metrics, setMetrics] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -54,7 +56,7 @@ const CognitiveTraining = () => {
 
             } catch (err) {
                 console.error('Error fetching metrics:', err);
-                setError('Failed to load your progress metrics. Using default values.');
+                setError(t('cognitiveTraining.errorLoadingMetrics'));
                 // Use default metrics if API fails
                 setMetrics(DEFAULT_METRICS);
             } finally {
@@ -63,70 +65,90 @@ const CognitiveTraining = () => {
         };
 
         fetchMetrics();
-    }, []);
+    }, [t]);
 
     // Available cognitive exercises
     const exercises = [
         {
             id: 'word-recall',
-            title: 'Word Recall Challenge',
-            description: 'Memorize and recall a series of words to improve memory performance.',
+            title: t('cognitiveTraining.exercises.wordRecall.title'),
+            description: t('cognitiveTraining.exercises.wordRecall.description'),
             icon: <span className="text-blue-500 text-3xl">🧠</span>,
             path: '/cognitive-training/word-recall',
-            benefits: ['Improves working memory', 'Enhances verbal recall', 'Builds focus and attention'],
-            difficulty: 'Beginner to Expert',
-            duration: '3-5 minutes'
+            benefits: [
+                t('cognitiveTraining.exercises.wordRecall.benefits.workingMemory'),
+                t('cognitiveTraining.exercises.wordRecall.benefits.verbalRecall'),
+                t('cognitiveTraining.exercises.wordRecall.benefits.focusAttention')
+            ],
+            difficulty: t('cognitiveTraining.difficulty.beginnerToExpert'),
+            duration: t('cognitiveTraining.duration.threeToFiveMinutes')
         },
         {
             id: 'language-fluency',
-            title: 'Language Fluency Game',
-            description: 'Generate words that start with a specific letter across different categories.',
+            title: t('cognitiveTraining.exercises.languageFluency.title'),
+            description: t('cognitiveTraining.exercises.languageFluency.description'),
             icon: <span className="text-green-500 text-3xl">📝</span>,
             path: '/cognitive-training/language-fluency',
-            benefits: ['Boosts verbal fluency', 'Improves cognitive flexibility', 'Enhances vocabulary'],
-            difficulty: 'Beginner to Expert',
-            duration: '2-4 minutes'
+            benefits: [
+                t('cognitiveTraining.exercises.languageFluency.benefits.verbalFluency'),
+                t('cognitiveTraining.exercises.languageFluency.benefits.cognitiveFlexibility'),
+                t('cognitiveTraining.exercises.languageFluency.benefits.vocabulary')
+            ],
+            difficulty: t('cognitiveTraining.difficulty.beginnerToExpert'),
+            duration: t('cognitiveTraining.duration.twoToFourMinutes')
         },
         {
             id: 'memory-match',
-            title: 'Memory Match Game',
-            description: 'Match question cards with their corresponding answers to improve memory and attention.',
+            title: t('cognitiveTraining.exercises.memoryMatch.title'),
+            description: t('cognitiveTraining.exercises.memoryMatch.description'),
             icon: <span className="text-purple-500 text-3xl">🃏</span>,
             path: '/cognitive-training/memory-match',
-            benefits: ['Strengthens working memory', 'Improves visual processing', 'Enhances executive function'],
-            difficulty: 'Beginner to Expert',
-            duration: '2-10 minutes'
+            benefits: [
+                t('cognitiveTraining.exercises.memoryMatch.benefits.workingMemory'),
+                t('cognitiveTraining.exercises.memoryMatch.benefits.visualProcessing'),
+                t('cognitiveTraining.exercises.memoryMatch.benefits.executiveFunction')
+            ],
+            difficulty: t('cognitiveTraining.difficulty.beginnerToExpert'),
+            duration: t('cognitiveTraining.duration.twoToTenMinutes')
         },
         {
             id: 'category-naming',
-            title: 'Category Naming Game',
-            description: 'Name as many items as possible within a specific category to boost semantic fluency.',
+            title: t('cognitiveTraining.exercises.categoryNaming.title'),
+            description: t('cognitiveTraining.exercises.categoryNaming.description'),
             icon: <span className="text-blue-500 text-3xl">📊</span>,
             path: '/cognitive-training/category-naming',
-            benefits: ['Enhances semantic memory', 'Improves word retrieval', 'Boosts cognitive processing speed'],
-            difficulty: 'Beginner to Expert',
-            duration: '1-3 minutes'
+            benefits: [
+                t('cognitiveTraining.exercises.categoryNaming.benefits.semanticMemory'),
+                t('cognitiveTraining.exercises.categoryNaming.benefits.wordRetrieval'),
+                t('cognitiveTraining.exercises.categoryNaming.benefits.processingSpeed')
+            ],
+            difficulty: t('cognitiveTraining.difficulty.beginnerToExpert'),
+            duration: t('cognitiveTraining.duration.oneToThreeMinutes')
         },
         {
             id: 'sequence-ordering',
-            title: 'Sequence Ordering Game',
-            description: 'Arrange shuffled steps in their correct chronological or logical order.',
+            title: t('cognitiveTraining.exercises.sequenceOrdering.title'),
+            description: t('cognitiveTraining.exercises.sequenceOrdering.description'),
             icon: <span className="text-orange-500 text-3xl">🔄</span>,
             path: '/cognitive-training/sequence-ordering',
-            benefits: ['Enhances executive function', 'Improves sequential reasoning', 'Builds temporal understanding'],
-            difficulty: 'Easy to Hard',
-            duration: '2-5 minutes'
+            benefits: [
+                t('cognitiveTraining.exercises.sequenceOrdering.benefits.executiveFunction'),
+                t('cognitiveTraining.exercises.sequenceOrdering.benefits.sequentialReasoning'),
+                t('cognitiveTraining.exercises.sequenceOrdering.benefits.temporalUnderstanding')
+            ],
+            difficulty: t('cognitiveTraining.difficulty.easyToHard'),
+            duration: t('cognitiveTraining.duration.twoToFiveMinutes')
         }
     ];
 
     // Function to format duration in minutes and seconds
     const formatDuration = (seconds) => {
-        if (!seconds) return 'N/A';
+        if (!seconds) return t('cognitiveTraining.notAvailable');
 
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
 
-        return `${mins}m ${secs}s`;
+        return `${mins}${t('cognitiveTraining.minutesShort')} ${secs}${t('cognitiveTraining.secondsShort')}`;
     };
 
     // Calculate overall average accuracy across all exercise types
@@ -146,7 +168,7 @@ const CognitiveTraining = () => {
         if (!performanceTrends || Object.keys(performanceTrends).length === 0) {
             return (
                 <p className="text-gray-600 dark:text-gray-400 text-sm italic">
-                    No performance data available yet. Complete more exercises to see your progress.
+                    {t('cognitiveTraining.noPerformanceData')}
                 </p>
             );
         }
@@ -177,11 +199,11 @@ const CognitiveTraining = () => {
 
         // Exercise type display names
         const exerciseNames = {
-            word_recall: 'Word Recall',
-            language_fluency: 'Language Fluency',
-            memory_match: 'Memory Match',
-            category_naming: 'Category Naming',
-            sequence_ordering: 'Sequence Ordering'
+            word_recall: t('cognitiveTraining.exercises.wordRecall.title'),
+            language_fluency: t('cognitiveTraining.exercises.languageFluency.title'),
+            memory_match: t('cognitiveTraining.exercises.memoryMatch.title'),
+            category_naming: t('cognitiveTraining.exercises.categoryNaming.title'),
+            sequence_ordering: t('cognitiveTraining.exercises.sequenceOrdering.title')
         };
 
         // Generate datasets from user data
@@ -203,7 +225,7 @@ const CognitiveTraining = () => {
 
         // Generate labels (session numbers)
         const maxLength = Math.max(...Object.values(performanceTrends).map(arr => arr.length));
-        const labels = Array.from({ length: maxLength }, (_, i) => `Session ${i + 1}`);
+        const labels = Array.from({ length: maxLength }, (_, i) => `${t('cognitiveTraining.session')} ${i + 1}`);
 
         const chartData = {
             labels,
@@ -241,7 +263,7 @@ const CognitiveTraining = () => {
                     },
                     title: {
                         display: true,
-                        text: 'Score (%)',
+                        text: t('cognitiveTraining.scorePercentage'),
                         color: document.documentElement.classList.contains('dark') ? 'white' : 'black'
                     }
                 },
@@ -282,23 +304,23 @@ const CognitiveTraining = () => {
     return (
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
-                Cognitive Training Exercises
+                {t('cognitiveTraining.title')}
             </h1>
 
             {/* Progress Summary */}
             <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow-lg p-6 mb-8">
-                <h2 className="text-2xl font-semibold mb-4">Your Training Progress</h2>
+                <h2 className="text-2xl font-semibold mb-4">{t('cognitiveTraining.progressSummary.title')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                        <h3 className="text-lg font-medium mb-2">Total Sessions</h3>
+                        <h3 className="text-lg font-medium mb-2">{t('cognitiveTraining.progressSummary.totalSessions')}</h3>
                         <p className="text-3xl font-bold">{metrics?.total_sessions || 0}</p>
                     </div>
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                        <h3 className="text-lg font-medium mb-2">Time Spent</h3>
+                        <h3 className="text-lg font-medium mb-2">{t('cognitiveTraining.progressSummary.timeSpent')}</h3>
                         <p className="text-3xl font-bold">{formatDuration(metrics?.total_time_spent || 0)}</p>
                     </div>
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                        <h3 className="text-lg font-medium mb-2">Consistency Score</h3>
+                        <h3 className="text-lg font-medium mb-2">{t('cognitiveTraining.progressSummary.consistencyScore')}</h3>
                         <p className="text-3xl font-bold">
                             {metrics?.consistency_score > 0
                                 ? `${Math.round(metrics.consistency_score * 100)}%`
@@ -306,19 +328,19 @@ const CognitiveTraining = () => {
                         </p>
                         <p className="text-sm mt-1 opacity-80">
                             {metrics?.consistency_score >= 0.7
-                                ? 'Excellent consistency!'
+                                ? t('cognitiveTraining.consistencyMessages.excellent')
                                 : metrics?.consistency_score >= 0.4
-                                    ? 'Good progress, keep it up!'
-                                    : 'Complete exercises regularly to improve'}
+                                    ? t('cognitiveTraining.consistencyMessages.good')
+                                    : t('cognitiveTraining.consistencyMessages.improve')}
                         </p>
                     </div>
                     <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                        <h3 className="text-lg font-medium mb-2">Average Accuracy</h3>
+                        <h3 className="text-lg font-medium mb-2">{t('cognitiveTraining.progressSummary.averageAccuracy')}</h3>
                         <p className="text-3xl font-bold">
                             {calculateOverallAccuracy(metrics)}
                         </p>
                         <p className="text-sm mt-1 opacity-80">
-                            Across all exercise types
+                            {t('cognitiveTraining.acrossAllExercises')}
                         </p>
                     </div>
                 </div>
@@ -334,8 +356,8 @@ const CognitiveTraining = () => {
             {/* New User Welcome Message */}
             {metrics && metrics.total_sessions === 0 && (
                 <div className="bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-500 text-yellow-800 dark:text-yellow-300 p-4 mb-6 rounded-r">
-                    <p className="font-medium">Welcome to Cognitive Training!</p>
-                    <p className="mt-1">Complete your first exercise to start tracking your progress.</p>
+                    <p className="font-medium">{t('cognitiveTraining.welcome.title')}</p>
+                    <p className="mt-1">{t('cognitiveTraining.welcome.message')}</p>
                 </div>
             )}
 
@@ -363,7 +385,7 @@ const CognitiveTraining = () => {
 
                             <div className="mb-4">
                                 <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                                    Benefits:
+                                    {t('cognitiveTraining.benefits')}:
                                 </h3>
                                 <ul className="space-y-1">
                                     {exercise.benefits.map((benefit, index) => (
@@ -378,18 +400,18 @@ const CognitiveTraining = () => {
                             <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
                                 <div className="flex items-center">
                                     <span className="mr-1">🏋️</span>
-                                    <span>Difficulty: {exercise.difficulty}</span>
+                                    <span>{t('cognitiveTraining.difficulty.label')}: {exercise.difficulty}</span>
                                 </div>
                                 <div className="flex items-center">
                                     <span className="mr-1">⏱️</span>
-                                    <span>Duration: {exercise.duration}</span>
+                                    <span>{t('cognitiveTraining.duration.label')}: {exercise.duration}</span>
                                 </div>
                             </div>
 
                             {metrics?.average_scores && exercise.id === 'word-recall' && metrics.average_scores.word_recall && (
                                 <div className="mb-4 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                                     <p className="text-blue-800 dark:text-blue-300 text-sm">
-                                        <span className="font-medium">Your Average Score:</span> {metrics.average_scores.word_recall.toFixed(1)}%
+                                        <span className="font-medium">{t('cognitiveTraining.yourAverageScore')}:</span> {metrics.average_scores.word_recall.toFixed(1)}%
                                     </p>
                                 </div>
                             )}
@@ -397,7 +419,7 @@ const CognitiveTraining = () => {
                             {metrics?.average_scores && exercise.id === 'language-fluency' && metrics.average_scores.language_fluency && (
                                 <div className="mb-4 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                                     <p className="text-blue-800 dark:text-blue-300 text-sm">
-                                        <span className="font-medium">Your Average Score:</span> {metrics.average_scores.language_fluency.toFixed(1)}%
+                                        <span className="font-medium">{t('cognitiveTraining.yourAverageScore')}:</span> {metrics.average_scores.language_fluency.toFixed(1)}%
                                     </p>
                                 </div>
                             )}
@@ -405,7 +427,7 @@ const CognitiveTraining = () => {
                             {metrics?.average_scores && exercise.id === 'memory-match' && metrics.average_scores.memory_match && (
                                 <div className="mb-4 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                                     <p className="text-blue-800 dark:text-blue-300 text-sm">
-                                        <span className="font-medium">Your Average Score:</span> {metrics.average_scores.memory_match.toFixed(1)}%
+                                        <span className="font-medium">{t('cognitiveTraining.yourAverageScore')}:</span> {metrics.average_scores.memory_match.toFixed(1)}%
                                     </p>
                                 </div>
                             )}
@@ -413,7 +435,7 @@ const CognitiveTraining = () => {
                             {metrics?.average_scores && exercise.id === 'category-naming' && metrics.average_scores.category_naming && (
                                 <div className="mb-4 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                                     <p className="text-blue-800 dark:text-blue-300 text-sm">
-                                        <span className="font-medium">Your Average Score:</span> {metrics.average_scores.category_naming.toFixed(1)}%
+                                        <span className="font-medium">{t('cognitiveTraining.yourAverageScore')}:</span> {metrics.average_scores.category_naming.toFixed(1)}%
                                     </p>
                                 </div>
                             )}
@@ -421,7 +443,7 @@ const CognitiveTraining = () => {
                             {metrics?.average_scores && exercise.id === 'sequence-ordering' && metrics.average_scores.sequence_ordering && (
                                 <div className="mb-4 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                                     <p className="text-blue-800 dark:text-blue-300 text-sm">
-                                        <span className="font-medium">Your Average Score:</span> {metrics.average_scores.sequence_ordering.toFixed(1)}%
+                                        <span className="font-medium">{t('cognitiveTraining.yourAverageScore')}:</span> {metrics.average_scores.sequence_ordering.toFixed(1)}%
                                     </p>
                                 </div>
                             )}
@@ -430,7 +452,7 @@ const CognitiveTraining = () => {
                                 to={exercise.path}
                                 className="w-full inline-flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                             >
-                                Start Exercise
+                                {t('cognitiveTraining.startExercise')}
                                 <span className="ml-1 text-lg">→</span>
                             </Link>
                         </div>
@@ -442,14 +464,14 @@ const CognitiveTraining = () => {
                 (metrics.performance_trends && Object.keys(metrics.performance_trends).length > 0)) ? (
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-10">
                     <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-                        Your Cognitive Profile
+                        {t('cognitiveTraining.cognitiveProfile.title')}
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {metrics.strengths.length > 0 && (
                             <div>
                                 <h3 className="text-lg font-medium text-green-600 dark:text-green-400 mb-2">
-                                    Cognitive Strengths
+                                    {t('cognitiveTraining.cognitiveProfile.strengths')}
                                 </h3>
                                 <ul className="space-y-2">
                                     {metrics.strengths.map((strength, index) => (
@@ -469,7 +491,7 @@ const CognitiveTraining = () => {
                         {metrics.areas_for_improvement.length > 0 && (
                             <div>
                                 <h3 className="text-lg font-medium text-amber-600 dark:text-amber-400 mb-2">
-                                    Areas for Improvement
+                                    {t('cognitiveTraining.cognitiveProfile.areasForImprovement')}
                                 </h3>
                                 <ul className="space-y-2">
                                     {metrics.areas_for_improvement.map((area, index) => (
@@ -490,7 +512,7 @@ const CognitiveTraining = () => {
                     {metrics.performance_trends && Object.keys(metrics.performance_trends).length > 0 && (
                         <div className="mt-6">
                             <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Performance Trends
+                                {t('cognitiveTraining.cognitiveProfile.performanceTrends')}
                             </h3>
 
                             <div className="bg-white dark:bg-gray-700 p-4 rounded-lg">
@@ -503,13 +525,13 @@ const CognitiveTraining = () => {
 
             <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg p-6">
                 <h2 className="text-xl font-semibold text-indigo-800 dark:text-indigo-300 mb-2">
-                    Why Cognitive Training Matters
+                    {t('cognitiveTraining.whyItMatters.title')}
                 </h2>
                 <p className="text-indigo-700 dark:text-indigo-400 mb-4">
-                    Regular cognitive training has been shown to support brain health and may help reduce the risk of cognitive decline. These exercises target specific cognitive domains including memory, attention, language, and executive function.
+                    {t('cognitiveTraining.whyItMatters.description')}
                 </p>
                 <p className="text-indigo-700 dark:text-indigo-400">
-                    For best results, aim to complete at least 3-4 training sessions per week, varying the types of exercises to challenge different cognitive abilities.
+                    {t('cognitiveTraining.whyItMatters.recommendation')}
                 </p>
             </div>
         </div>

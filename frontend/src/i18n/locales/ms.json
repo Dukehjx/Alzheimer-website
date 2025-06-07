@@ -172,19 +172,105 @@
         "disclaimer": "Nota: Penilaian ini berdasarkan analisis AI corak bahasa dan tidak sepatutnya menggantikan penilaian perubatan profesional. Jika anda mempunyai kebimbangan tentang kesihatan kognitif, sila berunding dengan profesional penjagaan kesihatan."
     },
     "cognitiveTraining": {
-        "title": "Latihan Kognitif",
-        "description": "Kukuhkan keupayaan kognitif anda dengan latihan berkuasa AI",
-        "wordRecall": "Ingatan Perkataan",
-        "languageFluency": "Kelancaran Bahasa",
-        "memoryMatch": "Padanan Ingatan",
-        "categoryNaming": "Penamaan Kategori",
-        "readingComprehension": "Pemahaman Bacaan",
-        "score": "Skor",
-        "level": "Tahap",
-        "timeRemaining": "Masa Berbaki",
-        "gameComplete": "Permainan Selesai!",
-        "yourScore": "Skor Anda",
-        "playAgain": "Main Lagi"
+        "title": "Latihan Latihan Kognitif",
+        "errorLoadingMetrics": "Gagal memuatkan metrik kemajuan. Menggunakan nilai lalai.",
+        "notAvailable": "Tidak tersedia",
+        "minutesShort": "min",
+        "secondsShort": "s",
+        "session": "Sesi",
+        "scorePercentage": "Skor (%)",
+        "noPerformanceData": "Tiada data prestasi tersedia lagi. Lengkapkan lebih banyak latihan untuk melihat kemajuan anda.",
+        "benefits": "Faedah",
+        "yourAverageScore": "Skor Purata Anda",
+        "startExercise": "Mula Latihan",
+        "acrossAllExercises": "Merentas semua jenis latihan",
+        "progressSummary": {
+            "title": "Kemajuan Latihan Anda",
+            "totalSessions": "Jumlah Sesi",
+            "timeSpent": "Masa Dihabiskan",
+            "consistencyScore": "Skor Konsistensi",
+            "averageAccuracy": "Ketepatan Purata"
+        },
+        "consistencyMessages": {
+            "excellent": "Konsistensi cemerlang!",
+            "good": "Kemajuan baik, teruskan!",
+            "improve": "Lengkapkan latihan secara berkala untuk memperbaiki"
+        },
+        "welcome": {
+            "title": "Selamat datang ke Latihan Kognitif!",
+            "message": "Lengkapkan latihan pertama anda untuk mula menjejaki kemajuan anda."
+        },
+        "exercises": {
+            "wordRecall": {
+                "title": "Cabaran Ingatan Perkataan",
+                "description": "Hafal dan ingat siri perkataan untuk meningkatkan prestasi ingatan.",
+                "benefits": {
+                    "workingMemory": "Meningkatkan ingatan kerja",
+                    "verbalRecall": "Meningkatkan ingatan lisan",
+                    "focusAttention": "Membina fokus dan perhatian"
+                }
+            },
+            "languageFluency": {
+                "title": "Permainan Kefasihan Bahasa",
+                "description": "Hasilkan perkataan yang bermula dengan huruf tertentu merentas kategori berbeza.",
+                "benefits": {
+                    "verbalFluency": "Meningkatkan kefasihan lisan",
+                    "cognitiveFlexibility": "Meningkatkan fleksibiliti kognitif",
+                    "vocabulary": "Meningkatkan perbendaharaan kata"
+                }
+            },
+            "memoryMatch": {
+                "title": "Permainan Padanan Ingatan",
+                "description": "Padankan kad soalan dengan jawapan yang sepadan untuk meningkatkan ingatan dan perhatian.",
+                "benefits": {
+                    "workingMemory": "Mengukuhkan ingatan kerja",
+                    "visualProcessing": "Meningkatkan pemprosesan visual",
+                    "executiveFunction": "Meningkatkan fungsi eksekutif"
+                }
+            },
+            "categoryNaming": {
+                "title": "Permainan Penamaan Kategori",
+                "description": "Namakan sebanyak mungkin item dalam kategori tertentu untuk meningkatkan kefasihan semantik.",
+                "benefits": {
+                    "semanticMemory": "Meningkatkan ingatan semantik",
+                    "wordRetrieval": "Meningkatkan pengambilan perkataan",
+                    "processingSpeed": "Meningkatkan kelajuan pemprosesan kognitif"
+                }
+            },
+            "sequenceOrdering": {
+                "title": "Permainan Penyusunan Urutan",
+                "description": "Susun langkah-langkah yang bercampur dalam susunan kronologi atau logik yang betul.",
+                "benefits": {
+                    "executiveFunction": "Meningkatkan fungsi eksekutif",
+                    "sequentialReasoning": "Meningkatkan penaakulan berurutan",
+                    "temporalUnderstanding": "Membina pemahaman temporal"
+                }
+            }
+        },
+        "difficulty": {
+            "label": "Kesukaran",
+            "beginnerToExpert": "Pemula hingga Pakar",
+            "easyToHard": "Mudah hingga Sukar"
+        },
+        "duration": {
+            "label": "Tempoh",
+            "oneToThreeMinutes": "1-3 minit",
+            "twoToFourMinutes": "2-4 minit",
+            "twoToFiveMinutes": "2-5 minit",
+            "threeToFiveMinutes": "3-5 minit",
+            "twoToTenMinutes": "2-10 minit"
+        },
+        "cognitiveProfile": {
+            "title": "Profil Kognitif Anda",
+            "strengths": "Kekuatan Kognitif",
+            "areasForImprovement": "Bidang untuk Penambahbaikan",
+            "performanceTrends": "Trend Prestasi"
+        },
+        "whyItMatters": {
+            "title": "Mengapa Latihan Kognitif Penting",
+            "description": "Latihan kognitif yang kerap telah terbukti menyokong kesihatan otak dan mungkin membantu mengurangkan risiko kemerosotan kognitif. Latihan ini menyasarkan domain kognitif tertentu termasuk ingatan, perhatian, bahasa, dan fungsi eksekutif.",
+            "recommendation": "Untuk hasil terbaik, sasarkan untuk melengkapkan sekurang-kurangnya 3-4 sesi latihan seminggu, mengubah jenis latihan untuk mencabar kebolehan kognitif yang berbeza."
+        }
     },
     "resources": {
         "title": "Pusat Sumber",

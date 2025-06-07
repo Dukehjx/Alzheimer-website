@@ -172,19 +172,105 @@
         "disclaimer": "注意：這些評估基於AI對語言模式的分析，不應替代專業醫療評估。如果您對認知健康有擔憂，請諮詢醫療專業人員。"
     },
     "cognitiveTraining": {
-        "title": "認知訓練",
-        "description": "透過AI驅動的練習增強您的認知能力",
-        "wordRecall": "詞彙回憶",
-        "languageFluency": "語言流暢性",
-        "memoryMatch": "記憶配對",
-        "categoryNaming": "分類命名",
-        "readingComprehension": "閱讀理解",
-        "score": "得分",
-        "level": "級別",
-        "timeRemaining": "剩餘時間",
-        "gameComplete": "遊戲完成！",
-        "yourScore": "您的得分",
-        "playAgain": "再玩一次"
+        "title": "認知訓練練習",
+        "errorLoadingMetrics": "載入進度指標失敗。使用預設值。",
+        "notAvailable": "不可用",
+        "minutesShort": "分",
+        "secondsShort": "秒",
+        "session": "會話",
+        "scorePercentage": "分數 (%)",
+        "noPerformanceData": "暫無表現數據。完成更多練習以查看您的進度。",
+        "benefits": "益處",
+        "yourAverageScore": "您的平均分數",
+        "startExercise": "開始練習",
+        "acrossAllExercises": "所有練習類型",
+        "progressSummary": {
+            "title": "您的訓練進度",
+            "totalSessions": "總會話數",
+            "timeSpent": "花費時間",
+            "consistencyScore": "一致性分數",
+            "averageAccuracy": "平均準確率"
+        },
+        "consistencyMessages": {
+            "excellent": "一致性極佳！",
+            "good": "進步良好，繼續保持！",
+            "improve": "定期完成練習以改善"
+        },
+        "welcome": {
+            "title": "歡迎來到認知訓練！",
+            "message": "完成您的第一個練習以開始追蹤您的進度。"
+        },
+        "exercises": {
+            "wordRecall": {
+                "title": "單詞回憶挑戰",
+                "description": "記憶並回憶一系列單詞以提高記憶表現。",
+                "benefits": {
+                    "workingMemory": "改善工作記憶",
+                    "verbalRecall": "增強言語回憶",
+                    "focusAttention": "建立專注力和注意力"
+                }
+            },
+            "languageFluency": {
+                "title": "語言流暢性遊戲",
+                "description": "生成以特定字母開頭的不同類別的單詞。",
+                "benefits": {
+                    "verbalFluency": "提升言語流暢性",
+                    "cognitiveFlexibility": "改善認知靈活性",
+                    "vocabulary": "增強詞彙量"
+                }
+            },
+            "memoryMatch": {
+                "title": "記憶匹配遊戲",
+                "description": "將問題卡片與相應答案匹配以改善記憶和注意力。",
+                "benefits": {
+                    "workingMemory": "加強工作記憶",
+                    "visualProcessing": "改善視覺處理",
+                    "executiveFunction": "增強執行功能"
+                }
+            },
+            "categoryNaming": {
+                "title": "類別命名遊戲",
+                "description": "在特定類別中盡可能多地命名項目以提升語義流暢性。",
+                "benefits": {
+                    "semanticMemory": "增強語義記憶",
+                    "wordRetrieval": "改善詞彙檢索",
+                    "processingSpeed": "提升認知處理速度"
+                }
+            },
+            "sequenceOrdering": {
+                "title": "序列排序遊戲",
+                "description": "將打亂的步驟按正確的時間或邏輯順序排列。",
+                "benefits": {
+                    "executiveFunction": "增強執行功能",
+                    "sequentialReasoning": "改善序列推理",
+                    "temporalUnderstanding": "建立時間理解"
+                }
+            }
+        },
+        "difficulty": {
+            "label": "難度",
+            "beginnerToExpert": "初學者到專家",
+            "easyToHard": "簡單到困難"
+        },
+        "duration": {
+            "label": "持續時間",
+            "oneToThreeMinutes": "1-3分鐘",
+            "twoToFourMinutes": "2-4分鐘",
+            "twoToFiveMinutes": "2-5分鐘",
+            "threeToFiveMinutes": "3-5分鐘",
+            "twoToTenMinutes": "2-10分鐘"
+        },
+        "cognitiveProfile": {
+            "title": "您的認知檔案",
+            "strengths": "認知優勢",
+            "areasForImprovement": "改進領域",
+            "performanceTrends": "表現趨勢"
+        },
+        "whyItMatters": {
+            "title": "為什麼認知訓練很重要",
+            "description": "定期的認知訓練已被證明支持大腦健康，可能有助於降低認知衰退的風險。這些練習針對特定的認知領域，包括記憶、注意力、語言和執行功能。",
+            "recommendation": "為了獲得最佳效果，建議每週完成至少3-4次訓練，變換不同類型的練習以挑戰不同的認知能力。"
+        }
     },
     "resources": {
         "title": "資源中心",

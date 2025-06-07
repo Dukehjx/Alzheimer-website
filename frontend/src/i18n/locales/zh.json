@@ -172,19 +172,105 @@
         "disclaimer": "注意：这些评估基于AI对语言模式的分析，不应替代专业医疗评估。如果您对认知健康有担忧，请咨询医疗专业人员。"
     },
     "cognitiveTraining": {
-        "title": "认知训练",
-        "description": "通过AI驱动的练习增强您的认知能力",
-        "wordRecall": "词汇回忆",
-        "languageFluency": "语言流畅性",
-        "memoryMatch": "记忆匹配",
-        "categoryNaming": "分类命名",
-        "readingComprehension": "阅读理解",
-        "score": "得分",
-        "level": "级别",
-        "timeRemaining": "剩余时间",
-        "gameComplete": "游戏完成！",
-        "yourScore": "您的得分",
-        "playAgain": "再玩一次"
+        "title": "认知训练练习",
+        "errorLoadingMetrics": "加载进度指标失败。使用默认值。",
+        "notAvailable": "不可用",
+        "minutesShort": "分",
+        "secondsShort": "秒",
+        "session": "会话",
+        "scorePercentage": "分数 (%)",
+        "noPerformanceData": "暂无表现数据。完成更多练习以查看您的进度。",
+        "benefits": "益处",
+        "yourAverageScore": "您的平均分数",
+        "startExercise": "开始练习",
+        "acrossAllExercises": "所有练习类型",
+        "progressSummary": {
+            "title": "您的训练进度",
+            "totalSessions": "总会话数",
+            "timeSpent": "花费时间",
+            "consistencyScore": "一致性分数",
+            "averageAccuracy": "平均准确率"
+        },
+        "consistencyMessages": {
+            "excellent": "一致性极佳！",
+            "good": "进步良好，继续保持！",
+            "improve": "定期完成练习以改善"
+        },
+        "welcome": {
+            "title": "欢迎来到认知训练！",
+            "message": "完成您的第一个练习以开始跟踪您的进度。"
+        },
+        "exercises": {
+            "wordRecall": {
+                "title": "单词回忆挑战",
+                "description": "记忆并回忆一系列单词以提高记忆表现。",
+                "benefits": {
+                    "workingMemory": "改善工作记忆",
+                    "verbalRecall": "增强言语回忆",
+                    "focusAttention": "建立专注力和注意力"
+                }
+            },
+            "languageFluency": {
+                "title": "语言流畅性游戏",
+                "description": "生成以特定字母开头的不同类别的单词。",
+                "benefits": {
+                    "verbalFluency": "提升言语流畅性",
+                    "cognitiveFlexibility": "改善认知灵活性",
+                    "vocabulary": "增强词汇量"
+                }
+            },
+            "memoryMatch": {
+                "title": "记忆匹配游戏",
+                "description": "将问题卡片与相应答案匹配以改善记忆和注意力。",
+                "benefits": {
+                    "workingMemory": "加强工作记忆",
+                    "visualProcessing": "改善视觉处理",
+                    "executiveFunction": "增强执行功能"
+                }
+            },
+            "categoryNaming": {
+                "title": "类别命名游戏",
+                "description": "在特定类别中尽可能多地命名项目以提升语义流畅性。",
+                "benefits": {
+                    "semanticMemory": "增强语义记忆",
+                    "wordRetrieval": "改善词汇检索",
+                    "processingSpeed": "提升认知处理速度"
+                }
+            },
+            "sequenceOrdering": {
+                "title": "序列排序游戏",
+                "description": "将打乱的步骤按正确的时间或逻辑顺序排列。",
+                "benefits": {
+                    "executiveFunction": "增强执行功能",
+                    "sequentialReasoning": "改善序列推理",
+                    "temporalUnderstanding": "建立时间理解"
+                }
+            }
+        },
+        "difficulty": {
+            "label": "难度",
+            "beginnerToExpert": "初学者到专家",
+            "easyToHard": "简单到困难"
+        },
+        "duration": {
+            "label": "持续时间",
+            "oneToThreeMinutes": "1-3分钟",
+            "twoToFourMinutes": "2-4分钟",
+            "twoToFiveMinutes": "2-5分钟",
+            "threeToFiveMinutes": "3-5分钟",
+            "twoToTenMinutes": "2-10分钟"
+        },
+        "cognitiveProfile": {
+            "title": "您的认知档案",
+            "strengths": "认知优势",
+            "areasForImprovement": "改进领域",
+            "performanceTrends": "表现趋势"
+        },
+        "whyItMatters": {
+            "title": "为什么认知训练很重要",
+            "description": "定期的认知训练已被证明支持大脑健康，可能有助于降低认知衰退的风险。这些练习针对特定的认知领域，包括记忆、注意力、语言和执行功能。",
+            "recommendation": "为了获得最佳效果，建议每周完成至少3-4次训练，变换不同类型的练习以挑战不同的认知能力。"
+        }
     },
     "resources": {
         "title": "资源中心",
