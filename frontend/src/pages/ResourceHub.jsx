@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     MagnifyingGlassIcon,
     ArrowTopRightOnSquareIcon,
@@ -38,14 +39,14 @@ const CATEGORY_COLORS = {
     'default': 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 border-gray-200 dark:border-gray-700'
 };
 
-// Resource type filters
-const RESOURCE_TYPE_FILTERS = [
-    { value: '', label: 'All Types' },
-    { value: 'article', label: 'Articles' },
-    { value: 'video', label: 'Videos' },
-    { value: 'tool', label: 'Tools' },
-    { value: 'checklist', label: 'Checklists' },
-    { value: 'education', label: 'Educational' }
+// Resource type filters - will be populated with translations in component
+const getResourceTypeFilters = (t) => [
+    { value: '', label: t('resourceHub.filters.allTypes') },
+    { value: 'article', label: t('resourceHub.filters.articles') },
+    { value: 'video', label: t('resourceHub.filters.videos') },
+    { value: 'tool', label: t('resourceHub.filters.tools') },
+    { value: 'checklist', label: t('resourceHub.filters.checklists') },
+    { value: 'education', label: t('resourceHub.filters.educational') }
 ];
 
 // Helper function to determine resource type from title/description
@@ -113,62 +114,62 @@ const getSourceAndYear = (resource) => {
     return { source, year };
 };
 
-// FAQ data
-const FAQ_DATA = [
+// FAQ data - will be populated with translations in component
+const getFAQData = (t) => [
     {
         id: 1,
-        misconception: "Memory loss is a normal part of aging.",
-        fact: "While some mild forgetfulness is common with aging, persistent memory loss that disrupts daily life is not normal. It may be an early sign of Alzheimer's or another type of dementia. Aging-related forgetfulness (e.g., occasionally misplacing keys) differs from forgetting how to use the keys or what they're for."
+        misconception: t('resourceHub.faq.item1.misconception'),
+        fact: t('resourceHub.faq.item1.fact')
     },
     {
         id: 2,
-        misconception: "Only elderly people get Alzheimer's.",
-        fact: "Most people with Alzheimer's are 65 or older, but early-onset Alzheimer's can develop in people as young as their 30s or 40s. It accounts for about 5–10% of all cases. Younger individuals may initially be misdiagnosed due to atypical symptoms like vision or language problems rather than memory issues."
+        misconception: t('resourceHub.faq.item2.misconception'),
+        fact: t('resourceHub.faq.item2.fact')
     },
     {
         id: 3,
-        misconception: "Alzheimer's is just memory loss.",
-        fact: "Alzheimer's affects more than memory—it impairs thinking, problem-solving, language, judgment, and behavior. As it progresses, it can cause confusion, mood swings, personality changes, and loss of independence."
+        misconception: t('resourceHub.faq.item3.misconception'),
+        fact: t('resourceHub.faq.item3.fact')
     },
     {
         id: 4,
-        misconception: "MCI always leads to Alzheimer's.",
-        fact: "Mild Cognitive Impairment (MCI) increases the risk of Alzheimer's, but not all people with MCI progress to dementia. Some remain stable for years, and a portion may even revert to normal cognition, especially if the cause is treatable (e.g., medication side effects, depression, or sleep disorders)."
+        misconception: t('resourceHub.faq.item4.misconception'),
+        fact: t('resourceHub.faq.item4.fact')
     },
     {
         id: 5,
-        misconception: "There is no treatment for Alzheimer's.",
-        fact: "There is no cure yet, but treatments can manage symptoms and improve quality of life. FDA-approved medications (e.g., donepezil, memantine, lecanemab) may slow progression in early stages. Lifestyle changes, cognitive activities, and social support are also crucial non-pharmacological interventions."
+        misconception: t('resourceHub.faq.item5.misconception'),
+        fact: t('resourceHub.faq.item5.fact')
     },
     {
         id: 6,
-        misconception: "People with Alzheimer's have no awareness.",
-        fact: "In early and even moderate stages, many individuals are aware of their diagnosis and capable of participating in decisions. Lack of understanding from others can lead to social withdrawal and unnecessary dependence."
+        misconception: t('resourceHub.faq.item6.misconception'),
+        fact: t('resourceHub.faq.item6.fact')
     },
     {
         id: 7,
-        misconception: "Alzheimer's is caused by aluminum, vaccines, or microwaves.",
-        fact: "These claims are not supported by scientific evidence. Alzheimer's is caused by a complex interplay of genetics, age, vascular health, and lifestyle factors—not by everyday exposures like cooking with aluminum or using vaccines."
+        misconception: t('resourceHub.faq.item7.misconception'),
+        fact: t('resourceHub.faq.item7.fact')
     },
     {
         id: 8,
-        misconception: "Dementia and Alzheimer's are the same.",
-        fact: "Dementia is a general term for cognitive decline affecting daily life. Alzheimer's is the most common cause of dementia, but there are others, including vascular dementia, Lewy body dementia, and frontotemporal dementia."
+        misconception: t('resourceHub.faq.item8.misconception'),
+        fact: t('resourceHub.faq.item8.fact')
     },
     {
         id: 9,
-        misconception: "People with dementia cannot understand or communicate.",
-        fact: "People with dementia often retain emotional memory and the ability to respond to kindness, tone of voice, music, and visual cues. With patience and adaptation, meaningful communication is often possible far into the disease."
+        misconception: t('resourceHub.faq.item9.misconception'),
+        fact: t('resourceHub.faq.item9.fact')
     },
     {
         id: 10,
-        misconception: "A person with Alzheimer's cannot live well.",
-        fact: "With the right support, routines, and engagement in activities they enjoy, many people with Alzheimer's continue to experience joy, connection, and purpose—especially in early and middle stages."
+        misconception: t('resourceHub.faq.item10.misconception'),
+        fact: t('resourceHub.faq.item10.fact')
     }
 ];
 
 // FAQ Item Component
-function FAQItem({ faq, isOpen, onToggle }) {
+function FAQItem({ faq, isOpen, onToggle, t }) {
     return (
         <div className="border border-neutral-200 dark:border-neutral-600 rounded-lg overflow-hidden">
             <button
@@ -183,7 +184,7 @@ function FAQItem({ faq, isOpen, onToggle }) {
                         <div className="flex items-start gap-3">
                             <BookOpenIcon className="h-5 w-5 text-blue-500 dark:text-blue-400 mt-1 flex-shrink-0" aria-hidden="true" />
                             <h3 className="text-lg font-medium text-neutral-900 dark:text-white">
-                                <span className="text-red-600 dark:text-red-400 font-semibold">Misconception:</span> {faq.misconception}
+                                <span className="text-red-600 dark:text-red-400 font-semibold">{t('resourceHub.faq.misconceptionLabel')}:</span> {faq.misconception}
                             </h3>
                         </div>
                     </div>
@@ -205,7 +206,7 @@ function FAQItem({ faq, isOpen, onToggle }) {
             >
                 <div className="px-6 py-4 bg-white dark:bg-neutral-800 border-t border-neutral-200 dark:border-neutral-600">
                     <p className="text-neutral-700 dark:text-neutral-300 leading-relaxed">
-                        <span className="text-green-600 dark:text-green-400 font-semibold">Fact:</span> {faq.fact}
+                        <span className="text-green-600 dark:text-green-400 font-semibold">{t('resourceHub.faq.factLabel')}:</span> {faq.fact}
                     </p>
                 </div>
             </div>
@@ -214,6 +215,7 @@ function FAQItem({ faq, isOpen, onToggle }) {
 }
 
 export default function ResourceHub() {
+    const { t } = useTranslation();
     const [allResources, setAllResources] = useState([]);
     const [filteredResources, setFilteredResources] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -225,6 +227,10 @@ export default function ResourceHub() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [openFAQs, setOpenFAQs] = useState(new Set());
+
+    // Get translated data
+    const resourceTypeFilters = getResourceTypeFilters(t);
+    const faqData = getFAQData(t);
 
     // FAQ handlers
     const toggleFAQ = (faqId) => {
@@ -240,7 +246,7 @@ export default function ResourceHub() {
     };
 
     const expandAllFAQs = () => {
-        setOpenFAQs(new Set(FAQ_DATA.map(faq => faq.id)));
+        setOpenFAQs(new Set(faqData.map(faq => faq.id)));
     };
 
     const collapseAllFAQs = () => {
@@ -386,7 +392,7 @@ export default function ResourceHub() {
             setFilteredResources(response.data?.resources || []);
         } catch (err) {
             console.error(`Error searching resources with query "${query}":`, err);
-            setError(err.message || 'Failed to perform search. Please try again.');
+            setError(err.message || t('resourceHub.errors.searchFailed'));
             setFilteredResources([]);
         } finally {
             setIsLoading(false);
@@ -405,15 +411,15 @@ export default function ResourceHub() {
     return (
         <div className="max-w-7xl mx-auto">
             <div className="px-4 py-5 sm:px-6">
-                <h1 className="text-2xl font-semibold text-neutral-900 dark:text-white">Resource Hub</h1>
+                <h1 className="text-2xl font-semibold text-neutral-900 dark:text-white">{t('resourceHub.title')}</h1>
                 <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-300">
-                    Explore comprehensive information on cognitive health, prevention strategies, and the latest research.
+                    {t('resourceHub.description')}
                 </p>
             </div>
 
             {error && (
                 <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 mx-4 sm:mx-0" role="alert">
-                    <p className="font-bold">Error</p>
+                    <p className="font-bold">{t('resourceHub.errors.errorLabel')}</p>
                     <p>{error}</p>
                 </div>
             )}
@@ -433,21 +439,21 @@ export default function ResourceHub() {
                                     type="text"
                                     name="search"
                                     className="pl-10 pr-4 py-2 border border-neutral-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-neutral-700 dark:border-neutral-600 dark:text-white"
-                                    placeholder="Search resources... (e.g., 'memory exercises', 'alzheimer prevention')"
+                                    placeholder={t('resourceHub.search.placeholder')}
                                     value={searchQuery}
                                     onChange={handleSearchInputChange}
                                     onFocus={() => setShowSuggestions(searchSuggestions.length > 0)}
                                     onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                                    aria-label="Search resources"
+                                    aria-label={t('resourceHub.search.ariaLabel')}
                                     aria-expanded={showSuggestions}
                                     aria-haspopup="listbox"
                                 />
                                 <button
                                     type="submit"
                                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    aria-label="Submit search"
+                                    aria-label={t('resourceHub.search.submitAriaLabel')}
                                 >
-                                    Search
+                                    {t('resourceHub.search.button')}
                                 </button>
                             </div>
                         </form>
@@ -478,7 +484,7 @@ export default function ResourceHub() {
                         {/* Category filter */}
                         <div className="flex-1">
                             <label htmlFor="category-select" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                                Category
+                                {t('resourceHub.filters.categoryLabel')}
                             </label>
                             <select
                                 id="category-select"
@@ -486,9 +492,9 @@ export default function ResourceHub() {
                                 className="block w-full pl-3 pr-10 py-2 text-base border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md bg-white dark:bg-neutral-700 dark:border-neutral-600 dark:text-white"
                                 value={selectedCategory}
                                 onChange={(e) => handleCategoryChange(e.target.value)}
-                                aria-label="Filter by category"
+                                aria-label={t('resourceHub.filters.categoryAriaLabel')}
                             >
-                                <option value="">All Categories</option>
+                                <option value="">{t('resourceHub.filters.allCategories')}</option>
                                 {categories.map((category) => (
                                     <option key={category} value={category}>
                                         {category}
@@ -500,7 +506,7 @@ export default function ResourceHub() {
                         {/* Resource type filter */}
                         <div className="flex-1">
                             <label htmlFor="type-select" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                                Resource Type
+                                {t('resourceHub.filters.resourceTypeLabel')}
                             </label>
                             <select
                                 id="type-select"
@@ -508,9 +514,9 @@ export default function ResourceHub() {
                                 className="block w-full pl-3 pr-10 py-2 text-base border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm rounded-md bg-white dark:bg-neutral-700 dark:border-neutral-600 dark:text-white"
                                 value={selectedResourceType}
                                 onChange={(e) => handleResourceTypeChange(e.target.value)}
-                                aria-label="Filter by resource type"
+                                aria-label={t('resourceHub.filters.resourceTypeAriaLabel')}
                             >
-                                {RESOURCE_TYPE_FILTERS.map((filter) => (
+                                {resourceTypeFilters.map((filter) => (
                                     <option key={filter.value} value={filter.value}>
                                         {filter.label}
                                     </option>
@@ -523,9 +529,9 @@ export default function ResourceHub() {
                             <button
                                 onClick={resetFiltersAndSearch}
                                 className="px-4 py-2 text-sm font-medium text-neutral-600 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-                                aria-label="Reset all filters and search"
+                                aria-label={t('resourceHub.filters.resetAriaLabel')}
                             >
-                                Reset
+                                {t('resourceHub.filters.resetButton')}
                             </button>
                         </div>
                     </div>
@@ -534,18 +540,18 @@ export default function ResourceHub() {
                 {/* Results section */}
                 {isLoading ? (
                     <div className="flex justify-center py-10">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" role="status" aria-label="Loading resources"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" role="status" aria-label={t('resourceHub.results.loadingAriaLabel')}></div>
                     </div>
                 ) : filteredResources.length === 0 ? (
                     <div className="text-center py-10">
                         <p className="text-lg text-neutral-600 dark:text-neutral-300">
-                            {error ? 'Could not load resources.' : 'No resources found matching your criteria.'}
+                            {error ? t('resourceHub.results.couldNotLoad') : t('resourceHub.results.noResourcesFound')}
                         </p>
                         <button
                             onClick={resetFiltersAndSearch}
                             className="mt-2 text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
                         >
-                            Reset filters & Search
+                            {t('resourceHub.results.resetFiltersButton')}
                         </button>
                     </div>
                 ) : (
@@ -589,7 +595,7 @@ export default function ResourceHub() {
                                             {/* Source and year */}
                                             {(source || year) && (
                                                 <div className="text-sm text-neutral-500 dark:text-neutral-400 mb-2">
-                                                    {source && <span>Source: {source}</span>}
+                                                    {source && <span>{t('resourceHub.results.sourceLabel')}: {source}</span>}
                                                     {source && year && <span> | </span>}
                                                     {year && <span>{year}</span>}
                                                 </div>
@@ -621,10 +627,10 @@ export default function ResourceHub() {
             <div className="bg-white dark:bg-neutral-800 shadow sm:rounded-lg mt-8 px-4 py-5 sm:p-6">
                 <div className="mb-6">
                     <h2 className="text-2xl font-semibold text-neutral-900 dark:text-white mb-2">
-                        Frequently Asked Questions
+                        {t('resourceHub.faq.title')}
                     </h2>
                     <p className="text-sm text-neutral-600 dark:text-neutral-300 mb-4">
-                        Common misconceptions about Alzheimer's disease and cognitive health, clarified with evidence-based facts.
+                        {t('resourceHub.faq.description')}
                     </p>
 
                     {/* FAQ Controls */}
@@ -632,28 +638,29 @@ export default function ResourceHub() {
                         <button
                             onClick={expandAllFAQs}
                             className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            aria-label="Expand all FAQ items"
+                            aria-label={t('resourceHub.faq.expandAllAriaLabel')}
                         >
-                            Expand All
+                            {t('resourceHub.faq.expandAllButton')}
                         </button>
                         <button
                             onClick={collapseAllFAQs}
                             className="px-4 py-2 text-sm font-medium text-neutral-600 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-600 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-neutral-500"
-                            aria-label="Collapse all FAQ items"
+                            aria-label={t('resourceHub.faq.collapseAllAriaLabel')}
                         >
-                            Collapse All
+                            {t('resourceHub.faq.collapseAllButton')}
                         </button>
                     </div>
                 </div>
 
                 {/* FAQ Items */}
-                <div className="space-y-4" role="region" aria-label="Frequently Asked Questions">
-                    {FAQ_DATA.map((faq) => (
+                <div className="space-y-4" role="region" aria-label={t('resourceHub.faq.regionAriaLabel')}>
+                    {faqData.map((faq) => (
                         <FAQItem
                             key={faq.id}
                             faq={faq}
                             isOpen={openFAQs.has(faq.id)}
                             onToggle={() => toggleFAQ(faq.id)}
+                            t={t}
                         />
                     ))}
                 </div>
@@ -661,8 +668,7 @@ export default function ResourceHub() {
                 {/* FAQ Footer */}
                 <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                     <p className="text-sm text-blue-800 dark:text-blue-200">
-                        <strong>Disclaimer:</strong> This information is for educational purposes only and should not replace professional medical advice.
-                        If you have concerns about cognitive health, please consult with a qualified healthcare provider.
+                        <strong>{t('resourceHub.faq.disclaimerLabel')}:</strong> {t('resourceHub.faq.disclaimerText')}
                     </p>
                 </div>
             </div>

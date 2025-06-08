@@ -369,5 +369,94 @@
         "malay": "Bahasa Melayu",
         "vietnamese": "Tiếng Việt",
         "russian": "Русский"
+    },
+    "resourceHub": {
+        "title": "Pusat Sumber",
+        "description": "Terokai maklumat komprehensif tentang kesihatan kognitif, strategi pencegahan dan penyelidikan terkini.",
+        "errors": {
+            "errorLabel": "Ralat",
+            "searchFailed": "Ralat melakukan carian. Sila cuba lagi."
+        },
+        "search": {
+            "placeholder": "Cari sumber... (cth., 'latihan memori', 'pencegahan alzheimer')",
+            "button": "Cari",
+            "ariaLabel": "Cari sumber",
+            "submitAriaLabel": "Hantar carian"
+        },
+        "filters": {
+            "categoryLabel": "Kategori",
+            "categoryAriaLabel": "Tapis mengikut kategori",
+            "allCategories": "Semua Kategori",
+            "resourceTypeLabel": "Jenis Sumber",
+            "resourceTypeAriaLabel": "Tapis mengikut jenis sumber",
+            "allTypes": "Semua Jenis",
+            "articles": "Artikel",
+            "videos": "Video",
+            "tools": "Alat",
+            "checklists": "Senarai Semak",
+            "educational": "Pendidikan",
+            "resetButton": "Set Semula",
+            "resetAriaLabel": "Set semula semua penapis dan carian"
+        },
+        "results": {
+            "loadingAriaLabel": "Memuatkan sumber",
+            "couldNotLoad": "Tidak dapat memuatkan sumber.",
+            "noResourcesFound": "Tiada sumber yang sepadan dengan kriteria anda ditemui.",
+            "resetFiltersButton": "Set semula penapis dan carian",
+            "sourceLabel": "Sumber"
+        },
+        "faq": {
+            "title": "Soalan Lazim",
+            "description": "Salah tanggapan biasa tentang penyakit Alzheimer dan kesihatan kognitif, dijelaskan dengan fakta berasaskan bukti.",
+            "expandAllButton": "Kembangkan Semua",
+            "expandAllAriaLabel": "Kembangkan semua item FAQ",
+            "collapseAllButton": "Runtuhkan Semua",
+            "collapseAllAriaLabel": "Runtuhkan semua item FAQ",
+            "regionAriaLabel": "Soalan Lazim",
+            "misconceptionLabel": "Salah Tanggapan",
+            "factLabel": "Fakta",
+            "disclaimerLabel": "Penafian",
+            "disclaimerText": "Maklumat ini adalah untuk tujuan pendidikan sahaja dan tidak sepatutnya menggantikan nasihat perubatan profesional. Jika anda mempunyai kebimbangan tentang kesihatan kognitif, sila berunding dengan penyedia penjagaan kesihatan yang berkelayakan.",
+            "item1": {
+                "misconception": "Kehilangan ingatan adalah bahagian normal penuaan.",
+                "fact": "Walaupun sedikit pelupa dengan usia adalah biasa, kehilangan ingatan berterusan yang mengganggu kehidupan harian adalah tidak normal. Ia mungkin merupakan tanda awal Alzheimer atau jenis demensia lain. Pelupa berkaitan usia (cth., kadang-kadang kehilangan kunci) berbeza daripada melupakan cara menggunakan kunci atau untuk apa ia digunakan."
+            },
+            "item2": {
+                "misconception": "Hanya orang tua yang mengembangkan Alzheimer.",
+                "fact": "Kebanyakan orang dengan Alzheimer berusia 65 tahun ke atas, tetapi Alzheimer permulaan awal boleh berkembang pada orang dalam 30-an atau 40-an mereka. Ia mewakili kira-kira 5-10% daripada semua kes. Individu yang lebih muda mungkin salah didiagnosis pada mulanya kerana gejala atipikal seperti masalah penglihatan atau bahasa dan bukannya masalah ingatan."
+            },
+            "item3": {
+                "misconception": "Alzheimer hanyalah kehilangan ingatan.",
+                "fact": "Alzheimer mempengaruhi lebih daripada ingatan: ia merosakkan pemikiran, penyelesaian masalah, bahasa, pertimbangan dan tingkah laku. Apabila ia berkembang, ia boleh menyebabkan kekeliruan, perubahan mood, perubahan personaliti dan kehilangan kemandirian."
+            },
+            "item4": {
+                "misconception": "MCI sentiasa membawa kepada Alzheimer.",
+                "fact": "Kemerosotan Kognitif Ringan (MCI) meningkatkan risiko Alzheimer, tetapi tidak semua orang dengan MCI berkembang kepada demensia. Sesetengahnya kekal stabil selama bertahun-tahun, dan sebahagian mungkin kembali kepada kognisi normal, terutamanya jika penyebabnya boleh dirawat (cth., kesan sampingan ubat, kemurungan atau gangguan tidur)."
+            },
+            "item5": {
+                "misconception": "Tiada rawatan untuk Alzheimer.",
+                "fact": "Walaupun belum ada penawar, rawatan boleh menguruskan gejala dan meningkatkan kualiti hidup. Ubat yang diluluskan FDA (cth., donepezil, memantine, lecanemab) boleh memperlahankan perkembangan dalam peringkat awal. Perubahan gaya hidup, aktiviti kognitif dan sokongan sosial juga merupakan intervensi bukan ubat yang penting."
+            },
+            "item6": {
+                "misconception": "Orang dengan Alzheimer tidak mempunyai kesedaran.",
+                "fact": "Dalam peringkat awal dan sederhana, ramai individu sedar tentang diagnosis mereka dan mampu mengambil bahagian dalam membuat keputusan. Kekurangan pemahaman orang lain boleh menyebabkan pengasingan sosial dan pergantungan yang tidak perlu."
+            },
+            "item7": {
+                "misconception": "Alzheimer disebabkan oleh aluminium, vaksin atau ketuhar gelombang mikro.",
+                "fact": "Dakwaan ini tidak disokong oleh bukti saintifik. Alzheimer disebabkan oleh interaksi kompleks genetik, usia, kesihatan vaskular dan faktor gaya hidup, bukan oleh pendedahan harian seperti memasak dengan aluminium atau menggunakan vaksin."
+            },
+            "item8": {
+                "misconception": "Demensia dan Alzheimer adalah perkara yang sama.",
+                "fact": "Demensia adalah istilah umum untuk kemerosotan kognitif yang mempengaruhi kehidupan harian. Alzheimer adalah penyebab demensia yang paling biasa, tetapi ada yang lain, termasuk demensia vaskular, demensia dengan badan Lewy dan demensia frontotemporal."
+            },
+            "item9": {
+                "misconception": "Orang dengan demensia tidak dapat memahami atau berkomunikasi.",
+                "fact": "Orang dengan demensia sering mengekalkan ingatan emosi dan keupayaan untuk bertindak balas kepada kebaikan, nada suara, muzik dan isyarat visual. Dengan kesabaran dan penyesuaian, komunikasi yang bermakna sering mungkin sehingga sangat lewat dalam penyakit."
+            },
+            "item10": {
+                "misconception": "Seseorang dengan Alzheimer tidak boleh hidup dengan baik.",
+                "fact": "Dengan sokongan yang sesuai, rutin dan penglibatan dalam aktiviti yang mereka nikmati, ramai orang dengan Alzheimer terus mengalami kegembiraan, hubungan dan tujuan, terutamanya dalam peringkat awal dan pertengahan."
+            }
+        }
     }
 }

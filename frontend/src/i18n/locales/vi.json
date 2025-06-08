@@ -369,5 +369,94 @@
         "malay": "Bahasa Melayu",
         "vietnamese": "Tiếng Việt",
         "russian": "Русский"
+    },
+    "resourceHub": {
+        "title": "Trung Tâm Tài Nguyên",
+        "description": "Khám phá thông tin toàn diện về sức khỏe nhận thức, chiến lược phòng ngừa và nghiên cứu mới nhất.",
+        "errors": {
+            "errorLabel": "Lỗi",
+            "searchFailed": "Lỗi thực hiện tìm kiếm. Vui lòng thử lại."
+        },
+        "search": {
+            "placeholder": "Tìm kiếm tài nguyên... (ví dụ: 'bài tập trí nhớ', 'phòng ngừa alzheimer')",
+            "button": "Tìm kiếm",
+            "ariaLabel": "Tìm kiếm tài nguyên",
+            "submitAriaLabel": "Gửi tìm kiếm"
+        },
+        "filters": {
+            "categoryLabel": "Danh mục",
+            "categoryAriaLabel": "Lọc theo danh mục",
+            "allCategories": "Tất cả danh mục",
+            "resourceTypeLabel": "Loại tài nguyên",
+            "resourceTypeAriaLabel": "Lọc theo loại tài nguyên",
+            "allTypes": "Tất cả loại",
+            "articles": "Bài viết",
+            "videos": "Video",
+            "tools": "Công cụ",
+            "checklists": "Danh sách kiểm tra",
+            "educational": "Giáo dục",
+            "resetButton": "Đặt lại",
+            "resetAriaLabel": "Đặt lại tất cả bộ lọc và tìm kiếm"
+        },
+        "results": {
+            "loadingAriaLabel": "Đang tải tài nguyên",
+            "couldNotLoad": "Không thể tải tài nguyên.",
+            "noResourcesFound": "Không tìm thấy tài nguyên nào phù hợp với tiêu chí của bạn.",
+            "resetFiltersButton": "Đặt lại bộ lọc và tìm kiếm",
+            "sourceLabel": "Nguồn"
+        },
+        "faq": {
+            "title": "Câu hỏi thường gặp",
+            "description": "Những quan niệm sai lầm phổ biến về bệnh Alzheimer và sức khỏe nhận thức, được làm rõ bằng các sự kiện dựa trên bằng chứng.",
+            "expandAllButton": "Mở rộng tất cả",
+            "expandAllAriaLabel": "Mở rộng tất cả mục FAQ",
+            "collapseAllButton": "Thu gọn tất cả",
+            "collapseAllAriaLabel": "Thu gọn tất cả mục FAQ",
+            "regionAriaLabel": "Câu hỏi thường gặp",
+            "misconceptionLabel": "Quan niệm sai lầm",
+            "factLabel": "Sự thật",
+            "disclaimerLabel": "Tuyên bố từ chối trách nhiệm",
+            "disclaimerText": "Thông tin này chỉ dành cho mục đích giáo dục và không nên thay thế lời khuyên y tế chuyên nghiệp. Nếu bạn có lo ngại về sức khỏe nhận thức, vui lòng tham khảo ý kiến của nhà cung cấp dịch vụ chăm sóc sức khỏe có trình độ.",
+            "item1": {
+                "misconception": "Mất trí nhớ là một phần bình thường của quá trình lão hóa.",
+                "fact": "Mặc dù một số quên lãng nhẹ theo tuổi tác là bình thường, mất trí nhớ liên tục can thiệp vào cuộc sống hàng ngày là không bình thường. Đây có thể là dấu hiệu sớm của Alzheimer hoặc các loại sa sút trí tuệ khác. Quên lãng liên quan đến tuổi tác (ví dụ: thỉnh thoảng mất chìa khóa) khác với việc quên cách sử dụng chìa khóa hoặc chúng dùng để làm gì."
+            },
+            "item2": {
+                "misconception": "Chỉ người già mới phát triển bệnh Alzheimer.",
+                "fact": "Hầu hết người mắc Alzheimer từ 65 tuổi trở lên, nhưng Alzheimer khởi phát sớm có thể phát triển ở những người trong độ tuổi 30 hoặc 40. Nó chiếm khoảng 5-10% tất cả các trường hợp. Những cá nhân trẻ tuổi có thể bị chẩn đoán sai ban đầu do các triệu chứng không điển hình như vấn đề về thị giác hoặc ngôn ngữ thay vì vấn đề về trí nhớ."
+            },
+            "item3": {
+                "misconception": "Alzheimer chỉ là mất trí nhớ.",
+                "fact": "Alzheimer ảnh hưởng nhiều hơn trí nhớ: nó làm suy giảm tư duy, giải quyết vấn đề, ngôn ngữ, phán đoán và hành vi. Khi bệnh tiến triển, nó có thể gây ra sự nhầm lẫn, thay đổi tâm trạng, thay đổi tính cách và mất độc lập."
+            },
+            "item4": {
+                "misconception": "MCI luôn dẫn đến Alzheimer.",
+                "fact": "Suy giảm nhận thức nhẹ (MCI) làm tăng nguy cơ Alzheimer, nhưng không phải tất cả người mắc MCI đều tiến triển thành sa sút trí tuệ. Một số vẫn ổn định trong nhiều năm, và một phần có thể trở lại nhận thức bình thường, đặc biệt nếu nguyên nhân có thể điều trị được (ví dụ: tác dụng phụ của thuốc, trầm cảm hoặc rối loạn giấc ngủ)."
+            },
+            "item5": {
+                "misconception": "Không có phương pháp điều trị nào cho Alzheimer.",
+                "fact": "Mặc dù chưa có thuốc chữa khỏi, các phương pháp điều trị có thể quản lý các triệu chứng và cải thiện chất lượng cuộc sống. Các loại thuốc được FDA phê duyệt (ví dụ: donepezil, memantine, lecanemab) có thể làm chậm tiến triển trong giai đoạn đầu. Thay đổi lối sống, hoạt động nhận thức và hỗ trợ xã hội cũng là những can thiệp không dùng thuốc quan trọng."
+            },
+            "item6": {
+                "misconception": "Người mắc Alzheimer không có nhận thức.",
+                "fact": "Trong giai đoạn đầu và thậm chí trung bình, nhiều cá nhân nhận thức được chẩn đoán của họ và có thể tham gia vào việc ra quyết định. Sự thiếu hiểu biết của người khác có thể dẫn đến cô lập xã hội và sự phụ thuộc không cần thiết."
+            },
+            "item7": {
+                "misconception": "Alzheimer do nhôm, vắc-xin hoặc lò vi sóng gây ra.",
+                "fact": "Những tuyên bố này không được hỗ trợ bởi bằng chứng khoa học. Alzheimer được gây ra bởi sự tương tác phức tạp của di truyền, tuổi tác, sức khỏe mạch máu và các yếu tố lối sống, không phải do tiếp xúc hàng ngày như nấu ăn bằng nhôm hoặc sử dụng vắc-xin."
+            },
+            "item8": {
+                "misconception": "Sa sút trí tuệ và Alzheimer là một.",
+                "fact": "Sa sút trí tuệ là một thuật ngữ chung cho suy giảm nhận thức ảnh hưởng đến cuộc sống hàng ngày. Alzheimer là nguyên nhân phổ biến nhất của sa sút trí tuệ, nhưng có những nguyên nhân khác, bao gồm sa sút trí tuệ mạch máu, sa sút trí tuệ với thể Lewy và sa sút trí tuệ thùy trán-thái dương."
+            },
+            "item9": {
+                "misconception": "Người mắc sa sút trí tuệ không thể hiểu hoặc giao tiếp.",
+                "fact": "Người mắc sa sút trí tuệ thường giữ được trí nhớ cảm xúc và khả năng phản ứng với lòng tốt, giọng điệu, âm nhạc và tín hiệu thị giác. Với sự kiên nhẫn và thích ứng, giao tiếp có ý nghĩa thường có thể thực hiện được cho đến rất muộn trong bệnh."
+            },
+            "item10": {
+                "misconception": "Một người mắc Alzheimer không thể sống tốt.",
+                "fact": "Với sự hỗ trợ phù hợp, thói quen và tham gia vào các hoạt động họ thích, nhiều người mắc Alzheimer tiếp tục trải nghiệm niềm vui, kết nối và mục đích, đặc biệt trong giai đoạn đầu và giữa."
+            }
+        }
     }
 }

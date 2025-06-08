@@ -273,16 +273,94 @@
             "recommendation": "For best results, aim to complete at least 3-4 training sessions per week, varying the types of exercises to challenge different cognitive abilities."
         }
     },
-    "resources": {
+    "resourceHub": {
         "title": "Resource Hub",
-        "description": "Comprehensive information on Alzheimer's prevention and cognitive health",
-        "categories": {
-            "prevention": "Prevention",
-            "earlySymptoms": "Early Symptoms",
-            "caregiving": "Caregiving"
+        "description": "Explore comprehensive information on cognitive health, prevention strategies, and the latest research.",
+        "errors": {
+            "errorLabel": "Error",
+            "searchFailed": "Failed to perform search. Please try again."
         },
-        "latestArticles": "Latest Articles",
-        "researchUpdates": "Research Updates"
+        "search": {
+            "placeholder": "Search resources... (e.g., 'memory exercises', 'alzheimer prevention')",
+            "button": "Search",
+            "ariaLabel": "Search resources",
+            "submitAriaLabel": "Submit search"
+        },
+        "filters": {
+            "categoryLabel": "Category",
+            "categoryAriaLabel": "Filter by category",
+            "allCategories": "All Categories",
+            "resourceTypeLabel": "Resource Type",
+            "resourceTypeAriaLabel": "Filter by resource type",
+            "allTypes": "All Types",
+            "articles": "Articles",
+            "videos": "Videos",
+            "tools": "Tools",
+            "checklists": "Checklists",
+            "educational": "Educational",
+            "resetButton": "Reset",
+            "resetAriaLabel": "Reset all filters and search"
+        },
+        "results": {
+            "loadingAriaLabel": "Loading resources",
+            "couldNotLoad": "Could not load resources.",
+            "noResourcesFound": "No resources found matching your criteria.",
+            "resetFiltersButton": "Reset filters & Search",
+            "sourceLabel": "Source"
+        },
+        "faq": {
+            "title": "Frequently Asked Questions",
+            "description": "Common misconceptions about Alzheimer's disease and cognitive health, clarified with evidence-based facts.",
+            "expandAllButton": "Expand All",
+            "expandAllAriaLabel": "Expand all FAQ items",
+            "collapseAllButton": "Collapse All",
+            "collapseAllAriaLabel": "Collapse all FAQ items",
+            "regionAriaLabel": "Frequently Asked Questions",
+            "misconceptionLabel": "Misconception",
+            "factLabel": "Fact",
+            "disclaimerLabel": "Disclaimer",
+            "disclaimerText": "This information is for educational purposes only and should not replace professional medical advice. If you have concerns about cognitive health, please consult with a qualified healthcare provider.",
+            "item1": {
+                "misconception": "Memory loss is a normal part of aging.",
+                "fact": "While some mild forgetfulness is common with aging, persistent memory loss that disrupts daily life is not normal. It may be an early sign of Alzheimer's or another type of dementia. Aging-related forgetfulness (e.g., occasionally misplacing keys) differs from forgetting how to use the keys or what they're for."
+            },
+            "item2": {
+                "misconception": "Only elderly people get Alzheimer's.",
+                "fact": "Most people with Alzheimer's are 65 or older, but early-onset Alzheimer's can develop in people as young as their 30s or 40s. It accounts for about 5–10% of all cases. Younger individuals may initially be misdiagnosed due to atypical symptoms like vision or language problems rather than memory issues."
+            },
+            "item3": {
+                "misconception": "Alzheimer's is just memory loss.",
+                "fact": "Alzheimer's affects more than memory—it impairs thinking, problem-solving, language, judgment, and behavior. As it progresses, it can cause confusion, mood swings, personality changes, and loss of independence."
+            },
+            "item4": {
+                "misconception": "MCI always leads to Alzheimer's.",
+                "fact": "Mild Cognitive Impairment (MCI) increases the risk of Alzheimer's, but not all people with MCI progress to dementia. Some remain stable for years, and a portion may even revert to normal cognition, especially if the cause is treatable (e.g., medication side effects, depression, or sleep disorders)."
+            },
+            "item5": {
+                "misconception": "There is no treatment for Alzheimer's.",
+                "fact": "There is no cure yet, but treatments can manage symptoms and improve quality of life. FDA-approved medications (e.g., donepezil, memantine, lecanemab) may slow progression in early stages. Lifestyle changes, cognitive activities, and social support are also crucial non-pharmacological interventions."
+            },
+            "item6": {
+                "misconception": "People with Alzheimer's have no awareness.",
+                "fact": "In early and even moderate stages, many individuals are aware of their diagnosis and capable of participating in decisions. Lack of understanding from others can lead to social withdrawal and unnecessary dependence."
+            },
+            "item7": {
+                "misconception": "Alzheimer's is caused by aluminum, vaccines, or microwaves.",
+                "fact": "These claims are not supported by scientific evidence. Alzheimer's is caused by a complex interplay of genetics, age, vascular health, and lifestyle factors—not by everyday exposures like cooking with aluminum or using vaccines."
+            },
+            "item8": {
+                "misconception": "Dementia and Alzheimer's are the same.",
+                "fact": "Dementia is a general term for cognitive decline affecting daily life. Alzheimer's is the most common cause of dementia, but there are others, including vascular dementia, Lewy body dementia, and frontotemporal dementia."
+            },
+            "item9": {
+                "misconception": "People with dementia cannot understand or communicate.",
+                "fact": "People with dementia often retain emotional memory and the ability to respond to kindness, tone of voice, music, and visual cues. With patience and adaptation, meaningful communication is often possible far into the disease."
+            },
+            "item10": {
+                "misconception": "A person with Alzheimer's cannot live well.",
+                "fact": "With the right support, routines, and engagement in activities they enjoy, many people with Alzheimer's continue to experience joy, connection, and purpose—especially in early and middle stages."
+            }
+        }
     },
     "auth": {
         "login": {

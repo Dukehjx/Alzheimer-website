@@ -272,16 +272,94 @@
             "recommendation": "为了获得最佳效果，建议每周完成至少3-4次训练，变换不同类型的练习以挑战不同的认知能力。"
         }
     },
-    "resources": {
+    "resourceHub": {
         "title": "资源中心",
-        "description": "关于阿尔兹海默病预防和认知健康的综合信息",
-        "categories": {
-            "prevention": "预防",
-            "earlySymptoms": "早期症状",
-            "caregiving": "护理"
+        "description": "探索关于认知健康、预防策略和最新研究的综合信息。",
+        "errors": {
+            "errorLabel": "错误",
+            "searchFailed": "搜索失败。请重试。"
         },
-        "latestArticles": "最新文章",
-        "researchUpdates": "研究更新"
+        "search": {
+            "placeholder": "搜索资源...（例如，'记忆练习'，'阿尔茨海默预防'）",
+            "button": "搜索",
+            "ariaLabel": "搜索资源",
+            "submitAriaLabel": "提交搜索"
+        },
+        "filters": {
+            "categoryLabel": "类别",
+            "categoryAriaLabel": "按类别筛选",
+            "allCategories": "所有类别",
+            "resourceTypeLabel": "资源类型",
+            "resourceTypeAriaLabel": "按资源类型筛选",
+            "allTypes": "所有类型",
+            "articles": "文章",
+            "videos": "视频",
+            "tools": "工具",
+            "checklists": "检查清单",
+            "educational": "教育",
+            "resetButton": "重置",
+            "resetAriaLabel": "重置所有筛选和搜索"
+        },
+        "results": {
+            "loadingAriaLabel": "正在加载资源",
+            "couldNotLoad": "无法加载资源。",
+            "noResourcesFound": "未找到符合您条件的资源。",
+            "resetFiltersButton": "重置筛选和搜索",
+            "sourceLabel": "来源"
+        },
+        "faq": {
+            "title": "常见问题",
+            "description": "关于阿尔茨海默病和认知健康的常见误解，用基于证据的事实澄清。",
+            "expandAllButton": "展开全部",
+            "expandAllAriaLabel": "展开所有FAQ项目",
+            "collapseAllButton": "收起全部",
+            "collapseAllAriaLabel": "收起所有FAQ项目",
+            "regionAriaLabel": "常见问题",
+            "misconceptionLabel": "误解",
+            "factLabel": "事实",
+            "disclaimerLabel": "免责声明",
+            "disclaimerText": "此信息仅供教育目的，不应替代专业医疗建议。如果您对认知健康有担忧，请咨询合格的医疗保健提供者。",
+            "item1": {
+                "misconception": "记忆力减退是衰老的正常部分。",
+                "fact": "虽然随着年龄增长出现一些轻微的健忘是常见的，但持续的记忆丧失干扰日常生活并不正常。这可能是阿尔茨海默病或其他类型痴呆的早期征象。与年龄相关的健忘（如偶尔放错钥匙）与忘记如何使用钥匙或钥匙的用途不同。"
+            },
+            "item2": {
+                "misconception": "只有老年人才会得阿尔茨海默病。",
+                "fact": "大多数阿尔茨海默病患者年龄在65岁或以上，但早发性阿尔茨海默病可能在30多岁或40多岁的人群中发生。约占所有病例的5-10%。年轻患者可能最初被误诊，因为他们的症状不典型，如视觉或语言问题而非记忆问题。"
+            },
+            "item3": {
+                "misconception": "阿尔茨海默病只是记忆丧失。",
+                "fact": "阿尔茨海默病影响的不仅仅是记忆——它损害思维、解决问题、语言、判断和行为。随着病情进展，可能导致混乱、情绪波动、性格改变和失去独立性。"
+            },
+            "item4": {
+                "misconception": "轻度认知障碍总是导致阿尔茨海默病。",
+                "fact": "轻度认知障碍（MCI）增加阿尔茨海默病的风险，但并非所有MCI患者都会进展为痴呆。有些人多年保持稳定，一部分甚至可能恢复正常认知，特别是如果病因可治疗（如药物副作用、抑郁或睡眠障碍）。"
+            },
+            "item5": {
+                "misconception": "阿尔茨海默病没有治疗方法。",
+                "fact": "虽然尚无治愈方法，但治疗可以管理症状并改善生活质量。FDA批准的药物（如多奈哌齐、美金刚、仑卡奈单抗）可能在早期阶段减缓进展。生活方式改变、认知活动和社会支持也是重要的非药物干预措施。"
+            },
+            "item6": {
+                "misconception": "阿尔茨海默病患者没有意识。",
+                "fact": "在早期甚至中期阶段，许多患者意识到自己的诊断并能够参与决策。他人缺乏理解可能导致社交退缩和不必要的依赖。"
+            },
+            "item7": {
+                "misconception": "阿尔茨海默病是由铝、疫苗或微波炉引起的。",
+                "fact": "这些说法没有科学证据支持。阿尔茨海默病是由遗传、年龄、血管健康和生活方式因素的复杂相互作用引起的——而不是由日常接触如用铝烹饪或使用疫苗引起的。"
+            },
+            "item8": {
+                "misconception": "痴呆和阿尔茨海默病是一回事。",
+                "fact": "痴呆是影响日常生活的认知衰退的总称。阿尔茨海默病是痴呆最常见的原因，但还有其他类型，包括血管性痴呆、路易体痴呆和额颞叶痴呆。"
+            },
+            "item9": {
+                "misconception": "痴呆患者无法理解或交流。",
+                "fact": "痴呆患者通常保留情感记忆和对善意、语调、音乐和视觉线索的反应能力。通过耐心和适应，有意义的交流在疾病的很晚期通常仍然可能。"
+            },
+            "item10": {
+                "misconception": "阿尔茨海默病患者无法过得好。",
+                "fact": "在适当的支持、例行程序和参与他们喜欢的活动下，许多阿尔茨海默病患者继续体验快乐、联系和目标——特别是在早期和中期阶段。"
+            }
+        }
     },
     "auth": {
         "login": {

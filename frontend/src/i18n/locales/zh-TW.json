@@ -272,16 +272,94 @@
             "recommendation": "為了獲得最佳效果，建議每週完成至少3-4次訓練，變換不同類型的練習以挑戰不同的認知能力。"
         }
     },
-    "resources": {
+    "resourceHub": {
         "title": "資源中心",
-        "description": "關於阿茲海默症預防和認知健康的綜合資訊",
-        "categories": {
-            "prevention": "預防",
-            "earlySymptoms": "早期症狀",
-            "caregiving": "照護"
+        "description": "探索關於認知健康、預防策略和最新研究的綜合資訊。",
+        "errors": {
+            "errorLabel": "錯誤",
+            "searchFailed": "搜尋失敗。請重試。"
         },
-        "latestArticles": "最新文章",
-        "researchUpdates": "研究更新"
+        "search": {
+            "placeholder": "搜尋資源...（例如，'記憶練習'，'阿茲海默預防'）",
+            "button": "搜尋",
+            "ariaLabel": "搜尋資源",
+            "submitAriaLabel": "提交搜尋"
+        },
+        "filters": {
+            "categoryLabel": "類別",
+            "categoryAriaLabel": "按類別篩選",
+            "allCategories": "所有類別",
+            "resourceTypeLabel": "資源類型",
+            "resourceTypeAriaLabel": "按資源類型篩選",
+            "allTypes": "所有類型",
+            "articles": "文章",
+            "videos": "影片",
+            "tools": "工具",
+            "checklists": "檢查清單",
+            "educational": "教育",
+            "resetButton": "重置",
+            "resetAriaLabel": "重置所有篩選和搜尋"
+        },
+        "results": {
+            "loadingAriaLabel": "正在載入資源",
+            "couldNotLoad": "無法載入資源。",
+            "noResourcesFound": "未找到符合您條件的資源。",
+            "resetFiltersButton": "重置篩選和搜尋",
+            "sourceLabel": "來源"
+        },
+        "faq": {
+            "title": "常見問題",
+            "description": "關於阿茲海默症和認知健康的常見誤解，用基於證據的事實澄清。",
+            "expandAllButton": "展開全部",
+            "expandAllAriaLabel": "展開所有FAQ項目",
+            "collapseAllButton": "收起全部",
+            "collapseAllAriaLabel": "收起所有FAQ項目",
+            "regionAriaLabel": "常見問題",
+            "misconceptionLabel": "誤解",
+            "factLabel": "事實",
+            "disclaimerLabel": "免責聲明",
+            "disclaimerText": "此資訊僅供教育目的，不應替代專業醫療建議。如果您對認知健康有擔憂，請諮詢合格的醫療保健提供者。",
+            "item1": {
+                "misconception": "記憶力減退是衰老的正常部分。",
+                "fact": "雖然隨著年齡增長出現一些輕微的健忘是常見的，但持續的記憶喪失干擾日常生活並不正常。這可能是阿茲海默症或其他類型失智症的早期徵象。與年齡相關的健忘（如偶爾放錯鑰匙）與忘記如何使用鑰匙或鑰匙的用途不同。"
+            },
+            "item2": {
+                "misconception": "只有老年人才會得阿茲海默症。",
+                "fact": "大多數阿茲海默症患者年齡在65歲或以上，但早發性阿茲海默症可能在30多歲或40多歲的人群中發生。約佔所有病例的5-10%。年輕患者可能最初被誤診，因為他們的症狀不典型，如視覺或語言問題而非記憶問題。"
+            },
+            "item3": {
+                "misconception": "阿茲海默症只是記憶喪失。",
+                "fact": "阿茲海默症影響的不僅僅是記憶——它損害思維、解決問題、語言、判斷和行為。隨著病情進展，可能導致混亂、情緒波動、性格改變和失去獨立性。"
+            },
+            "item4": {
+                "misconception": "輕度認知障礙總是導致阿茲海默症。",
+                "fact": "輕度認知障礙（MCI）增加阿茲海默症的風險，但並非所有MCI患者都會進展為失智症。有些人多年保持穩定，一部分甚至可能恢復正常認知，特別是如果病因可治療（如藥物副作用、憂鬱或睡眠障礙）。"
+            },
+            "item5": {
+                "misconception": "阿茲海默症沒有治療方法。",
+                "fact": "雖然尚無治癒方法，但治療可以管理症狀並改善生活品質。FDA批准的藥物（如多奈哌齊、美金剛、侖卡奈單抗）可能在早期階段減緩進展。生活方式改變、認知活動和社會支持也是重要的非藥物干預措施。"
+            },
+            "item6": {
+                "misconception": "阿茲海默症患者沒有意識。",
+                "fact": "在早期甚至中期階段，許多患者意識到自己的診斷並能夠參與決策。他人缺乏理解可能導致社交退縮和不必要的依賴。"
+            },
+            "item7": {
+                "misconception": "阿茲海默症是由鋁、疫苗或微波爐引起的。",
+                "fact": "這些說法沒有科學證據支持。阿茲海默症是由遺傳、年齡、血管健康和生活方式因素的複雜相互作用引起的——而不是由日常接觸如用鋁烹飪或使用疫苗引起的。"
+            },
+            "item8": {
+                "misconception": "失智症和阿茲海默症是一回事。",
+                "fact": "失智症是影響日常生活的認知衰退的總稱。阿茲海默症是失智症最常見的原因，但還有其他類型，包括血管性失智症、路易體失智症和額顳葉失智症。"
+            },
+            "item9": {
+                "misconception": "失智症患者無法理解或交流。",
+                "fact": "失智症患者通常保留情感記憶和對善意、語調、音樂和視覺線索的反應能力。通過耐心和適應，有意義的交流在疾病的很晚期通常仍然可能。"
+            },
+            "item10": {
+                "misconception": "阿茲海默症患者無法過得好。",
+                "fact": "在適當的支持、例行程序和參與他們喜歡的活動下，許多阿茲海默症患者繼續體驗快樂、聯繫和目標——特別是在早期和中期階段。"
+            }
+        }
     },
     "auth": {
         "login": {

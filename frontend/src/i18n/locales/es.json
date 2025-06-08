@@ -272,16 +272,94 @@
             "recommendation": "Para mejores resultados, intenta completar al menos 3-4 sesiones de entrenamiento por semana, variando los tipos de ejercicios para desafiar diferentes habilidades cognitivas."
         }
     },
-    "resources": {
+    "resourceHub": {
         "title": "Centro de Recursos",
-        "description": "Información integral sobre prevención del Alzheimer y salud cognitiva",
-        "categories": {
-            "prevention": "Prevención",
-            "earlySymptoms": "Síntomas Tempranos",
-            "caregiving": "Cuidado"
+        "description": "Explora información integral sobre salud cognitiva, estrategias de prevención y las últimas investigaciones.",
+        "errors": {
+            "errorLabel": "Error",
+            "searchFailed": "Error al realizar la búsqueda. Por favor, inténtalo de nuevo."
         },
-        "latestArticles": "Últimos Artículos",
-        "researchUpdates": "Actualizaciones de Investigación"
+        "search": {
+            "placeholder": "Buscar recursos... (ej., 'ejercicios de memoria', 'prevención alzheimer')",
+            "button": "Buscar",
+            "ariaLabel": "Buscar recursos",
+            "submitAriaLabel": "Enviar búsqueda"
+        },
+        "filters": {
+            "categoryLabel": "Categoría",
+            "categoryAriaLabel": "Filtrar por categoría",
+            "allCategories": "Todas las Categorías",
+            "resourceTypeLabel": "Tipo de Recurso",
+            "resourceTypeAriaLabel": "Filtrar por tipo de recurso",
+            "allTypes": "Todos los Tipos",
+            "articles": "Artículos",
+            "videos": "Videos",
+            "tools": "Herramientas",
+            "checklists": "Listas de Verificación",
+            "educational": "Educativo",
+            "resetButton": "Restablecer",
+            "resetAriaLabel": "Restablecer todos los filtros y búsqueda"
+        },
+        "results": {
+            "loadingAriaLabel": "Cargando recursos",
+            "couldNotLoad": "No se pudieron cargar los recursos.",
+            "noResourcesFound": "No se encontraron recursos que coincidan con tus criterios.",
+            "resetFiltersButton": "Restablecer filtros y búsqueda",
+            "sourceLabel": "Fuente"
+        },
+        "faq": {
+            "title": "Preguntas Frecuentes",
+            "description": "Conceptos erróneos comunes sobre la enfermedad de Alzheimer y la salud cognitiva, aclarados con hechos basados en evidencia.",
+            "expandAllButton": "Expandir Todo",
+            "expandAllAriaLabel": "Expandir todos los elementos de FAQ",
+            "collapseAllButton": "Contraer Todo",
+            "collapseAllAriaLabel": "Contraer todos los elementos de FAQ",
+            "regionAriaLabel": "Preguntas Frecuentes",
+            "misconceptionLabel": "Concepto Erróneo",
+            "factLabel": "Hecho",
+            "disclaimerLabel": "Descargo de Responsabilidad",
+            "disclaimerText": "Esta información es solo para fines educativos y no debe reemplazar el consejo médico profesional. Si tienes preocupaciones sobre la salud cognitiva, consulta con un proveedor de atención médica calificado.",
+            "item1": {
+                "misconception": "La pérdida de memoria es una parte normal del envejecimiento.",
+                "fact": "Aunque cierto olvido leve es común con el envejecimiento, la pérdida de memoria persistente que interrumpe la vida diaria no es normal. Puede ser una señal temprana de Alzheimer u otro tipo de demencia. El olvido relacionado con la edad (ej., perder las llaves ocasionalmente) difiere de olvidar cómo usar las llaves o para qué sirven."
+            },
+            "item2": {
+                "misconception": "Solo las personas mayores desarrollan Alzheimer.",
+                "fact": "La mayoría de las personas con Alzheimer tienen 65 años o más, pero el Alzheimer de inicio temprano puede desarrollarse en personas de 30 o 40 años. Representa aproximadamente el 5-10% de todos los casos. Los individuos más jóvenes pueden ser inicialmente mal diagnosticados debido a síntomas atípicos como problemas de visión o lenguaje en lugar de problemas de memoria."
+            },
+            "item3": {
+                "misconception": "El Alzheimer es solo pérdida de memoria.",
+                "fact": "El Alzheimer afecta más que la memoria: deteriora el pensamiento, la resolución de problemas, el lenguaje, el juicio y el comportamiento. A medida que progresa, puede causar confusión, cambios de humor, cambios de personalidad y pérdida de independencia."
+            },
+            "item4": {
+                "misconception": "El DCL siempre lleva al Alzheimer.",
+                "fact": "El Deterioro Cognitivo Leve (DCL) aumenta el riesgo de Alzheimer, pero no todas las personas con DCL progresan a demencia. Algunos permanecen estables durante años, y una parte puede incluso revertir a cognición normal, especialmente si la causa es tratable (ej., efectos secundarios de medicamentos, depresión o trastornos del sueño)."
+            },
+            "item5": {
+                "misconception": "No hay tratamiento para el Alzheimer.",
+                "fact": "Aún no hay cura, pero los tratamientos pueden manejar los síntomas y mejorar la calidad de vida. Los medicamentos aprobados por la FDA (ej., donepezilo, memantina, lecanemab) pueden ralentizar la progresión en etapas tempranas. Los cambios de estilo de vida, actividades cognitivas y apoyo social también son intervenciones no farmacológicas cruciales."
+            },
+            "item6": {
+                "misconception": "Las personas con Alzheimer no tienen conciencia.",
+                "fact": "En etapas tempranas e incluso moderadas, muchos individuos son conscientes de su diagnóstico y capaces de participar en decisiones. La falta de comprensión de otros puede llevar al aislamiento social y dependencia innecesaria."
+            },
+            "item7": {
+                "misconception": "El Alzheimer es causado por aluminio, vacunas o microondas.",
+                "fact": "Estas afirmaciones no están respaldadas por evidencia científica. El Alzheimer es causado por una interacción compleja de genética, edad, salud vascular y factores de estilo de vida, no por exposiciones cotidianas como cocinar con aluminio o usar vacunas."
+            },
+            "item8": {
+                "misconception": "La demencia y el Alzheimer son lo mismo.",
+                "fact": "La demencia es un término general para el deterioro cognitivo que afecta la vida diaria. El Alzheimer es la causa más común de demencia, pero hay otras, incluyendo demencia vascular, demencia con cuerpos de Lewy y demencia frontotemporal."
+            },
+            "item9": {
+                "misconception": "Las personas con demencia no pueden entender o comunicarse.",
+                "fact": "Las personas con demencia a menudo retienen la memoria emocional y la capacidad de responder a la amabilidad, tono de voz, música y señales visuales. Con paciencia y adaptación, la comunicación significativa es a menudo posible hasta muy avanzada la enfermedad."
+            },
+            "item10": {
+                "misconception": "Una persona con Alzheimer no puede vivir bien.",
+                "fact": "Con el apoyo adecuado, rutinas y participación en actividades que disfrutan, muchas personas con Alzheimer continúan experimentando alegría, conexión y propósito, especialmente en etapas tempranas y medias."
+            }
+        }
     },
     "auth": {
         "login": {
