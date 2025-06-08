@@ -361,6 +361,91 @@
             }
         }
     },
+    "userHome": {
+        "greetings": {
+            "morning": "おはようございます",
+            "afternoon": "こんにちは",
+            "evening": "こんばんは"
+        },
+        "welcome": "パーソナライズされた認知健康ダッシュボードへようこそ",
+        "logout": "ログアウト",
+        "sections": {
+            "quickActions": "クイックアクション",
+            "cognitiveHealthSummary": "認知健康サマリー",
+            "recentActivity": "最近のアクティビティ",
+            "todaysHealthTip": "今日の健康ヒント",
+            "thisWeeksProgress": "今週の進捗"
+        },
+        "quickActions": {
+            "startAiScreening": {
+                "title": "AIスクリーニング開始",
+                "description": "音声パターンを分析"
+            },
+            "cognitiveTraining": {
+                "title": "認知トレーニング",
+                "description": "脳トレーニングゲームをプレイ"
+            },
+            "takeDetectionQuiz": {
+                "title": "検出クイズを受ける",
+                "description": "迅速な認知評価"
+            },
+            "resourceHub": {
+                "title": "リソースハブ",
+                "description": "教育資料"
+            }
+        },
+        "metrics": {
+            "cognitiveScore": {
+                "name": "認知スコア",
+                "description": "最新のAI分析認知スコア"
+            },
+            "trainingSessions": {
+                "name": "トレーニングセッション",
+                "description": "完了したトレーニングセッションの総数"
+            },
+            "trainingAccuracy": {
+                "name": "トレーニング精度",
+                "description": "全トレーニングの平均精度"
+            },
+            "consistencyScore": {
+                "name": "一貫性スコア",
+                "description": "トレーニング一貫性スコア"
+            }
+        },
+        "recentActivities": {
+            "wordRecallExercise": {
+                "title": "単語記憶エクササイズ完了",
+                "description": "上級単語記憶チャレンジで85%を獲得"
+            },
+            "speechAnalysis": {
+                "title": "音声分析完了",
+                "description": "最新の音声サンプルで明瞭度の改善を確認"
+            },
+            "readArticle": {
+                "title": "新しい研究記事を読む",
+                "description": "リソースハブで『栄養と脳の健康』を閲覧"
+            },
+            "memoryMatch": {
+                "title": "記憶マッチチャレンジ",
+                "description": "90秒で12マッチの個人記録を達成"
+            }
+        },
+        "timeIndicators": {
+            "hoursAgo": "時間前",
+            "dayAgo": "1日前",
+            "daysAgo": "日前"
+        },
+        "actions": {
+            "viewAll": "すべて表示",
+            "continue": "続行 →",
+            "todaysTip": "今日のヒント：",
+            "learnMoreBrainHealth": "脳の健康についてもっと学ぶ →"
+        },
+        "progressLabels": {
+            "trainingSessions": "トレーニングセッション",
+            "trainingAccuracy": "トレーニング精度"
+        }
+    },
     "auth": {
         "login": {
             "title": "アカウントにログイン",

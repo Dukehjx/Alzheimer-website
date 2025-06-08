@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
     ArrowUpIcon,
     ArrowDownIcon,
@@ -200,129 +201,131 @@ const BrainCustomIcon = (props) => (
     </svg>
 );
 
-// Initial cognitive health metrics
-const initialMetrics = [
-    {
-        name: 'Cognitive Score',
-        value: 'N/A',
-        change: '-',
-        trend: 'up',
-        icon: BrainCustomIcon,
-        color: 'primary',
-        description: 'Latest AI analysis cognitive score',
-    },
-    {
-        name: 'Training Sessions',
-        value: '0',
-        change: '0',
-        trend: 'up',
-        icon: ChartBarIcon,
-        color: 'secondary',
-        description: 'Total completed training sessions',
-    },
-    {
-        name: 'Training Accuracy',
-        value: 'N/A',
-        change: '-',
-        trend: 'up',
-        icon: TrophyIcon,
-        color: 'yellow',
-        description: 'Average accuracy across all training',
-    },
-    {
-        name: 'Consistency Score',
-        value: '0%',
-        change: '0%',
-        trend: 'up',
-        icon: ClockIcon,
-        color: 'indigo',
-        description: 'Training consistency score',
-    },
-];
-
-// Quick action links
-const quickActions = [
-    {
-        title: 'Start AI Screening',
-        description: 'Analyze your speech patterns',
-        icon: ChatBubbleLeftRightIcon,
-        href: '/screening',
-        color: 'bg-blue-500 hover:bg-blue-600',
-        textColor: 'text-white',
-    },
-    {
-        title: 'Cognitive Training',
-        description: 'Play brain training games',
-        icon: BrainCustomIcon,
-        href: '/cognitive-training',
-        color: 'bg-primary-500 hover:bg-primary-600',
-        textColor: 'text-white',
-    },
-    {
-        title: 'Take Detection Quiz',
-        description: 'Quick cognitive assessment',
-        icon: DocumentTextIcon,
-        href: '/quiz',
-        color: 'bg-green-500 hover:bg-green-600',
-        textColor: 'text-white',
-    },
-    {
-        title: 'Resource Hub',
-        description: 'Educational materials',
-        icon: BookOpenIcon,
-        href: '/resources',
-        color: 'bg-purple-500 hover:bg-purple-600',
-        textColor: 'text-white',
-    },
-];
-
-// Recent activities
-const recentActivities = [
-    {
-        id: 1,
-        title: 'Completed Word Recall Exercise',
-        time: '2 hours ago',
-        icon: BrainCustomIcon,
-        iconBackground: 'bg-primary-100 dark:bg-primary-900',
-        iconColor: 'text-primary-600 dark:text-primary-400',
-        description: 'Scored 85% in the advanced word recall challenge',
-        link: '/cognitive-training/word-recall',
-    },
-    {
-        id: 2,
-        title: 'Speech Analysis Completed',
-        time: '1 day ago',
-        icon: ChatBubbleLeftRightIcon,
-        iconBackground: 'bg-blue-100 dark:bg-blue-900',
-        iconColor: 'text-blue-600 dark:text-blue-400',
-        description: 'Your latest speech sample shows improved clarity',
-        link: '/screening',
-    },
-    {
-        id: 3,
-        title: 'Read New Research Article',
-        time: '2 days ago',
-        icon: DocumentTextIcon,
-        iconBackground: 'bg-green-100 dark:bg-green-900',
-        iconColor: 'text-green-600 dark:text-green-400',
-        description: 'Viewed "Nutrition and Brain Health" in Resource Hub',
-        link: '/resources',
-    },
-    {
-        id: 4,
-        title: 'Memory Match Challenge',
-        time: '3 days ago',
-        icon: TrophyIcon,
-        iconBackground: 'bg-yellow-100 dark:bg-yellow-900',
-        iconColor: 'text-yellow-600 dark:text-yellow-400',
-        description: 'Achieved personal best with 12 matches in 90 seconds',
-        link: '/cognitive-training/memory-match',
-    },
-];
-
 export default function UserHomePage() {
     const { currentUser, logout } = useAuth();
     const navigate = useNavigate();
+    const { t } = useTranslation();
+
+    // Initial cognitive health metrics with translations
+    const initialMetrics = [
+        {
+            name: t('userHome.metrics.cognitiveScore.name'),
+            value: 'N/A',
+            change: '-',
+            trend: 'up',
+            icon: BrainCustomIcon,
+            color: 'primary',
+            description: t('userHome.metrics.cognitiveScore.description'),
+        },
+        {
+            name: t('userHome.metrics.trainingSessions.name'),
+            value: '0',
+            change: '0',
+            trend: 'up',
+            icon: ChartBarIcon,
+            color: 'secondary',
+            description: t('userHome.metrics.trainingSessions.description'),
+        },
+        {
+            name: t('userHome.metrics.trainingAccuracy.name'),
+            value: 'N/A',
+            change: '-',
+            trend: 'up',
+            icon: TrophyIcon,
+            color: 'yellow',
+            description: t('userHome.metrics.trainingAccuracy.description'),
+        },
+        {
+            name: t('userHome.metrics.consistencyScore.name'),
+            value: '0%',
+            change: '0%',
+            trend: 'up',
+            icon: ClockIcon,
+            color: 'indigo',
+            description: t('userHome.metrics.consistencyScore.description'),
+        },
+    ];
+
+    // Quick action links with translations
+    const quickActions = [
+        {
+            title: t('userHome.quickActions.startAiScreening.title'),
+            description: t('userHome.quickActions.startAiScreening.description'),
+            icon: ChatBubbleLeftRightIcon,
+            href: '/screening',
+            color: 'bg-blue-500 hover:bg-blue-600',
+            textColor: 'text-white',
+        },
+        {
+            title: t('userHome.quickActions.cognitiveTraining.title'),
+            description: t('userHome.quickActions.cognitiveTraining.description'),
+            icon: BrainCustomIcon,
+            href: '/cognitive-training',
+            color: 'bg-primary-500 hover:bg-primary-600',
+            textColor: 'text-white',
+        },
+        {
+            title: t('userHome.quickActions.takeDetectionQuiz.title'),
+            description: t('userHome.quickActions.takeDetectionQuiz.description'),
+            icon: DocumentTextIcon,
+            href: '/quiz',
+            color: 'bg-green-500 hover:bg-green-600',
+            textColor: 'text-white',
+        },
+        {
+            title: t('userHome.quickActions.resourceHub.title'),
+            description: t('userHome.quickActions.resourceHub.description'),
+            icon: BookOpenIcon,
+            href: '/resources',
+            color: 'bg-purple-500 hover:bg-purple-600',
+            textColor: 'text-white',
+        },
+    ];
+
+    // Recent activities with translations
+    const recentActivities = [
+        {
+            id: 1,
+            title: t('userHome.recentActivities.wordRecallExercise.title'),
+            time: `2 ${t('userHome.timeIndicators.hoursAgo')}`,
+            icon: BrainCustomIcon,
+            iconBackground: 'bg-primary-100 dark:bg-primary-900',
+            iconColor: 'text-primary-600 dark:text-primary-400',
+            description: t('userHome.recentActivities.wordRecallExercise.description'),
+            link: '/cognitive-training/word-recall',
+        },
+        {
+            id: 2,
+            title: t('userHome.recentActivities.speechAnalysis.title'),
+            time: t('userHome.timeIndicators.dayAgo'),
+            icon: ChatBubbleLeftRightIcon,
+            iconBackground: 'bg-blue-100 dark:bg-blue-900',
+            iconColor: 'text-blue-600 dark:text-blue-400',
+            description: t('userHome.recentActivities.speechAnalysis.description'),
+            link: '/screening',
+        },
+        {
+            id: 3,
+            title: t('userHome.recentActivities.readArticle.title'),
+            time: `2 ${t('userHome.timeIndicators.daysAgo')}`,
+            icon: DocumentTextIcon,
+            iconBackground: 'bg-green-100 dark:bg-green-900',
+            iconColor: 'text-green-600 dark:text-green-400',
+            description: t('userHome.recentActivities.readArticle.description'),
+            link: '/resources',
+        },
+        {
+            id: 4,
+            title: t('userHome.recentActivities.memoryMatch.title'),
+            time: `3 ${t('userHome.timeIndicators.daysAgo')}`,
+            icon: TrophyIcon,
+            iconBackground: 'bg-yellow-100 dark:bg-yellow-900',
+            iconColor: 'text-yellow-600 dark:text-yellow-400',
+            description: t('userHome.recentActivities.memoryMatch.description'),
+            link: '/cognitive-training/memory-match',
+        },
+    ];
+
     const [metrics, setMetrics] = useState(initialMetrics);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -331,9 +334,9 @@ export default function UserHomePage() {
     // Get current time-based greeting
     const getGreeting = () => {
         const hour = new Date().getHours();
-        if (hour < 12) return 'Good morning';
-        if (hour < 18) return 'Good afternoon';
-        return 'Good evening';
+        if (hour < 12) return t('userHome.greetings.morning');
+        if (hour < 18) return t('userHome.greetings.afternoon');
+        return t('userHome.greetings.evening');
     };
 
     // Handle logout
@@ -427,28 +430,40 @@ export default function UserHomePage() {
 
                 setMetrics([
                     {
-                        ...initialMetrics[0],
+                        name: t('userHome.metrics.cognitiveScore.name'),
                         value: cognitiveScore,
                         change: cognitiveChange,
-                        trend: cognitiveTrend
+                        trend: cognitiveTrend,
+                        icon: BrainCustomIcon,
+                        color: 'primary',
+                        description: t('userHome.metrics.cognitiveScore.description'),
                     },
                     {
-                        ...initialMetrics[1],
+                        name: t('userHome.metrics.trainingSessions.name'),
                         value: trainingSessions,
                         change: trainingChange,
-                        trend: 'up'
+                        trend: 'up',
+                        icon: ChartBarIcon,
+                        color: 'secondary',
+                        description: t('userHome.metrics.trainingSessions.description'),
                     },
                     {
-                        ...initialMetrics[2],
+                        name: t('userHome.metrics.trainingAccuracy.name'),
                         value: trainingAccuracy,
                         change: accuracyChange,
-                        trend: 'up'
+                        trend: 'up',
+                        icon: TrophyIcon,
+                        color: 'yellow',
+                        description: t('userHome.metrics.trainingAccuracy.description'),
                     },
                     {
-                        ...initialMetrics[3],
+                        name: t('userHome.metrics.consistencyScore.name'),
                         value: consistencyScore,
                         change: consistencyChange,
-                        trend: 'up'
+                        trend: 'up',
+                        icon: ClockIcon,
+                        color: 'indigo',
+                        description: t('userHome.metrics.consistencyScore.description'),
                     }
                 ]);
 
@@ -461,7 +476,7 @@ export default function UserHomePage() {
         }
 
         fetchUserData();
-    }, [currentUser]);
+    }, [currentUser, t]);
 
     const userName = currentUser?.full_name || currentUser?.name || currentUser?.email?.split('@')[0] || 'User';
 
@@ -475,7 +490,7 @@ export default function UserHomePage() {
                             {getGreeting()}, {userName}! 👋
                         </h1>
                         <p className="mt-2 text-lg text-gray-600 dark:text-gray-300">
-                            Welcome to your personalized cognitive health dashboard
+                            {t('userHome.welcome')}
                         </p>
                     </div>
                     <div className="hidden sm:flex items-center space-x-3">
@@ -488,7 +503,7 @@ export default function UserHomePage() {
                             title="Logout"
                         >
                             <ArrowRightOnRectangleIcon className="w-5 h-5 mr-1" />
-                            Logout
+                            {t('userHome.logout')}
                         </button>
                     </div>
                 </div>
@@ -496,7 +511,7 @@ export default function UserHomePage() {
 
             {/* Quick Actions Grid */}
             <div className="mb-8">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('userHome.sections.quickActions')}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {quickActions.map((action, index) => (
                         <Link
@@ -518,7 +533,7 @@ export default function UserHomePage() {
 
             {/* Cognitive Health Metrics */}
             <div className="mb-8">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Cognitive Health Summary</h2>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('userHome.sections.cognitiveHealthSummary')}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {metrics.map((metric, index) => (
                         <div
@@ -563,12 +578,12 @@ export default function UserHomePage() {
                 <div className="lg:col-span-2">
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6">
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Recent Activity</h2>
+                            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('userHome.sections.recentActivity')}</h2>
                             <Link
                                 to="/profile"
                                 className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-sm font-medium"
                             >
-                                View all
+                                {t('userHome.actions.viewAll')}
                             </Link>
                         </div>
                         <div className="space-y-4">
@@ -591,7 +606,7 @@ export default function UserHomePage() {
                                             to={activity.link}
                                             className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-xs font-medium"
                                         >
-                                            Continue →
+                                            {t('userHome.actions.continue')}
                                         </Link>
                                     </div>
                                 </div>
@@ -606,17 +621,17 @@ export default function UserHomePage() {
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                             <HeartIcon className="w-5 h-5 mr-2" />
-                            Today's Health Tip
+                            {t('userHome.sections.todaysHealthTip')}
                         </h3>
                         <div className="bg-primary-50 dark:bg-primary-900/20 p-4 rounded-md">
                             <p className="text-sm text-primary-800 dark:text-primary-200 mb-2">
-                                <strong>Today's Tip:</strong> {currentHealthTip}
+                                <strong>{t('userHome.actions.todaysTip')}</strong> {currentHealthTip}
                             </p>
                             <Link
                                 to="/resources"
                                 className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-xs font-medium"
                             >
-                                Learn more about brain health →
+                                {t('userHome.actions.learnMoreBrainHealth')}
                             </Link>
                         </div>
                     </div>
@@ -625,11 +640,11 @@ export default function UserHomePage() {
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 p-6">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                             <AcademicCapIcon className="w-5 h-5 mr-2" />
-                            This Week's Progress
+                            {t('userHome.sections.thisWeeksProgress')}
                         </h3>
                         <div className="space-y-3">
                             <div className="flex justify-between items-center">
-                                <span className="text-sm text-gray-600 dark:text-gray-300">Training Sessions</span>
+                                <span className="text-sm text-gray-600 dark:text-gray-300">{t('userHome.progressLabels.trainingSessions')}</span>
                                 <span className="text-sm font-medium text-gray-900 dark:text-white">
                                     {loading ? '...' : `${metrics[1]?.value || '0'}/5`}
                                 </span>
@@ -643,7 +658,7 @@ export default function UserHomePage() {
                                 ></div>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-sm text-gray-600 dark:text-gray-300">Training Accuracy</span>
+                                <span className="text-sm text-gray-600 dark:text-gray-300">{t('userHome.progressLabels.trainingAccuracy')}</span>
                                 <span className="text-sm font-medium text-green-600 dark:text-green-400">
                                     {loading ? '...' : metrics[2]?.value || 'N/A'}
                                 </span>
@@ -666,7 +681,7 @@ export default function UserHomePage() {
                             className="w-full flex items-center justify-center px-4 py-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg font-medium hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
                         >
                             <ArrowRightOnRectangleIcon className="w-5 h-5 mr-2" />
-                            Logout
+                            {t('userHome.logout')}
                         </button>
                     </div>
                 </div>

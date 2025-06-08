@@ -272,6 +272,91 @@
             "recommendation": "Để có kết quả tốt nhất, hãy cố gắng hoàn thành ít nhất 3-4 phiên huấn luyện mỗi tuần, thay đổi các loại bài tập để thách thức các khả năng nhận thức khác nhau."
         }
     },
+    "userHome": {
+        "greetings": {
+            "morning": "Chào buổi sáng",
+            "afternoon": "Chào buổi chiều",
+            "evening": "Chào buổi tối"
+        },
+        "welcome": "Chào mừng bạn đến với bảng điều khiển sức khỏe nhận thức cá nhân của bạn",
+        "logout": "Đăng xuất",
+        "sections": {
+            "quickActions": "Hành Động Nhanh",
+            "cognitiveHealthSummary": "Tóm Tắt Sức Khỏe Nhận Thức",
+            "recentActivity": "Hoạt Động Gần Đây",
+            "todaysHealthTip": "Mẹo Sức Khỏe Hôm Nay",
+            "thisWeeksProgress": "Tiến Độ Tuần Này"
+        },
+        "quickActions": {
+            "startAiScreening": {
+                "title": "Bắt Đầu Sàng Lọc AI",
+                "description": "Phân tích các mẫu giọng nói của bạn"
+            },
+            "cognitiveTraining": {
+                "title": "Huấn Luyện Nhận Thức",
+                "description": "Chơi các trò chơi huấn luyện não bộ"
+            },
+            "takeDetectionQuiz": {
+                "title": "Làm Bài Kiểm Tra Phát Hiện",
+                "description": "Đánh giá nhận thức nhanh"
+            },
+            "resourceHub": {
+                "title": "Trung Tâm Tài Nguyên",
+                "description": "Tài liệu giáo dục"
+            }
+        },
+        "metrics": {
+            "cognitiveScore": {
+                "name": "Điểm Nhận Thức",
+                "description": "Điểm nhận thức phân tích AI mới nhất"
+            },
+            "trainingSessions": {
+                "name": "Phiên Huấn Luyện",
+                "description": "Tổng số phiên huấn luyện đã hoàn thành"
+            },
+            "trainingAccuracy": {
+                "name": "Độ Chính Xác Huấn Luyện",
+                "description": "Độ chính xác trung bình trên tất cả huấn luyện"
+            },
+            "consistencyScore": {
+                "name": "Điểm Nhất Quán",
+                "description": "Điểm nhất quán huấn luyện"
+            }
+        },
+        "recentActivities": {
+            "wordRecallExercise": {
+                "title": "Hoàn Thành Bài Tập Ghi Nhớ Từ",
+                "description": "Đạt 85% trong thử thách ghi nhớ từ nâng cao"
+            },
+            "speechAnalysis": {
+                "title": "Hoàn Thành Phân Tích Giọng Nói",
+                "description": "Mẫu giọng nói mới nhất của bạn cho thấy độ rõ ràng được cải thiện"
+            },
+            "readArticle": {
+                "title": "Đọc Bài Báo Nghiên Cứu Mới",
+                "description": "Đã xem 'Dinh Dưỡng và Sức Khỏe Não Bộ' trong Trung Tâm Tài Nguyên"
+            },
+            "memoryMatch": {
+                "title": "Thử Thách Ghép Trí Nhớ",
+                "description": "Đạt kỷ lục cá nhân với 12 lần ghép trong 90 giây"
+            }
+        },
+        "timeIndicators": {
+            "hoursAgo": "giờ trước",
+            "dayAgo": "1 ngày trước",
+            "daysAgo": "ngày trước"
+        },
+        "actions": {
+            "viewAll": "Xem tất cả",
+            "continue": "Tiếp tục →",
+            "todaysTip": "Mẹo Hôm Nay:",
+            "learnMoreBrainHealth": "Tìm hiểu thêm về sức khỏe não bộ →"
+        },
+        "progressLabels": {
+            "trainingSessions": "Phiên Huấn Luyện",
+            "trainingAccuracy": "Độ Chính Xác Huấn Luyện"
+        }
+    },
     "resources": {
         "title": "Trung Tâm Tài Nguyên",
         "description": "Thông tin toàn diện về phòng ngừa Alzheimer và sức khỏe nhận thức",

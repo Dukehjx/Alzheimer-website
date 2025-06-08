@@ -361,6 +361,91 @@
             }
         }
     },
+    "userHome": {
+        "greetings": {
+            "morning": "早安",
+            "afternoon": "午安",
+            "evening": "晚安"
+        },
+        "welcome": "歡迎來到您的個人認知健康儀表板",
+        "logout": "登出",
+        "sections": {
+            "quickActions": "快速操作",
+            "cognitiveHealthSummary": "認知健康摘要",
+            "recentActivity": "最近活動",
+            "todaysHealthTip": "今日健康提示",
+            "thisWeeksProgress": "本週進展"
+        },
+        "quickActions": {
+            "startAiScreening": {
+                "title": "開始AI篩檢",
+                "description": "分析您的語音模式"
+            },
+            "cognitiveTraining": {
+                "title": "認知訓練",
+                "description": "玩大腦訓練遊戲"
+            },
+            "takeDetectionQuiz": {
+                "title": "進行檢測測驗",
+                "description": "快速認知評估"
+            },
+            "resourceHub": {
+                "title": "資源中心",
+                "description": "教育材料"
+            }
+        },
+        "metrics": {
+            "cognitiveScore": {
+                "name": "認知評分",
+                "description": "最新AI分析認知評分"
+            },
+            "trainingSessions": {
+                "name": "訓練會話",
+                "description": "已完成的訓練會話總數"
+            },
+            "trainingAccuracy": {
+                "name": "訓練準確率",
+                "description": "所有訓練的平均準確率"
+            },
+            "consistencyScore": {
+                "name": "一致性評分",
+                "description": "訓練一致性評分"
+            }
+        },
+        "recentActivities": {
+            "wordRecallExercise": {
+                "title": "完成單詞回憶練習",
+                "description": "在高級單詞回憶挑戰中獲得85%"
+            },
+            "speechAnalysis": {
+                "title": "語音分析完成",
+                "description": "您最新的語音樣本顯示清晰度有所改善"
+            },
+            "readArticle": {
+                "title": "閱讀新研究文章",
+                "description": "在資源中心查看了《營養與大腦健康》"
+            },
+            "memoryMatch": {
+                "title": "記憶配對挑戰",
+                "description": "在90秒內完成12次配對，創造個人最佳記錄"
+            }
+        },
+        "timeIndicators": {
+            "hoursAgo": "小時前",
+            "dayAgo": "1天前",
+            "daysAgo": "天前"
+        },
+        "actions": {
+            "viewAll": "查看全部",
+            "continue": "繼續 →",
+            "todaysTip": "今日提示：",
+            "learnMoreBrainHealth": "了解更多大腦健康知識 →"
+        },
+        "progressLabels": {
+            "trainingSessions": "訓練會話",
+            "trainingAccuracy": "訓練準確率"
+        }
+    },
     "auth": {
         "login": {
             "title": "登入您的帳戶",

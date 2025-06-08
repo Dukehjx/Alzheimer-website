@@ -272,6 +272,91 @@
             "recommendation": "सर्वोत्तम परिणामों के लिए, सप्ताह में कम से कम 3-4 प्रशिक्षण सत्र पूरे करने का लक्ष्य रखें, विभिन्न संज्ञानात्मक क्षमताओं को चुनौती देने के लिए अभ्यास के प्रकारों को बदलते रहें।"
         }
     },
+    "userHome": {
+        "greetings": {
+            "morning": "सुप्रभात",
+            "afternoon": "नमस्कार",
+            "evening": "शुभ संध्या"
+        },
+        "welcome": "आपके व्यक्तिगत संज्ञानात्मक स्वास्थ्य डैशबोर्ड में आपका स्वागत है",
+        "logout": "लॉगआउट",
+        "sections": {
+            "quickActions": "त्वरित कार्य",
+            "cognitiveHealthSummary": "संज्ञानात्मक स्वास्थ्य सारांश",
+            "recentActivity": "हाल की गतिविधि",
+            "todaysHealthTip": "आज का स्वास्थ्य सुझाव",
+            "thisWeeksProgress": "इस सप्ताह की प्रगति"
+        },
+        "quickActions": {
+            "startAiScreening": {
+                "title": "AI जांच शुरू करें",
+                "description": "अपने भाषण पैटर्न का विश्लेषण करें"
+            },
+            "cognitiveTraining": {
+                "title": "संज्ञानात्मक प्रशिक्षण",
+                "description": "मस्तिष्क प्रशिक्षण खेल खेलें"
+            },
+            "takeDetectionQuiz": {
+                "title": "पहचान प्रश्नोत्तरी लें",
+                "description": "त्वरित संज्ञानात्मक मूल्यांकन"
+            },
+            "resourceHub": {
+                "title": "संसाधन केंद्र",
+                "description": "शैक्षिक सामग्री"
+            }
+        },
+        "metrics": {
+            "cognitiveScore": {
+                "name": "संज्ञानात्मक स्कोर",
+                "description": "नवीनतम AI विश्लेषण संज्ञानात्मक स्कोर"
+            },
+            "trainingSessions": {
+                "name": "प्रशिक्षण सत्र",
+                "description": "कुल पूर्ण प्रशिक्षण सत्र"
+            },
+            "trainingAccuracy": {
+                "name": "प्रशिक्षण सटीकता",
+                "description": "सभी प्रशिक्षणों में औसत सटीकता"
+            },
+            "consistencyScore": {
+                "name": "निरंतरता स्कोर",
+                "description": "प्रशिक्षण निरंतरता स्कोर"
+            }
+        },
+        "recentActivities": {
+            "wordRecallExercise": {
+                "title": "शब्द स्मरण अभ्यास पूर्ण",
+                "description": "उन्नत शब्द स्मरण चुनौती में 85% स्कोर किया"
+            },
+            "speechAnalysis": {
+                "title": "भाषण विश्लेषण पूर्ण",
+                "description": "आपका नवीनतम भाषण नमूना बेहतर स्पष्टता दिखाता है"
+            },
+            "readArticle": {
+                "title": "नया अनुसंधान लेख पढ़ा",
+                "description": "संसाधन केंद्र में \"पोषण और मस्तिष्क स्वास्थ्य\" देखा"
+            },
+            "memoryMatch": {
+                "title": "मेमोरी मैच चुनौती",
+                "description": "90 सेकंड में 12 मैच के साथ व्यक्तिगत सर्वश्रेष्ठ हासिल किया"
+            }
+        },
+        "timeIndicators": {
+            "hoursAgo": "घंटे पहले",
+            "dayAgo": "1 दिन पहले",
+            "daysAgo": "दिन पहले"
+        },
+        "actions": {
+            "viewAll": "सभी देखें",
+            "continue": "जारी रखें →",
+            "todaysTip": "आज का सुझाव:",
+            "learnMoreBrainHealth": "मस्तिष्क स्वास्थ्य के बारे में और जानें →"
+        },
+        "progressLabels": {
+            "trainingSessions": "प्रशिक्षण सत्र",
+            "trainingAccuracy": "प्रशिक्षण सटीकता"
+        }
+    },
     "auth": {
         "login": {
             "title": "अपने खाते में लॉगिन करें",

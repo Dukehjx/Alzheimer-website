@@ -361,6 +361,91 @@
             }
         }
     },
+    "userHome": {
+        "greetings": {
+            "morning": "صباح الخير",
+            "afternoon": "مساء الخير",
+            "evening": "مساء الخير"
+        },
+        "welcome": "مرحباً بك في لوحة تحكم صحتك المعرفية الشخصية",
+        "logout": "تسجيل الخروج",
+        "sections": {
+            "quickActions": "الإجراءات السريعة",
+            "cognitiveHealthSummary": "ملخص الصحة المعرفية",
+            "recentActivity": "النشاط الأخير",
+            "todaysHealthTip": "نصيحة صحية اليوم",
+            "thisWeeksProgress": "تقدم هذا الأسبوع"
+        },
+        "quickActions": {
+            "startAiScreening": {
+                "title": "بدء فحص الذكاء الاصطناعي",
+                "description": "تحليل أنماط كلامك"
+            },
+            "cognitiveTraining": {
+                "title": "التدريب المعرفي",
+                "description": "العب ألعاب تدريب الدماغ"
+            },
+            "takeDetectionQuiz": {
+                "title": "إجراء اختبار الكشف",
+                "description": "تقييم معرفي سريع"
+            },
+            "resourceHub": {
+                "title": "مركز الموارد",
+                "description": "مواد تعليمية"
+            }
+        },
+        "metrics": {
+            "cognitiveScore": {
+                "name": "النتيجة المعرفية",
+                "description": "أحدث نتيجة تحليل الذكاء الاصطناعي المعرفي"
+            },
+            "trainingSessions": {
+                "name": "جلسات التدريب",
+                "description": "إجمالي جلسات التدريب المكتملة"
+            },
+            "trainingAccuracy": {
+                "name": "دقة التدريب",
+                "description": "متوسط الدقة عبر جميع التدريبات"
+            },
+            "consistencyScore": {
+                "name": "نتيجة الاتساق",
+                "description": "نتيجة اتساق التدريب"
+            }
+        },
+        "recentActivities": {
+            "wordRecallExercise": {
+                "title": "تم إكمال تمرين استدعاء الكلمات",
+                "description": "حصل على 85% في تحدي استدعاء الكلمات المتقدم"
+            },
+            "speechAnalysis": {
+                "title": "تم إكمال تحليل الكلام",
+                "description": "عينة كلامك الأخيرة تظهر وضوحاً محسناً"
+            },
+            "readArticle": {
+                "title": "قرأ مقال بحثي جديد",
+                "description": "شاهد \"التغذية وصحة الدماغ\" في مركز الموارد"
+            },
+            "memoryMatch": {
+                "title": "تحدي مطابقة الذاكرة",
+                "description": "حقق أفضل رقم شخصي بـ 12 مطابقة في 90 ثانية"
+            }
+        },
+        "timeIndicators": {
+            "hoursAgo": "ساعات مضت",
+            "dayAgo": "منذ يوم واحد",
+            "daysAgo": "أيام مضت"
+        },
+        "actions": {
+            "viewAll": "عرض الكل",
+            "continue": "متابعة ←",
+            "todaysTip": "نصيحة اليوم:",
+            "learnMoreBrainHealth": "تعلم المزيد عن صحة الدماغ ←"
+        },
+        "progressLabels": {
+            "trainingSessions": "جلسات التدريب",
+            "trainingAccuracy": "دقة التدريب"
+        }
+    },
     "auth": {
         "login": {
             "title": "تسجيل الدخول إلى حسابك",

@@ -272,6 +272,91 @@
             "recommendation": "Untuk hasil terbaik, sasarkan untuk melengkapkan sekurang-kurangnya 3-4 sesi latihan seminggu, mengubah jenis latihan untuk mencabar kebolehan kognitif yang berbeza."
         }
     },
+    "userHome": {
+        "greetings": {
+            "morning": "Selamat pagi",
+            "afternoon": "Selamat petang",
+            "evening": "Selamat malam"
+        },
+        "welcome": "Selamat datang ke papan pemuka kesihatan kognitif peribadi anda",
+        "logout": "Log keluar",
+        "sections": {
+            "quickActions": "Tindakan Pantas",
+            "cognitiveHealthSummary": "Ringkasan Kesihatan Kognitif",
+            "recentActivity": "Aktiviti Terkini",
+            "todaysHealthTip": "Petua Kesihatan Hari Ini",
+            "thisWeeksProgress": "Kemajuan Minggu Ini"
+        },
+        "quickActions": {
+            "startAiScreening": {
+                "title": "Mulakan Saringan AI",
+                "description": "Analisis corak pertuturan anda"
+            },
+            "cognitiveTraining": {
+                "title": "Latihan Kognitif",
+                "description": "Main permainan latihan otak"
+            },
+            "takeDetectionQuiz": {
+                "title": "Ambil Kuiz Pengesanan",
+                "description": "Penilaian kognitif pantas"
+            },
+            "resourceHub": {
+                "title": "Pusat Sumber",
+                "description": "Bahan pendidikan"
+            }
+        },
+        "metrics": {
+            "cognitiveScore": {
+                "name": "Skor Kognitif",
+                "description": "Skor kognitif analisis AI terkini"
+            },
+            "trainingSessions": {
+                "name": "Sesi Latihan",
+                "description": "Jumlah sesi latihan yang diselesaikan"
+            },
+            "trainingAccuracy": {
+                "name": "Ketepatan Latihan",
+                "description": "Purata ketepatan merentas semua latihan"
+            },
+            "consistencyScore": {
+                "name": "Skor Konsistensi",
+                "description": "Skor konsistensi latihan"
+            }
+        },
+        "recentActivities": {
+            "wordRecallExercise": {
+                "title": "Latihan Ingatan Perkataan Selesai",
+                "description": "Memperoleh 85% dalam cabaran ingatan perkataan lanjutan"
+            },
+            "speechAnalysis": {
+                "title": "Analisis Pertuturan Selesai",
+                "description": "Sampel pertuturan terkini anda menunjukkan kejelasan yang lebih baik"
+            },
+            "readArticle": {
+                "title": "Membaca Artikel Penyelidikan Baru",
+                "description": "Melihat 'Pemakanan dan Kesihatan Otak' di Pusat Sumber"
+            },
+            "memoryMatch": {
+                "title": "Cabaran Padanan Ingatan",
+                "description": "Mencapai rekod peribadi terbaik dengan 12 padanan dalam 90 saat"
+            }
+        },
+        "timeIndicators": {
+            "hoursAgo": "jam yang lalu",
+            "dayAgo": "1 hari yang lalu",
+            "daysAgo": "hari yang lalu"
+        },
+        "actions": {
+            "viewAll": "Lihat semua",
+            "continue": "Teruskan →",
+            "todaysTip": "Petua Hari Ini:",
+            "learnMoreBrainHealth": "Ketahui lebih lanjut tentang kesihatan otak →"
+        },
+        "progressLabels": {
+            "trainingSessions": "Sesi Latihan",
+            "trainingAccuracy": "Ketepatan Latihan"
+        }
+    },
     "resources": {
         "title": "Pusat Sumber",
         "description": "Maklumat komprehensif mengenai pencegahan Alzheimer dan kesihatan kognitif",

@@ -361,6 +361,91 @@
             }
         }
     },
+    "userHome": {
+        "greetings": {
+            "morning": "좋은 아침입니다",
+            "afternoon": "안녕하세요",
+            "evening": "좋은 저녁입니다"
+        },
+        "welcome": "개인 맞춤형 인지 건강 대시보드에 오신 것을 환영합니다",
+        "logout": "로그아웃",
+        "sections": {
+            "quickActions": "빠른 작업",
+            "cognitiveHealthSummary": "인지 건강 요약",
+            "recentActivity": "최근 활동",
+            "todaysHealthTip": "오늘의 건강 팁",
+            "thisWeeksProgress": "이번 주 진행 상황"
+        },
+        "quickActions": {
+            "startAiScreening": {
+                "title": "AI 스크리닝 시작",
+                "description": "음성 패턴 분석"
+            },
+            "cognitiveTraining": {
+                "title": "인지 훈련",
+                "description": "뇌 훈련 게임 플레이"
+            },
+            "takeDetectionQuiz": {
+                "title": "탐지 퀴즈 응시",
+                "description": "빠른 인지 평가"
+            },
+            "resourceHub": {
+                "title": "리소스 허브",
+                "description": "교육 자료"
+            }
+        },
+        "metrics": {
+            "cognitiveScore": {
+                "name": "인지 점수",
+                "description": "최신 AI 분석 인지 점수"
+            },
+            "trainingSessions": {
+                "name": "훈련 세션",
+                "description": "완료된 총 훈련 세션 수"
+            },
+            "trainingAccuracy": {
+                "name": "훈련 정확도",
+                "description": "모든 훈련의 평균 정확도"
+            },
+            "consistencyScore": {
+                "name": "일관성 점수",
+                "description": "훈련 일관성 점수"
+            }
+        },
+        "recentActivities": {
+            "wordRecallExercise": {
+                "title": "단어 기억 연습 완료",
+                "description": "고급 단어 기억 챌린지에서 85% 달성"
+            },
+            "speechAnalysis": {
+                "title": "음성 분석 완료",
+                "description": "최신 음성 샘플에서 명확도 개선 확인"
+            },
+            "readArticle": {
+                "title": "새로운 연구 기사 읽기",
+                "description": "리소스 허브에서 '영양과 뇌 건강' 조회"
+            },
+            "memoryMatch": {
+                "title": "기억 매치 챌린지",
+                "description": "90초에 12개 매치로 개인 기록 달성"
+            }
+        },
+        "timeIndicators": {
+            "hoursAgo": "시간 전",
+            "dayAgo": "1일 전",
+            "daysAgo": "일 전"
+        },
+        "actions": {
+            "viewAll": "모두 보기",
+            "continue": "계속 →",
+            "todaysTip": "오늘의 팁:",
+            "learnMoreBrainHealth": "뇌 건강에 대해 더 알아보기 →"
+        },
+        "progressLabels": {
+            "trainingSessions": "훈련 세션",
+            "trainingAccuracy": "훈련 정확도"
+        }
+    },
     "auth": {
         "login": {
             "title": "계정에 로그인",

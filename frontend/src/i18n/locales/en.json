@@ -362,6 +362,91 @@
             }
         }
     },
+    "userHome": {
+        "greetings": {
+            "morning": "Good morning",
+            "afternoon": "Good afternoon",
+            "evening": "Good evening"
+        },
+        "welcome": "Welcome to your personalized cognitive health dashboard",
+        "logout": "Logout",
+        "sections": {
+            "quickActions": "Quick Actions",
+            "cognitiveHealthSummary": "Cognitive Health Summary",
+            "recentActivity": "Recent Activity",
+            "todaysHealthTip": "Today's Health Tip",
+            "thisWeeksProgress": "This Week's Progress"
+        },
+        "quickActions": {
+            "startAiScreening": {
+                "title": "Start AI Screening",
+                "description": "Analyze your speech patterns"
+            },
+            "cognitiveTraining": {
+                "title": "Cognitive Training",
+                "description": "Play brain training games"
+            },
+            "takeDetectionQuiz": {
+                "title": "Take Detection Quiz",
+                "description": "Quick cognitive assessment"
+            },
+            "resourceHub": {
+                "title": "Resource Hub",
+                "description": "Educational materials"
+            }
+        },
+        "metrics": {
+            "cognitiveScore": {
+                "name": "Cognitive Score",
+                "description": "Latest AI analysis cognitive score"
+            },
+            "trainingSessions": {
+                "name": "Training Sessions",
+                "description": "Total completed training sessions"
+            },
+            "trainingAccuracy": {
+                "name": "Training Accuracy",
+                "description": "Average accuracy across all training"
+            },
+            "consistencyScore": {
+                "name": "Consistency Score",
+                "description": "Training consistency score"
+            }
+        },
+        "recentActivities": {
+            "wordRecallExercise": {
+                "title": "Completed Word Recall Exercise",
+                "description": "Scored 85% in the advanced word recall challenge"
+            },
+            "speechAnalysis": {
+                "title": "Speech Analysis Completed",
+                "description": "Your latest speech sample shows improved clarity"
+            },
+            "readArticle": {
+                "title": "Read New Research Article",
+                "description": "Viewed \"Nutrition and Brain Health\" in Resource Hub"
+            },
+            "memoryMatch": {
+                "title": "Memory Match Challenge",
+                "description": "Achieved personal best with 12 matches in 90 seconds"
+            }
+        },
+        "timeIndicators": {
+            "hoursAgo": "hours ago",
+            "dayAgo": "1 day ago",
+            "daysAgo": "days ago"
+        },
+        "actions": {
+            "viewAll": "View all",
+            "continue": "Continue →",
+            "todaysTip": "Today's Tip:",
+            "learnMoreBrainHealth": "Learn more about brain health →"
+        },
+        "progressLabels": {
+            "trainingSessions": "Training Sessions",
+            "trainingAccuracy": "Training Accuracy"
+        }
+    },
     "auth": {
         "login": {
             "title": "Log in to your account",

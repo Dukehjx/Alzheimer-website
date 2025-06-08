@@ -361,6 +361,91 @@
             }
         }
     },
+    "userHome": {
+        "greetings": {
+            "morning": "Buenos días",
+            "afternoon": "Buenas tardes",
+            "evening": "Buenas noches"
+        },
+        "welcome": "Bienvenido a tu panel personalizado de salud cognitiva",
+        "logout": "Cerrar sesión",
+        "sections": {
+            "quickActions": "Acciones Rápidas",
+            "cognitiveHealthSummary": "Resumen de Salud Cognitiva",
+            "recentActivity": "Actividad Reciente",
+            "todaysHealthTip": "Consejo de Salud de Hoy",
+            "thisWeeksProgress": "Progreso de Esta Semana"
+        },
+        "quickActions": {
+            "startAiScreening": {
+                "title": "Iniciar Detección IA",
+                "description": "Analiza tus patrones de habla"
+            },
+            "cognitiveTraining": {
+                "title": "Entrenamiento Cognitivo",
+                "description": "Juega juegos de entrenamiento cerebral"
+            },
+            "takeDetectionQuiz": {
+                "title": "Realizar Prueba de Detección",
+                "description": "Evaluación cognitiva rápida"
+            },
+            "resourceHub": {
+                "title": "Centro de Recursos",
+                "description": "Materiales educativos"
+            }
+        },
+        "metrics": {
+            "cognitiveScore": {
+                "name": "Puntuación Cognitiva",
+                "description": "Última puntuación de análisis IA cognitivo"
+            },
+            "trainingSessions": {
+                "name": "Sesiones de Entrenamiento",
+                "description": "Total de sesiones de entrenamiento completadas"
+            },
+            "trainingAccuracy": {
+                "name": "Precisión de Entrenamiento",
+                "description": "Precisión promedio en todo el entrenamiento"
+            },
+            "consistencyScore": {
+                "name": "Puntuación de Consistencia",
+                "description": "Puntuación de consistencia de entrenamiento"
+            }
+        },
+        "recentActivities": {
+            "wordRecallExercise": {
+                "title": "Ejercicio de Recuerdo de Palabras Completado",
+                "description": "Obtuvo 85% en el desafío avanzado de recuerdo de palabras"
+            },
+            "speechAnalysis": {
+                "title": "Análisis de Habla Completado",
+                "description": "Tu última muestra de habla muestra mayor claridad"
+            },
+            "readArticle": {
+                "title": "Leyó Nuevo Artículo de Investigación",
+                "description": "Vio \"Nutrición y Salud Cerebral\" en el Centro de Recursos"
+            },
+            "memoryMatch": {
+                "title": "Desafío de Coincidencia de Memoria",
+                "description": "Logró récord personal con 12 coincidencias en 90 segundos"
+            }
+        },
+        "timeIndicators": {
+            "hoursAgo": "horas atrás",
+            "dayAgo": "hace 1 día",
+            "daysAgo": "días atrás"
+        },
+        "actions": {
+            "viewAll": "Ver todo",
+            "continue": "Continuar →",
+            "todaysTip": "Consejo de Hoy:",
+            "learnMoreBrainHealth": "Aprende más sobre salud cerebral →"
+        },
+        "progressLabels": {
+            "trainingSessions": "Sesiones de Entrenamiento",
+            "trainingAccuracy": "Precisión de Entrenamiento"
+        }
+    },
     "auth": {
         "login": {
             "title": "Inicia sesión en tu cuenta",

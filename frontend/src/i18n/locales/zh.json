@@ -361,6 +361,91 @@
             }
         }
     },
+    "userHome": {
+        "greetings": {
+            "morning": "早上好",
+            "afternoon": "下午好",
+            "evening": "晚上好"
+        },
+        "welcome": "欢迎来到您的个人认知健康仪表板",
+        "logout": "退出登录",
+        "sections": {
+            "quickActions": "快速操作",
+            "cognitiveHealthSummary": "认知健康摘要",
+            "recentActivity": "最近活动",
+            "todaysHealthTip": "今日健康提示",
+            "thisWeeksProgress": "本周进展"
+        },
+        "quickActions": {
+            "startAiScreening": {
+                "title": "开始AI筛查",
+                "description": "分析您的语音模式"
+            },
+            "cognitiveTraining": {
+                "title": "认知训练",
+                "description": "玩大脑训练游戏"
+            },
+            "takeDetectionQuiz": {
+                "title": "进行检测测验",
+                "description": "快速认知评估"
+            },
+            "resourceHub": {
+                "title": "资源中心",
+                "description": "教育材料"
+            }
+        },
+        "metrics": {
+            "cognitiveScore": {
+                "name": "认知评分",
+                "description": "最新AI分析认知评分"
+            },
+            "trainingSessions": {
+                "name": "训练会话",
+                "description": "已完成的训练会话总数"
+            },
+            "trainingAccuracy": {
+                "name": "训练准确率",
+                "description": "所有训练的平均准确率"
+            },
+            "consistencyScore": {
+                "name": "一致性评分",
+                "description": "训练一致性评分"
+            }
+        },
+        "recentActivities": {
+            "wordRecallExercise": {
+                "title": "完成单词回忆练习",
+                "description": "在高级单词回忆挑战中获得85%"
+            },
+            "speechAnalysis": {
+                "title": "语音分析完成",
+                "description": "您最新的语音样本显示清晰度有所改善"
+            },
+            "readArticle": {
+                "title": "阅读新研究文章",
+                "description": "在资源中心查看了《营养与大脑健康》"
+            },
+            "memoryMatch": {
+                "title": "记忆匹配挑战",
+                "description": "在90秒内完成12次匹配，创造个人最佳记录"
+            }
+        },
+        "timeIndicators": {
+            "hoursAgo": "小时前",
+            "dayAgo": "1天前",
+            "daysAgo": "天前"
+        },
+        "actions": {
+            "viewAll": "查看全部",
+            "continue": "继续 →",
+            "todaysTip": "今日提示：",
+            "learnMoreBrainHealth": "了解更多大脑健康知识 →"
+        },
+        "progressLabels": {
+            "trainingSessions": "训练会话",
+            "trainingAccuracy": "训练准确率"
+        }
+    },
     "auth": {
         "login": {
             "title": "登录您的账户",
