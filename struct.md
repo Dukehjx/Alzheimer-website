@@ -4,10 +4,12 @@
 ```
 Alzheimer-website/
 ├── frontend/           # React-based frontend application
-├── backend/           # Python-based backend server
+├── backend/            # Python-based backend server
 ├── docs/             # Project documentation
-├── struct.md         # Project structure documentation
-└── README.md         # Main project documentation
+├── struct.md           # Project structure documentation
+├── README.md           # Main project documentation
+├── resourcehub.txt     # Raw text file for resource hub data
+└── .gitignore          # Git ignore configuration
 ```
 
 ## Frontend Structure
@@ -25,15 +27,18 @@ frontend/
 │   │   ├── ScoreExplanation.jsx
 │   │   ├── ThemeSwitcher.jsx
 │   │   ├── FontSizeSelector.jsx
+│   │   ├── LanguageSwitcher.jsx # NEW: Language selection dropdown
 │   │   ├── auth/           # Authentication components
 │   │   ├── layout/         # Layout components
 │   │   └── cognitive-games/ # Cognitive training game components
 │   ├── pages/             # Page components and routes
 │   │   ├── HomePage.jsx
-│   │   ├── EarlyDetectionQuizPage.jsx  # NEW: Quiz assessment page
+│   │   ├── UserHomePage.jsx # NEW: Landing page for logged-in users
+│   │   ├── EarlyDetectionQuizPage.jsx
 │   │   ├── AIScreeningPage.jsx
 │   │   ├── CognitiveTraining.jsx
 │   │   ├── CognitiveTrainingPage.jsx
+│   │   ├── MemoryMatchPage.jsx # NEW: Page for the Memory Match game
 │   │   ├── ResourceHub.jsx
 │   │   ├── ResourceHubPage.jsx
 │   │   ├── ProfilePage.jsx
@@ -47,16 +52,23 @@ frontend/
 │   │   ├── CookiePolicy.jsx
 │   │   └── DataProtection.jsx
 │   ├── data/              # Static data and configurations
-│   │   └── quizData.js    # NEW: Quiz questions and scoring logic
+│   │   ├── quizData.js
+│   │   ├── memoryMatchData.js # NEW: Data for Memory Match game
+│   │   ├── sequenceOrderingData.js # NEW: Data for Sequence Ordering game
+│   │   └── categoryNamingData.js # NEW: Data for Category Naming game
 │   ├── contexts/          # React context providers
 │   │   ├── ThemeContext.jsx
 │   │   └── AuthContext.jsx
 │   ├── api/              # API integration layer
 │   │   ├── apiClient.js
 │   │   ├── aiService.js
-│   │   └── authService.js
+│   │   ├── authService.js
+│   │   └── cognitiveTrainingService.js # NEW: Service for cognitive games
 │   ├── assets/           # Static assets (images, fonts)
 │   │   └── react.svg
+│   ├── i18n/             # NEW: Internationalization configuration
+│   │   ├── locales/      # Language JSON files (en.json, es.json, etc.)
+│   │   └── index.js      # i18next configuration
 │   ├── App.jsx           # Main application component
 │   ├── main.jsx          # Application entry point
 │   ├── index.css         # Global styles and Tailwind
@@ -74,7 +86,9 @@ frontend/
 ├── postcss.config.cjs    # PostCSS configuration
 ├── eslint.config.js      # ESLint configuration
 ├── .npmrc               # NPM configuration
-└── QUIZ_IMPLEMENTATION.md # NEW: Quiz feature documentation
+├── QUIZ_IMPLEMENTATION.md # Quiz feature documentation
+├── MEMORY_MATCH_IMPLEMENTATION.md # NEW: Memory Match game documentation
+└── INTERNATIONALIZATION.md # NEW: Internationalization documentation
 ```
 
 ## Backend Structure
@@ -100,7 +114,7 @@ backend/
 │   │   ├── resource_service.py
 │   │   ├── cognitive_training_service.py
 │   │   └── __init__.py
-│   ├── schemas/         # Data validation schemas
+│   ├── schemas/         # Data validation schemas (Pydantic models)
 │   │   └── resource.py
 │   ├── utils/           # Utility functions
 │   │   ├── security.py
@@ -123,26 +137,18 @@ backend/
 ├── static/              # Static files
 │   ├── brain-icon.svg
 │   ├── favicon.ico
-│   └── game/           # Cognitive game static files (compiled Python)
-│       ├── cognitive_exercises.cpython-311.pyc
-│       ├── sound_manager.cpython-311.pyc
-│       ├── run_cognitive_exercises.cpython-311.pyc
-│       ├── menu.cpython-311.pyc
-│       ├── main.cpython-311.pyc
-│       ├── game_board.cpython-311.pyc
-│       ├── challenge_system.cpython-311.pyc
-│       ├── card.cpython-311.pyc
-│       └── __init__.cpython-311.pyc
+│   └── game/           # (Legacy) Cognitive game static files
 ├── scripts/            # Utility and data population scripts
 │   ├── db_utils.py
 │   ├── populate_resources.py
+│   ├── cleanup_resources.py
+│   ├── update_resources_from_txt.py
 │   └── add_user.py
 ├── main.py             # Application entry point
 ├── requirements.txt    # Python dependencies
 ├── backend.log         # Backend log file
 ├── .gitignore         # Git ignore rules
 ├── venv/              # Python virtual environment
-├── __pycache__/       # Python bytecode cache
 └── .vscode/           # VSCode settings
     └── settings.json
 ```
@@ -160,23 +166,29 @@ backend/
   - **Footer.jsx**: Footer with platform links including quiz
   - **ThemeSwitcher.jsx**: Dark/light mode toggle
   - **FontSizeSelector.jsx**: Accessibility font size control
+  - **LanguageSwitcher.jsx**: **NEW** - UI for selecting the display language.
 
 #### Pages
 - **pages/**: Page-level components and routing logic
-  - **HomePage.jsx**: Landing page with quiz entry points
-  - **EarlyDetectionQuizPage.jsx**: **NEW** - Complete quiz assessment system
-  - **AIScreeningPage.jsx**: AI-powered language analysis
-  - **CognitiveTraining.jsx**: Cognitive training games
-  - **ResourceHubPage.jsx**: Educational resources
-  - **ProfilePage.jsx**: User profile management
-  - **Dashboard.jsx**: User dashboard with metrics
+  - **HomePage.jsx**: Landing page for guests.
+  - **UserHomePage.jsx**: **NEW** - Landing page for authenticated users.
+  - **EarlyDetectionQuizPage.jsx**: Complete quiz assessment system.
+  - **AIScreeningPage.jsx**: AI-powered language analysis.
+  - **CognitiveTrainingPage.jsx**: Hub for all cognitive training games.
+  - **MemoryMatchPage.jsx**: **NEW** - The Memory Match cognitive game.
+  - **ResourceHubPage.jsx**: Educational resources.
+  - **ProfilePage.jsx**: User profile management.
+  - **Dashboard.jsx**: User dashboard with metrics.
 
 #### Data & Configuration
-- **data/**: Static data configurations
-  - **quizData.js**: **NEW** - Quiz questions, scoring logic, and thresholds
-- **contexts/**: React context providers for state management
-- **api/**: API integration and data management
-- **assets/**: Static resources (images, icons, fonts)
+- **data/**: Static data for quizzes and games.
+  - **quizData.js**: Quiz questions, scoring logic, and thresholds.
+  - **memoryMatchData.js**: **NEW** - Questions and answers for the Memory Match game.
+  - **sequenceOrderingData.js**: **NEW** - Data for the Sequence Ordering game.
+  - **categoryNamingData.js**: **NEW** - Data for the Category Naming game.
+- **contexts/**: React context providers for state management.
+- **api/**: API integration and data management.
+- **i18n/**: **NEW** - Internationalization setup using `i18next`.
 
 ### Backend
 
@@ -197,7 +209,7 @@ backend/
 #### Data & Storage
 - **db/**: Database connection and configuration (MongoDB)
 - **static/**: Static files and compiled cognitive games
-- **scripts/**: Utility and data population scripts
+- **scripts/**: Utility and data population scripts, including parsers for `resourcehub.txt`.
 
 ### Configuration Files
 - **vite.config.js**: Frontend build configuration
@@ -206,6 +218,18 @@ backend/
 - **requirements.txt**: Backend Python dependencies
 
 ## New Features Added
+
+### Cognitive Training Games
+- **Expanded Game Library**: In addition to the Memory Match game, the platform now includes:
+  - **Sequence Ordering**: Challenges users to remember and replicate sequences.
+  - **Category Naming**: Tests semantic memory by having users name items in a category.
+- **Centralized Service**: All games are managed through the `cognitiveTrainingService.js` on the frontend and the `cognitive_training.py` API on the backend.
+- **Dedicated Data Files**: Each game has its own data file in `frontend/src/data/` for easy management.
+
+### Internationalization (i18n)
+- **Multi-Language Support**: The user interface now supports multiple languages to cater to a global audience.
+- **Implementation**: Uses `i18next` and `react-i18next` with language files stored in `frontend/src/i18n/locales/`.
+- **Language Switcher**: A `LanguageSwitcher.jsx` component allows users to change their preferred language easily.
 
 ### Early Detection Quiz System
 - **Frontend Implementation**:
@@ -231,6 +255,8 @@ backend/
 
 ### Documentation
 - **QUIZ_IMPLEMENTATION.md**: Comprehensive documentation of quiz features
+- **MEMORY_MATCH_IMPLEMENTATION.md**: **NEW** - Detailed documentation for the Memory Match game
+- **INTERNATIONALIZATION.md**: **NEW** - Documentation explaining the i18n architecture and how to add new languages
 - **Updated README.md**: Reflects new quiz functionality
 - **Updated struct.md**: Current project structure
 
@@ -280,7 +306,7 @@ backend/
 - **Frontend Implementation**:
   - `MemoryMatchGame.jsx`: Complete game interface with backend integration
   - `memoryMatchData.js`: Game data and scoring logic
-  - `cognitiveTrainingService.js`: **NEW** - API service for all cognitive training exercises
+  - `cognitiveTrainingService.js`: API service for all cognitive training exercises
   - Real-time progress submission and tracking
   - Error handling and user feedback
 
