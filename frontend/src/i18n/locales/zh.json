@@ -1,6 +1,7 @@
 {
     "nav": {
         "home": "首页",
+        "quiz": "早期检测测试",
         "aiScreening": "AI筛查",
         "cognitiveTraining": "认知训练",
         "resourceHub": "资源中心",

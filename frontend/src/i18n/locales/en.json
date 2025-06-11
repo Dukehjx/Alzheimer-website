@@ -1,6 +1,7 @@
 {
     "nav": {
         "home": "Home",
+        "quiz": "Early Detection Quiz",
         "aiScreening": "AI Screening",
         "cognitiveTraining": "Cognitive Training",
         "resourceHub": "Resource Hub",

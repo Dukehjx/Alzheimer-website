@@ -1,6 +1,7 @@
 {
     "nav": {
         "home": "ホーム",
+        "quiz": "早期発見テスト",
         "aiScreening": "AI検査",
         "cognitiveTraining": "認知トレーニング",
         "resourceHub": "リソースセンター",

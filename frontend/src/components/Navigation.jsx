@@ -15,6 +15,7 @@ export default function Navigation() {
 
   const navigation = [
     { name: t('nav.home'), href: '/' },
+    { name: t('nav.quiz'), href: '/quiz' },
     { name: t('nav.aiScreening'), href: '/screening' },
     { name: t('nav.cognitiveTraining'), href: '/cognitive-training' },
     { name: t('nav.resourceHub'), href: '/resources' },

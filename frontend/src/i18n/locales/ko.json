@@ -1,6 +1,7 @@
 {
     "nav": {
         "home": "홈",
+        "quiz": "조기 발견 테스트",
         "aiScreening": "AI 검사",
         "cognitiveTraining": "인지 훈련",
         "resourceHub": "리소스 센터",

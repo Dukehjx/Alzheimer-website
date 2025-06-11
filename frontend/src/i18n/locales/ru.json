@@ -1,6 +1,7 @@
 {
     "nav": {
         "home": "Главная",
+        "quiz": "Тест Раннего Обнаружения",
         "aiScreening": "AI Скрининг",
         "cognitiveTraining": "Когнитивные Тренировки",
         "resourceHub": "Центр Ресурсов",

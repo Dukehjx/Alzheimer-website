@@ -1,6 +1,7 @@
 {
     "nav": {
         "home": "Inicio",
+        "quiz": "Prueba de Detección Temprana",
         "aiScreening": "Detección IA",
         "cognitiveTraining": "Entrenamiento Cognitivo",
         "resourceHub": "Centro de Recursos",
