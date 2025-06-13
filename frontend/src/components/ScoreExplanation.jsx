@@ -17,12 +17,6 @@ const ScoreExplanation = ({ scores }) => {
             moderate: t('scoreExplanation.sentenceModerate'),
             high: t('scoreExplanation.sentenceHigh')
         },
-        semanticCoherence: {
-            title: t('scoreExplanation.ideaOrganization'),
-            low: t('scoreExplanation.ideaLow'),
-            moderate: t('scoreExplanation.ideaModerate'),
-            high: t('scoreExplanation.ideaHigh')
-        },
         speechFluency: {
             title: t('scoreExplanation.fluencyFocus'),
             low: t('scoreExplanation.fluencyLow'),

@@ -1028,7 +1028,7 @@ const AudioRecorder = () => {
                                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.cognitiveDomainScores')}</h4>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-                                    {Object.entries(results.analysis.domain_scores || {}).map(([domain, score]) => (
+                                    {Object.entries(results.analysis.domain_scores || {}).filter(([domain]) => domain !== 'visuospatial').map(([domain, score]) => (
                                         <div
                                             key={domain}
                                             className={`p-4 text-center rounded-lg shadow-sm border-t-4 ${getScoreColor(score)}`}
@@ -1063,7 +1063,6 @@ const AudioRecorder = () => {
                                 scores={{
                                     lexicalDiversity: Math.round((1 - (results.analysis.domain_scores?.['LANGUAGE'] ?? 0.5)) * 100),
                                     syntacticComplexity: Math.round((1 - (results.analysis.domain_scores?.['EXECUTIVE_FUNCTION'] ?? 0.5)) * 100),
-                                    semanticCoherence: Math.round((1 - (results.analysis.domain_scores?.['EXECUTIVE_FUNCTION'] ?? 0.5)) * 100), // Map to executive function since visuospatial isn't available
                                     speechFluency: Math.round((1 - (results.analysis.domain_scores?.['ATTENTION'] ?? 0.5)) * 100),
                                     memoryCues: Math.round((1 - (results.analysis.domain_scores?.['MEMORY'] ?? 0.5)) * 100)
                                 }}

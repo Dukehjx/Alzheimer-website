@@ -293,7 +293,7 @@ const TextAnalysis = () => {
                             <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.cognitiveDomainScores')}</h4>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-                                {Object.entries(results.domain_scores).filter(([domain]) => domain !== 'overall_cognitive').map(([domain, score]) => (
+                                {Object.entries(results.domain_scores).filter(([domain]) => domain !== 'overall_cognitive' && domain !== 'visuospatial').map(([domain, score]) => (
                                     <div
                                         key={domain}
                                         className={`p-4 text-center rounded-lg shadow-sm border-t-4 ${getScoreColor(score)}`}

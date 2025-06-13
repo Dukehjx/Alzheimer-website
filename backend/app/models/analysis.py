@@ -27,7 +27,6 @@ class CognitiveDomain(str, Enum):
     EXECUTIVE_FUNCTION = "executive_function"
     ATTENTION = "attention"
     LANGUAGE = "language"
-    VISUOSPATIAL = "visuospatial"
 
 class DomainScore(BaseModel):
     """Score for a specific cognitive domain."""
