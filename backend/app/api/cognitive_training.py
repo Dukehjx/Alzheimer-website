@@ -821,15 +821,20 @@ async def get_progress_metrics(
     total_sessions = len(user_sessions)
     total_time_spent = sum(session.get("duration", 0) for session in user_sessions)
     
-    # Calculate average scores per exercise type
+        # Calculate average scores per exercise type using accuracy (which is consistently percentage-based)
     exercise_scores = {}
     for session in user_sessions:
         exercise_type = session.get("exercise_type")
         if exercise_type:
             if exercise_type not in exercise_scores:
                 exercise_scores[exercise_type] = []
-            exercise_scores[exercise_type].append(session.get("score", 0))
-    
+            # Use accuracy instead of score for consistent percentage-based averaging
+            accuracy = session.get("accuracy", 0)
+            # Ensure accuracy is in percentage format (0-100)
+            if accuracy <= 1.0:
+                accuracy = accuracy * 100  # Convert from decimal to percentage
+            exercise_scores[exercise_type].append(accuracy)
+
     average_scores = {
         ex_type: sum(scores) / len(scores) if scores else 0 
         for ex_type, scores in exercise_scores.items()

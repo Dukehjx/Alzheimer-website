@@ -586,15 +586,19 @@ class CognitiveTrainingService:
         if exercise_type_str not in user_metrics["performance_trends"]:
             user_metrics["performance_trends"][exercise_type_str] = []
         
-        # Add the latest score, keeping only the last 10 scores
-        user_metrics["performance_trends"][exercise_type_str].append(evaluation_result["score"])
+        # Add the latest accuracy score (normalized to percentage), keeping only the last 10 scores
+        accuracy = evaluation_result.get("accuracy", 0)
+        # Ensure accuracy is in percentage format (0-100)
+        if accuracy <= 1.0:
+            accuracy = accuracy * 100  # Convert from decimal to percentage
+        user_metrics["performance_trends"][exercise_type_str].append(accuracy)
         user_metrics["performance_trends"][exercise_type_str] = user_metrics["performance_trends"][exercise_type_str][-10:]
         
         # Update average scores
         if "average_scores" not in user_metrics:
             user_metrics["average_scores"] = {}
         
-        # Calculate new average
+        # Calculate new average using accuracy scores
         scores = user_metrics["performance_trends"][exercise_type_str]
         user_metrics["average_scores"][exercise_type_str] = sum(scores) / len(scores)
         
