@@ -33,7 +33,7 @@ function AIScreeningPage() {
       </div>
 
       {/* Content based on active tab */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 w-full overflow-hidden">
         {activeTab === 'text' ? (
           <>
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Text Analysis</h3>

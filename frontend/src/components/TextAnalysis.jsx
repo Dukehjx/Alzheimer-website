@@ -250,7 +250,7 @@ const TextAnalysis = () => {
             )}
 
             {results && results.success && (
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 w-full overflow-hidden">
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.analysisResults')}</h3>
 
                     <div className="flex flex-col md:flex-row items-center justify-center my-6">
@@ -289,16 +289,16 @@ const TextAnalysis = () => {
                     </div>
 
                     {results.domain_scores && Object.keys(results.domain_scores).length > 0 && (
-                        <div className="border-t border-gray-200 dark:border-gray-700 my-4 py-4">
+                        <div className="border-t border-gray-200 dark:border-gray-700 my-4 py-4 w-full">
                             <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.cognitiveDomainScores')}</h4>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6 overflow-hidden">
                                 {Object.entries(results.domain_scores).filter(([domain]) => domain !== 'overall_cognitive' && domain !== 'visuospatial').map(([domain, score]) => (
                                     <div
                                         key={domain}
-                                        className={`p-4 text-center rounded-lg shadow-sm border-t-4 ${getScoreColor(score)}`}
+                                        className={`p-4 text-center rounded-lg shadow-sm border-t-4 min-w-0 w-full ${getScoreColor(score)}`}
                                     >
-                                        <p className="text-sm font-medium">{formatDomain(domain)}</p>
+                                        <p className="text-sm font-medium break-words">{formatDomain(domain)}</p>
                                         <p className={`text-2xl font-bold ${getScoreColor(score)}`}>
                                             {Math.round(score * 100)}%
                                         </p>
@@ -309,16 +309,16 @@ const TextAnalysis = () => {
                     )}
 
                     {results.detected_patterns && Object.keys(results.detected_patterns).length > 0 && (
-                        <div className="border-t border-gray-200 dark:border-gray-700 my-4 py-4">
+                        <div className="border-t border-gray-200 dark:border-gray-700 my-4 py-4 w-full">
                             <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.detectedPatterns')}</h4>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6 overflow-hidden">
                                 {Object.entries(results.detected_patterns).map(([pattern, data]) => (
                                     <div
                                         key={pattern}
-                                        className="p-4 text-center rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                                        className="p-4 text-center rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 min-w-0 w-full"
                                     >
-                                        <p className="text-sm font-medium">{formatDomain(pattern)}</p>
+                                        <p className="text-sm font-medium break-words">{formatDomain(pattern)}</p>
                                         <p className="text-2xl font-bold">
                                             {Math.round((data.score || 0) * 100)}%
                                         </p>

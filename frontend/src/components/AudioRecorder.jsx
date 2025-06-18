@@ -970,7 +970,7 @@ const AudioRecorder = () => {
 
             {/* Results Display */}
             {results && results.success && (
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mt-6 results-container">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mt-6 results-container w-full overflow-hidden">
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.transcriptionResults')}</h3>
 
                     <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md mb-6">
@@ -1024,16 +1024,16 @@ const AudioRecorder = () => {
                                 </div>
                             </div>
 
-                            <div className="border-t border-gray-200 dark:border-gray-700 my-4 py-4">
+                            <div className="border-t border-gray-200 dark:border-gray-700 my-4 py-4 w-full">
                                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('aiScreening.cognitiveDomainScores')}</h4>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 mb-6 overflow-hidden">
                                     {Object.entries(results.analysis.domain_scores || {}).filter(([domain]) => domain !== 'visuospatial').map(([domain, score]) => (
                                         <div
                                             key={domain}
-                                            className={`p-4 text-center rounded-lg shadow-sm border-t-4 ${getScoreColor(score)}`}
+                                            className={`p-4 text-center rounded-lg shadow-sm border-t-4 min-w-0 w-full ${getScoreColor(score)}`}
                                         >
-                                            <p className="text-sm font-medium">{formatDomain(domain)}</p>
+                                            <p className="text-sm font-medium break-words">{formatDomain(domain)}</p>
                                             <p className={`text-2xl font-bold ${getScoreColor(score)}`}>
                                                 {Math.round(score * 100)}%
                                             </p>
