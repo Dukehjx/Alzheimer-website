@@ -10,7 +10,7 @@ const PrivacyPolicy = () => (
         </section>
         <section className="mb-4">
             <p>
-                For detailed information or inquiries, please contact <a href="mailto:hjxduke080111@outlook.com" className="text-blue-600 underline">hjxduke080111@outlook.com</a>.
+                For detailed information or inquiries, please contact <a href="mailto:D117107101@outlook.com" className="text-blue-600 underline">D117107101@outlook.com</a>.
             </p>
         </section>
     </main>

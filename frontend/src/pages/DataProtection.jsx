@@ -10,12 +10,12 @@ const DataProtection = () => (
         </section>
         <section className="mb-4">
             <p>
-                Users have the right to access, correct, delete, or restrict processing of their personal data. To exercise these rights, contact <a href="mailto:hjxduke080111@outlook.com" className="text-blue-600 underline">hjxduke080111@outlook.com</a>.
+                Users have the right to access, correct, delete, or restrict processing of their personal data. To exercise these rights, contact <a href="mailto:D117107101@outlook.com" className="text-blue-600 underline">D117107101@outlook.com</a>.
             </p>
         </section>
         <section className="mb-4">
             <p>
-                For more information, refer to our Privacy Policy or contact our Data Protection Officer at <a href="mailto:hjxduke080111@outlook.com" className="text-blue-600 underline">hjxduke080111@outlook.com</a>.
+                For more information, refer to our Privacy Policy or contact our Data Protection Officer at <a href="mailto:D117107101@outlook.com" className="text-blue-600 underline">D117107101@outlook.com</a>.
             </p>
         </section>
     </main>

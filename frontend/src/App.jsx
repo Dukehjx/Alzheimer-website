@@ -28,6 +28,9 @@ import PrivacyPolicy from './pages/PrivacyPolicy.jsx'
 import TermsOfService from './pages/TermsOfService.jsx'
 import CookiePolicy from './pages/CookiePolicy.jsx'
 import DataProtection from './pages/DataProtection.jsx'
+import AboutUsPage from './pages/AboutUsPage.jsx'
+import OurTeamPage from './pages/OurTeamPage.jsx'
+import ContactUsPage from './pages/ContactUsPage.jsx'
 
 function AppContent() {
   const location = useLocation();
@@ -99,6 +102,9 @@ function AppContent() {
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/cookies" element={<CookiePolicy />} />
           <Route path="/data-protection" element={<DataProtection />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/team" element={<OurTeamPage />} />
+          <Route path="/contact" element={<ContactUsPage />} />
           <Route path="/profile" element={
             <ProtectedRoute>
               <ProfilePage />

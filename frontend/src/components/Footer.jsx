@@ -23,7 +23,6 @@ export default function Footer() {
       links: [
         { name: t('footer.links.aboutUs'), path: '/about' },
         { name: t('footer.links.ourTeam'), path: '/team' },
-        { name: t('footer.links.careers'), path: '/careers' },
         { name: t('footer.links.contactUs'), path: '/contact' },
       ],
     },
